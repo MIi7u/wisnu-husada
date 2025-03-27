@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RSI</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <style>
+        body {
+            background: url('/images/backgroun.jpg') no-repeat center center fixed;
+            background-size: cover;
+            <img src="/images/logo_rsi.png" alt="Logo" height="40">
+        }
+        .navbar {
+            background-color: #28a745 !important;
+        }
+        .navbar-nav .nav-link {
+            color: white !important;
+        }
+        .dropdown-menu {
+            background-color: #218838;
+        }
+        .dropdown-item {
+            color: white !important;
+        }
+        .dropdown-item:hover {
+            background-color: #1e7e34;
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-success">
+        <div class="container-fluid">
+            <a class="navbar-brand text-white" href="#">RSI</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle text-white" href="#" id="masterMenu" role="button" data-bs-toggle="dropdown">
+                            Master
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="/admin/dokter">Dokter</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle text-white" href="#" id="laporanMenu" role="button" data-bs-toggle="dropdown">
+                            Laporan
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="/admin/pending">Pending BPJS</a></li>
+                            <li><a class="dropdown-item" href="/admin/dpjb">Rincian Jasa Medis</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            <img src="/images/logo_rsi.png" alt="Logo" height="40">
+        </div>
+    </nav>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,101 @@
+  <!-- ======= Sidebar ======= -->
+  <aside id="sidebar" class="sidebar" style="background:no-repeat;background-color:#ffffff;background-image:url(/assets/icons/spot-illustrations/authentication-corner.png);background-size:250px;background-position:right bottom;">
+    <center>
+    <img src="/assets/img/logo.jpg" width="80%">
+  </center>
+    <br>
+  
+    <ul class="sidebar-nav" id="sidebar-nav">
+ 
+      <li class="nav-item ">
+        <a class="nav-link" href="/pedagang">
+          <i class="bi bi-grid"></i>
+          <span>Dashboard</span>
+        </a>
+      </li><!-- End Dashboard Nav -->
+
+     
+    <li class="nav-item">
+        <a class="nav-link collapsed" data-bs-target="#forms-nav1" data-bs-toggle="collapse" href="#">
+          <i class="bi bi-shop"></i><span>Data Master</span><i class="bi bi-chevron-down ms-auto"></i>
+        </a>
+        <ul id="forms-nav1" class="nav-content collapse {{menu_master}}" data-bs-parent="#sidebar-nav">    
+          
+          <li>
+            <a href="{{ route('pedagang.produk') }}" class="{{menu_produk}}">
+              <i class="bi bi-circle"></i><span>Produk            
+            </a>
+          </li>
+          <li>
+            <a href="{{ route('pedagang.profil') }}" class="{{menu_profil}}">
+              <i class="bi bi-circle"></i><span>Profil             
+            </a>
+          </li>
+        </ul>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link collapsed" data-bs-target="#forms-nav2" data-bs-toggle="collapse" href="#">
+          <i class="bi bi-basket"></i><span>Transaksi</span><i class="bi bi-chevron-down ms-auto"></i>
+        </a>
+        <ul id="forms-nav2" class="nav-content collapse {{menu_mtransaksi}}" data-bs-parent="#sidebar-nav">    
+      
+          
+          <li>
+            <a href="{{ route('pedagang.transaksi.waitbayar') }}" class="{{menu_transaksi_waitbayar}}">
+              <i class="bi bi-circle"></i><span>Pesanan disiapkan            
+            </a>
+          </li>
+          <li>
+            <a href="{{ route('pedagang.transaksi.pengiriman') }}" class="{{menu_transaksi_pengiriman}}">
+              <i class="bi bi-circle"></i><span>Pesanan dalam Pengantaran            
+            </a>
+          </li>
+          <li>
+            <a href="{{ route('pedagang.transaksi.selesai') }}" class="{{menu_transaksi_selesai}}">
+              <i class="bi bi-circle"></i><span>Pesanan Selesai            
+            </a>
+          </li>
+        </ul>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link collapsed" data-bs-target="#forms-nav3" data-bs-toggle="collapse" href="#">
+          <i class="bi bi-bar-chart-line"></i><span>Laporan</span><i class="bi bi-chevron-down ms-auto"></i>
+        </a>
+        <ul id="forms-nav3" class="nav-content collapse {{menu_laporan}}" data-bs-parent="#sidebar-nav">    
+      
+          <li>
+            <a href="{{ route('pedagang.laporan.penjualan') }}" class="{{menu_laporan_penjualan}}">
+              <i class="bi bi-circle"></i><span>Penjualan            
+            </a>
+          </li>
+          <li>
+            <a href="{{ route('pedagang.laporan.produk') }}" class="{{menu_laporan_produk}}">
+              <i class="bi bi-circle"></i><span>Produk            
+            </a>
+          </li>
+        </ul>
+      </li>
+      <li class="nav-item ">
+        <a class="nav-link {{menu_dompet==''?'collapsed':''}}" href="/dompet">
+          <i class="bi bi-wallet2"></i>
+          <span>Dompet </span>
+        </a>
+      </li><!-- End Dashboard Nav -->
+    
+       
+     
+
+    </ul>
+  </aside><!-- End Sidebar-->
+  <main id="main" class="main">
+    <div class="pagetitle"> 
+      <h1>{{label_menu}}</h1>
+      <nav>
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="/">Home</a></li>
+          <li class="breadcrumb-item active">{{label_menu}}  </li>
+        </ol>
+      </nav>
+    </div>
+
+

@@ -1,0 +1,73 @@
+  <!-- ======= Sidebar ======= -->
+  <aside id="sidebar" class="sidebar" style="background:no-repeat;background-color:#ffffff;background-image:url(/assets/icons/spot-illustrations/authentication-corner.png);background-size:200px;background-position:right bottom;">
+     <img src="/assets/icons/icon1.png" width="100%">
+    <br>
+    <br>
+    <ul class="sidebar-nav" id="sidebar-nav">
+
+      <li class="nav-item ">
+        <a class="nav-link" href="{{ route('admin.dashboard') }}">
+          <i class="bi bi-grid"></i>
+          <span>Dashboard</span>
+        </a>
+      </li><!-- End Dashboard Nav -->
+   @if(level=="super" || level=="akuntansi")
+      <li class="nav-item">
+        <a class="nav-link collapsed" data-bs-target="#forms-nav" data-bs-toggle="collapse" href="#">
+          <i class="bi bi-journal-text"></i><span>Data Master</span><i class="bi bi-chevron-down ms-auto"></i>
+        </a>
+        <ul id="forms-nav" class="nav-content collapse {{menu_master}}" data-bs-parent="#sidebar-nav">
+          <li>
+            <a href="{{ route('admin.master.iku') }}" class="{{menu_iku}}">
+              <i class="bi bi-circle"></i><span>Indikator Kinerja Utama</span>
+            </a>
+          </li>
+           <li>
+            <a href="{{ route('admin.master.aktivitas') }}" class="{{menu_aktivitas}}">
+              <i class="bi bi-circle"></i><span>Aktivitas</span>
+            </a>
+          </li>
+           <li>
+            <a href="{{ route('admin.master.unit') }}" class="{{menu_unit}}">
+              <i class="bi bi-circle"></i><span>Unit Kerja</span>
+            </a>
+          </li>
+         <li>
+            <a href="{{ route('admin.master.ploting') }}" class="{{menu_ploting}}">
+              <i class="bi bi-circle"></i><span>Ploting Indikator</span>
+            </a>
+          </li>
+        
+        </ul>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link collapsed" data-bs-target="#tables-nav" data-bs-toggle="collapse" href="#">
+          <i class="bi bi-tools"></i><span>Pengaturan</span><i class="bi bi-chevron-down ms-auto"></i>
+        </a>
+        <ul id="tables-nav" class="nav-content collapse {{ menu_pengaturan }}" data-bs-parent="#sidebar-nav">
+            
+           <li>
+            <a href="{{ route('pengaturan.sistem') }}" class="{{menu_pengaturan_sistem}}">
+              <i class="bi bi-circle"></i><span>Sistem</span>
+            </a>
+           </li>
+          
+                
+        </ul>
+      </li>
+      @endif
+
+    </ul>
+  </aside><!-- End Sidebar-->
+  <main id="main" class="main">
+    <div class="pagetitle"> 
+      <h1>UNIVERSITAS MUHAMMADIYAH PURWOKERTO</h1>
+      <nav>
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="/">Home</a></li>
+          <li class="breadcrumb-item active">{{label_menu}}  </li>
+        </ol>
+      </nav>
+    </div>
+
+

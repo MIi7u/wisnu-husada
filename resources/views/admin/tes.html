@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DataTables Border</title>
+
+  <!-- Bootstrap & DataTables CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" rel="stylesheet">
+
+  <style>
+    /* Tambahan border sisi tabel */
+    table.dataTable, 
+    table.dataTable th, 
+    table.dataTable td {
+      border: 1px solid #dee2e6 !important;
+    }
+
+    /* Agar border rapih */
+    table.dataTable {
+      border-collapse: collapse !important;
+    }
+
+    /* Styling header & footer */
+    table.dataTable thead th, 
+    table.dataTable tfoot th {
+      background-color: #f8f9fa;
+      text-align: center;
+    }
+
+    /* Optional: Tambahkan hover effect */
+    table.dataTable tbody tr:hover {
+      background-color: #f1f1f1;
+    }
+  </style>
+
+</head>
+<body>
+
+<div class="container mt-4">
+  <h4 class="mb-3">Contoh DataTables dengan Border di Sisi</h4>
+
+  <table id="example" class="table table-striped" style="width:100%">
+    <thead>
+      <tr>
+        <th>No</th>
+        <th>Nama</th>
+        <th>Jabatan</th>
+        <th>Lokasi</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>1</td>
+        <td>Budi Santoso</td>
+        <td>Manager</td>
+        <td>Jakarta</td>
+      </tr>
+      <tr>
+        <td>2</td>
+        <td>Siti Aminah</td>
+        <td>Staff</td>
+        <td>Bandung</td>
+      </tr>
+      <tr>
+        <td>3</td>
+        <td>Ahmad Fikri</td>
+        <td>Supervisor</td>
+        <td>Surabaya</td>
+      </tr>
+    </tbody>
+    <tfoot>
+      <tr>
+        <th>No</th>
+        <th>Nama</th>
+        <th>Jabatan</th>
+        <th>Lokasi</th>
+      </tr>
+    </tfoot>
+  </table>
+</div>
+
+<!-- JQuery & DataTables JS -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+
+<script>
+  $(document).ready(function() {
+    $('#example').DataTable();
+  });
+</script>
+
+</body>
+</html>

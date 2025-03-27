@@ -1,0 +1,72 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Login {{hostname}}</title>
+  <link href="https://fonts.googleapis.com/css?family=Karla:400,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.materialdesignicons.com/4.8.95/css/materialdesignicons.min.css">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/theme/login/themes.css">
+</head>
+<body>
+  <main class="d-flex align-items-center min-vh-100 py-3 py-md-0">
+    <div class="container">
+      <div class="card login-card">
+        <div class="row no-gutters">
+          <div class="col-md-5">
+           <center>
+            <br>
+           
+            <img src="/assets/img/logo.jpg" alt="login" class="" style="width: 80%;" >
+          </center>
+            <p class="text-white font-weight-large text-center flex-grow align-self-end footer-link text-small">
+             
+            </p>
+          </div>
+          <div class="col-md-7">
+            <div class="card-body" style="background:no-repeat;background-image:url(/assets/icons/spot-illustrations/corner-2.png);background-size:600px;background-position:right bottom;z-index:-1;">
+            
+            <center>
+              <div class="brand-wrapper">
+                <img src="/assets/icons/spot-illustrations/50.png" alt="logo" width="200" style="display: none;">
+                <br>
+              </div>
+              <p class="login-card-description">{{hostname}}</p>
+              <form action="{{ route('login.check') }}" method="POST">
+                {{ csrfField() }}
+                  <div class="form-group">                  
+                    <input type="text" name="username" required id="username" class="form-control" placeholder="Username" value="{{username}}">
+                  </div>
+                  <div class="form-group mb-4">                  
+                    <input type="password" name="password" required id="password" class="form-control" placeholder="Password" value="{{password}}">
+                  </div>
+                
+                 <div class="btn-group btn-block">
+                  <input name="login" id="login" class="btn  btn-primary mb-4" type="submit" value="Login">
+                
+                 </div>
+                </form>
+              {{{error}}}
+              <br>
+              <br>
+                @if(code=="500")
+               
+                 @endif 
+                 {{pesan_reset}}               
+               <br>
+               </center>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main> 
+
+</body>
+</html>
+
+
