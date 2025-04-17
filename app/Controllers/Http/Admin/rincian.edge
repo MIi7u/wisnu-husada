@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Data Dokter</title>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.dataTables.min.css">
+    <style>
+        td.details-control {
+            background: url('https://datatables.net/examples/resources/details_open.png') no-repeat center center;
+            cursor: pointer;
+        }
+        tr.shown td.details-control {
+            background: url('https://datatables.net/examples/resources/details_close.png') no-repeat center center;
+        }
+    </style>
+</head>
+<body>
+
+    <table id="dokterTable" class="display responsive nowrap" width="100%">
+        <thead>
+            <tr>
+                <th></th> <th>NIP Dokter</th>
+                <th>Nama Dokter</th>
+                <th>Jenis Kelamin</th>
+                <th>Kode Spesialis</th>
+                <th>Nama Spesialis</th>
+            </tr>
+        </thead>
+        <tbody>
+            </tbody>
+    </table>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/responsive/2.2.9/js/dataTables.responsive.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            var table = $('#dokterTable').DataTable({
+                "ajax": {
+                            "url": "/admin/rincian/",
+                            "dataSrc": ""
+                        },
+                "columns": [
+                    {
+                        "className":      'details-control',
+                        "orderable":      false,
+                        "data":           null,
+                        "defaultContent": ''
+                    },
+                    { "data": "nip_dokter" },
+                    { "data": "nm_dokter" },
+                    { "data": "jenis_kelamin" },
+                    { "data": "kd_spesialis" },
+                    { "data": "nm_spesialis" }
+                ],
+                "order": [[1, 'asc']] // Urutkan berdasarkan kolom Nama Dokter secara default
+            });
+
+            // Fungsi untuk menampilkan detail baris
+            function format(d) {
+                // `d` adalah objek data untuk baris yang dipilih
+                return '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">'+
+                    '<tr>'+
+                        '<td>Kode Spesialis:</td>'+
+                        '<td>'+d.kd_spesialis+'</td>'+
+                    '</tr>'+
+                    '<tr>'+
+                        '<td>Nama Spesialis:</td>'+
+                        '<td>'+d.nm_spesialis+'</td>'+
+                    '</tr>'+
+                '</table>';
+            }
+
+            // Tambahkan event listener untuk ikon expand
+            $('#dokterTable tbody').on('click', 'td.details-control', function () {
+                var tr = $(this).closest('tr');
+                var row = table.row(tr);
+
+                if (row.child.isShown()) {
+                    // Baris ini sudah terbuka - tutup
+                    row.child.hide();
+                    tr.removeClass('shown');
+                } else {
+                    // Buka baris ini
+                    row.child(format(row.data())).show();
+                    tr.addClass('shown');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

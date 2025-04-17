@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data DPJP</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" rel="stylesheet">
+
+    <style>
+        .card-header {
+            background-color: #198754;
+            color: white;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        table.dataTable, table.dataTable th, table.dataTable td {
+            border: 1px solid #dee2e6 !important;
+        }
+        table.dataTable {
+            border-collapse: collapse !important;
+            width: 100% !important;
+            table-layout: fixed; /* Menjaga ukuran tetap proporsional */
+        }
+        table.dataTable thead th, table.dataTable tfoot th {
+            background-color: rgb(4, 87, 49) !important;
+            color: white !important;
+            text-align: center;
+        }
+        table.dataTable tbody tr:hover {
+            background-color: #f1f1f1;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-body">
+        </div>
+    </div>
+
+    <div class="card mt-3">
+        <div class="card-header">
+            <span>Data DPJP</span>
+            <button class="btn btn-light btn-sm" id="btnKembali">⬅ Kembali ke Menu</button>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table id="dpjbTable" class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>NIP Dokter (DPJP)</th>
+                            <th>Nama Dokter (DPJP)</th>
+                            <th>Nama Spesialis</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @each(data in dpjb)
+                            <tr>
+                                <td>{{ data.nip_dokter }}</td>
+                                <td>{{ data.nm_dokter }}</td>
+                                <td>{{ data.nm_spesialis }}</td>
+                                <td>
+                                   <a href="/admin/dpjbdetail/{{data.nip_dokter}}" class="btn btn-warning">Proses</a>
+                                </td>
+                            </tr>
+                        @endeach
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+
+<script>
+$(document).ready(function () {  
+    if ($.fn.DataTable.isDataTable("#dpjbTable")) {
+        $("#dpjbTable").DataTable().destroy();
+    }
+
+    // Inisialisasi DataTables dengan scroll horizontal untuk menjaga ukuran tetap
+    $('#dpjbTable').DataTable({
+        paging: true,
+        searching: true,
+        scrollX: true,
+        columnDefs: [
+            { orderable: false, targets: 0 },
+            { width: "150px", targets: 2 }
+        ]
+    });
+
+    // Tombol kembali
+    $('#btnKembali').click(function () {
+        window.location.href = '/';
+    });
+});
+</script>
+
+</body>
+</html>

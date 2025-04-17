@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Detail Tindakan Pasien</title>
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+
+  <style>
+    td.dt-control {
+      cursor: pointer;
+      text-align: center;
+    }
+
+    td.dt-control::before {
+      content: '+';
+      font-weight: bold;
+      color: green;
+    }
+
+    tr.shown td.dt-control::before {
+      content: '-';
+      color: red;
+    }
+  </style>
+</head>
+<body>
+
+  <h3>Daftar Tindakan</h3>
+  <table id="example" class="display" style="width:100%">
+    <thead>
+      <tr>
+        <th></th>
+        <th>Tanggal Registrasi</th>
+        <th>No Registrasi</th>
+        <th>Nama Tindakan</th>
+      </tr>
+    </thead>
+  </table>
+
+  <!-- DataTables & jQuery -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+
+  <script>
+    // Format detail baris
+    function format(d) {
+      return (
+        '<dl>' +
+        '<dt>Tanggal Registrasi</dt>' +
+        '<dd>' + d.tgl_registrasi + '</dd>' +
+        '<dt>No Registrasi</dt>' +
+        '<dd>' + d.kd_registrasi + '</dd>' +
+        '<dt>Nama Tindakan</dt>' +
+        '<dd>' + d.nm_tindakan + '</dd>' +
+        '</dl>'
+      );
+    }
+
+    // Inisialisasi DataTables
+    let table = new DataTable('#table2', {
+      ajax: {
+        url: 'data.json', // Ganti dengan endpoint AJAX kamu
+        dataSrc: ''
+      },
+      columns: [
+        {
+          className: 'dt-control',
+          orderable: false,
+          data: null,
+          defaultContent: ''
+        },
+        { data: 'tgl_registrasi' },
+        { data: 'kd_registrasi' },
+        { data: 'nm_tindakan' }
+      ],
+      order: [[1, 'asc']]
+    });
+
+    // Event toggle detail baris
+    $('#table2 tbody').on('click', 'td.dt-control', function (e) {
+      let tr = e.target.closest('tr');
+      let row = table.row(tr);
+
+      if (row.child.isShown()) {
+        row.child.hide();
+        tr.classList.remove('shown');
+      } else {
+        row.child(format(row.data())).show();
+        tr.classList.add('shown');
+      }
+    });
+  </script>
+
+</body>
+</html>

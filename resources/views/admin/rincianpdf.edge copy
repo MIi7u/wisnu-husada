@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jasa Medis RSI</title>
+
+  <!-- Menyertakan CSS Bootstrap -->
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Menyertakan CSS DataTables -->
+  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.1/css/jquery.dataTables.min.css">
+
+  <!-- Menyertakan jQuery dan DataTables JS -->
+  <script
+  src="https://code.jquery.com/jquery-3.7.1.js"
+  integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
+  crossorigin="anonymous"></script>
+  
+  <script src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<!-- SheetJS CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.2/xlsx.full.min.js"></script>
+<!-- jsPDF CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+  <style>
+    /* Styling untuk header tabel berwarna hijau */
+    th {
+      background-color: #076f1f; /* Warna hijau */
+      color: white; /* Warna teks putih */
+    }
+    
+    /* Styling untuk header card berwarna hijau */
+    .card-header {
+      background-color: #09571c; /* Warna hijau untuk card header */
+      color: white; /* Warna teks putih pada card header */
+    }
+
+    /* Agar dropdown Pilih Dokter tidak melebihi ukuran card */
+    .form-control, .form-select {
+      width: 100%; /* Menjamin dropdown memenuhi lebar kontainer */
+    }
+    /* Menyediakan responsive untuk DataTable agar tidak melebihi card */
+    .table-responsive {
+        overflow-x: auto; /* Memungkinkan scroll horizontal jika tabel lebih lebar dari card */
+    }
+     /* Custom style for the Select2 */
+     .select2-container {
+        width: 100% !important;
+    }
+  </style>
+   
+</head>
+<body>
+
+  <div class="container mt-4">
+    <div class="card mb-4">
+     <div class="card-header d-flex justify-content-between align-items-center">
+        <h4>Pasien Rawat Jalan</h4>
+        <!-- Tombol untuk Export ke Excel --> 
+        <button class="btn btn-danger"  onclick="exportPDF()">📄 Export PDF</button>
+        <a href="/" class="btn btn-secondary btn-sm">Kembali</a>
+    </div>
+    <div id="loading" style="display:none;">Loading...</div>
+      <div class="card-body">
+        <!-- Form Filter-->
+        <form id="cekbox" method="POST" action="/admin/rincian"> 
+          {{ csrfField() }}
+          <div class="row">
+            <!-- Input Tanggal Awal -->
+            <div class="col-12 col-md-4">
+              <label class="fw-bold">Tanggal Awal</label>
+              <input type="date" id="startDate" name="startDate" class="form-control" value="{{startDate }}">
+            </div>
+            <!-- Input Tanggal Akhir -->
+            <div class="col-12 col-md-4">
+              <label class="fw-bold">Tanggal Akhir</label>
+              <input type="date" id="endDate" name="endDate" class="form-control" value="{{endDate}}">
+            </div>
+
+            <!-- Pilih Dokter -->
+            <div class="col-12 col-md-4">
+              <label class="fw-bold">Pilih Dokter</label>
+              <select class="form-select select2" id="nipDokter" name="nip_dokter">
+                <option value="">Pilih Dokter</option>
+                @each(data in dpjbdetail)
+                    <option value="{{ data.nip_dokter }}" {{ nip_dokter === data.nip_dokter ? 'selected' : '' }}>
+                        {{ data.nip_dokter }} - {{ data.nm_dokter }} - {{ data.nm_spesialis }}
+                    </option>
+                @endeach
+              </select>              
+            </div>
+          </div>
+          <!-- Tombol Filter -->
+          <div class="text-center mt-3">
+            <button type="submit" class="btn btn-primary w-100 w-md-auto">🔍 Filter Data</button>
+          </div>   
+   </form>
+   </div>
+</div>
+
+<div  class="card mb-4">
+      <div class="card-header">
+        <h4>Data Pasien Rawat Jalan {{nm_dokter}}</h4>
+      </div>
+      <div class="card-body">
+        <!-- DataTable 1 -->
+        <table id="table1" class="display table table-bordered mt-4">
+          <thead>
+            <tr>
+              <th>Nama Pasien</th>
+              <th>Nama Tindakan</th>
+              <th>Tarif Tindakan</th>
+              <th>Qty Tindakan</th>
+              <th>Jumlah  Tagihan</th>
+            </tr>
+          </thead>
+          <tbody>
+            @each(data in rincian)
+            <tr>
+                <td>{{ data.nm_pasien }}</td>
+                <td>{{ data.nm_tindakan }}</td>             
+                <td>{{ data.tarif_tindakan }}</td>     
+                <td>{{ data.qty_tindakan}}</td>        
+                <td>{{ data.total_tindakan}}</td>             
+            </tr>
+        @endeach                         
+          </tbody>
+        </table>
+      </div>
+    </div>
+    
+
+    <!-- Card untuk DataTable 2 -->
+    <div class="card mb-4">
+      <div class="card-header">
+        <h4>Data Pasien Rawat Inap</h4>
+      </div>
+      <div class="card-body">
+        <div class="table-responsive">
+        <table id="table2" class="display table table-bordered">
+          <thead>
+            <tr>
+                <th>NO</th>
+                <th>Nama Pasien</th>
+                <th>No RM</th>
+                <th>Qty Visit</th>
+                <th>Tagihan Visit Rp.</th>
+                <th>Qty Konsul</th>
+                <th>Tagihan Konsul Rp.</th>
+                <th>Tagihan Tindakan Rp.</th>
+                <th>Tagihan Sewa Alat Rp.</th>
+                <th>Total Jumlah Diterima Rp.</th>
+            </tr>
+          </thead>
+          <tbody>
+            @each(data in prj )
+            <tr>
+            <td>{{data.no}}</td>
+            <td>{{ data.nm_pasien}}</td>
+            <td>{{ data.no_rm}}</td>
+            <td>{{ data.qty_visit }}</td>
+            <td>{{ data.tagihan_visit }}</td>
+            <td>{{ data.qty_konsul }}</td>
+            <td>{{ data.tagihan_konsul }}</td>
+            <td>{{ data.tagihan_tindakan }}</td>
+            <td>{{ data.total_sewa_alat }}</td>
+            <td class="jumlah">{{ data.total_semua}}</td>                        
+        </tr>
+        @endeach
+          </tbody>
+
+          <tfoot>
+      
+        </tfoot>
+        </table>
+        </div>
+      </div>
+    </div>
+<!-- Card untuk Menampilkan Total -->
+  <div class="card mt-4">
+    <div class="card-header bg-success text-white">
+      <h4>Total Perhitungan</h4>
+    </div>
+    <div class="card-body">
+      <div id="totals" class="list-group">
+        <div class="list-group-item d-flex justify-content-between">
+          <span>Total Rawat Jalan</span>
+          <span id="totalRawatJalan"></span>
+
+        </div>
+        <div class="list-group-item d-flex justify-content-between">
+          <span>Total Rawat Inap</span>
+          <span id="totalRawatInap">0</span>
+        </div>
+        <div class="list-group-item d-flex justify-content-between">
+          <span>Total Sewa Alat</span>
+          <span id="totalSewaAlat">0</span>
+        </div>
+        <div class="list-group-item d-flex justify-content-between">
+          <span>Total Semua</span>
+          <span id="totalKeseluruhan">0</span>
+        </div>
+        <div class="list-group-item d-flex justify-content-between">
+          <span>PPN 21</span>
+          <span id="ppn21">0</span>
+        </div>
+        <div class="list-group-item d-flex justify-content-between font-weight-bold text-primary">
+          <span>Yang Diterima</span>
+          <span id="yangDiterima">0</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<script src="logo.js" defer></script>
+
+<script>
+$(document).ready(function() {
+   
+        $('#nipDokter').select2({
+            placeholder: "Pilih Dokter", // Placeholder saat dropdown belum dipilih
+            allowClear: true, // Tambahkan tombol "Hapus pilihan"
+            width: "100%" // Pastikan dropdown menyesuaikan lebar
+        });
+   
+    var table1 = $('#table1').DataTable({
+        "pageLength": 5
+    });
+
+    var table2 = $('#table2').DataTable({
+      "paging": true,  // Pagination aktif
+    "searching": true, // Pencarian aktif
+    "order": [[0, 'asc']], // Urutkan berdasarkan kolom pertama
+    "columnDefs": [
+        {
+            "targets": 0, // Menentukan kolom pertama untuk nomor urut
+            "orderable": false, // Menonaktifkan pengurutan pada kolom ini
+            "render": function(data, type, row, meta) {
+                return meta.row + 1 + meta.settings._iDisplayStart; // Menambahkan nomor urut
+            }
+        }
+    ]
+});
+
+    function hitungTotalRawatJalan() {
+        let total = 0;
+        table1.rows({ search: 'applied' }).data().each(function(row) {
+            let jumlahTagihan = row[4]; // Kolom ke-5
+            if (typeof jumlahTagihan === "string") {
+                jumlahTagihan = jumlahTagihan.trim();
+            }
+            let nilai = parseFloat(jumlahTagihan.replace(/[^0-9,-]/g, '').replace(',', '.')) || 0;
+             // Jika angka memiliki dua nol desimal (390000.00) tapi terbaca 100x lebih besar, bagi 100
+        if (nilai > 1000000) {  
+            nilai = nilai / 100;  
+        }
+            total += nilai;
+        });
+        $('#totalRawatJalan').text(formatRupiah(total));
+        return total;
+    }
+
+    function hitungTotalRawatInap() {
+        let total = 0;
+        table2.rows({ search: 'applied' }).data().each(function(row) {
+            let jumlahTagihan = row[9]; // Kolom ke-10
+            if (typeof jumlahTagihan === "string") {
+                jumlahTagihan = jumlahTagihan.trim();
+            }
+            let nilai = parseFloat(jumlahTagihan.replace(/[^0-9,-]/g, '').replace(',', '.')) || 0;
+             // Jika angka memiliki dua nol desimal (390000.00) tapi terbaca 100x lebih besar, bagi 100
+        if (nilai > 1000000) {  
+            nilai = nilai / 100;  
+        }
+            total += nilai;
+        });
+        $('#totalRawatInap').text(formatRupiah(total));
+        return total;
+    }
+
+    function hitungTotalSewaAlat() {
+        let total = 0;
+        table2.rows({ search: 'applied' }).data().each(function(row) {
+            let jumlahTagihan = row[8]; // Kolom ke-9
+            if (typeof jumlahTagihan === "string") {
+                jumlahTagihan = jumlahTagihan.trim();
+            }
+            let nilai = parseFloat(jumlahTagihan.replace(/[^0-9,-]/g, '').replace(',', '.')) || 0;
+             // Jika angka memiliki dua nol desimal (390000.00) tapi terbaca 100x lebih besar, bagi 100
+        if (nilai > 1000000) {  
+            nilai = nilai / 100;  
+        }
+            total += nilai;
+        });
+        $('#totalSewaAlat').text(formatRupiah(total));
+        return total;
+    }
+
+    function hitungTotalKeseluruhan() {
+        let totalRawatJalan = hitungTotalRawatJalan();
+        let totalRawatInap = hitungTotalRawatInap();
+        let totalSewaAlat = hitungTotalSewaAlat();
+        
+        let totalKeseluruhan = totalRawatJalan + totalRawatInap + totalSewaAlat;
+        $('#totalKeseluruhan').text(formatRupiah(totalKeseluruhan));
+
+        // Simpan total ke variabel global agar bisa digunakan di hitungPPN
+        Keseluruhan = totalKeseluruhan;
+
+        hitungPPN(); // Panggil setelah total diperbarui
+        hitungYangDiterima(); // Hitung Yang Diterima setelah PPN dihitung
+        return totalKeseluruhan;
+    }
+
+    var Keseluruhan = 0; // Variabel global untuk menyimpan total
+
+    function hitungPPN() {
+        let ppn = Keseluruhan * 0.5 * 0.05;
+        $('#ppn21').text(formatRupiah(ppn));
+         // Simpan PPN ke variabel global agar bisa digunakan di hitungYangDiterima
+        PPN = ppn;
+        hitungYangDiterima()
+    }
+    
+function hitungYangDiterima() {
+    let yangDiterima = Keseluruhan - PPN;
+    $('#yangDiterima').text(formatRupiah(yangDiterima));
+}
+
+    function formatRupiah(angka) {
+        return 'Rp ' + angka.toLocaleString('id-ID', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+    }
+
+    // Pastikan DataTables selesai sebelum menghitung
+    setTimeout(function() {
+        hitungTotalKeseluruhan();
+    }, 1500);
+
+    // Hitung ulang saat tabel diperbarui, tapi tetap mempertahankan pagination
+    $('#table1, #table2').on('draw.dt', function() {
+        hitungTotalKeseluruhan();
+       
+    });
+});
+
+async function exportPDF() {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF('p', 'pt', 'a4');
+    const pageWidth = doc.internal.pageSize.getWidth();
+  
+    const img = new Image();
+    img.src = logoBase64; // ← ini penting!
+    
+    img.onload = async function () {
+      doc.addImage(img, 'PNG', 40, 10, 50, 50);
+      doc.setFontSize(14);
+      doc.text('Rumah Sakit Islam Purwokerto', 100, 25);
+      doc.setFontSize(8);
+      doc.text('Jalan H. Masyhuri No. 39, Kotak Pos 144 Purwokerto', 100, 35);
+      doc.text('Email: rsislam.purwokerto@gmail.com', 100, 45);
+      doc.text('Phone: +62 858-7503-5300', 100, 55);
+      doc.setFontSize(10);
+      doc.text('RINCIAN JASA MEDIS PASIEN BPJS', 200, 75);
+      doc.line(40, 100, pageWidth - 40, 100); // garis pemisah
+  
+     // Ambil semua instance DataTables
+    const table1 = $('#table1').DataTable();
+    const table2 = $('#table2').DataTable();
+
+    // Simpan page length awal
+    const len1 = table1.page.len();
+    const len2 = table2.page.len();
+
+    // Sembunyikan kontrol (pagination, search, info)
+    $('.dataTables_length,.dataTables_filter, .dataTables_paginate,.dataTables_info').hide();
+
+    // Tampilkan semua data
+    table1.page.len(-1).draw();
+    table2.page.len(-1).draw();
+  
+       // Tunggu render selesai
+    await new Promise(resolve => setTimeout(resolve, 500));
+
+    // Ambil elemen DOM tabel
+    const el1 = document.querySelector('#table1_wrapper');
+    const el2 = document.querySelector('#table2_wrapper');
+
+    // Render tabel 1
+    await html2canvas(el1).then(canvas => {
+      const imgData = canvas.toDataURL('image/png');
+      const imgProps = doc.getImageProperties(imgData);
+      const pdfWidth = doc.internal.pageSize.getWidth();
+      const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+
+      doc.addImage(imgData, 'PNG', 40, 110, pdfWidth - 80, pdfHeight);
+    });
+
+    // Render tabel 2 di halaman baru
+    doc.addPage();
+    await html2canvas(el2).then(canvas => {
+      const imgData = canvas.toDataURL('image/png');
+      const imgProps = doc.getImageProperties(imgData);
+      const pdfWidth = doc.internal.pageSize.getWidth();
+      const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+
+      doc.addImage(imgData, 'PNG', 40, 40, pdfWidth - 80, pdfHeight);
+    });
+
+    // Simpan PDF
+    doc.save('DataLengkap.pdf');
+
+    // Tampilkan kembali elemen semula & pagination
+   $('.dataTables_length,.dataTables_filter, .dataTables_paginate,.dataTables_info').show();
+    table1.page.len(len1).draw();
+    table2.page.len(len2).draw();
+  };
+
+  img.onerror = function () {
+    alert("Gagal memuat logo. Pastikan file logo.png tersedia dan dapat diakses.");
+  };
+}
+
+ 
+
+
+
+
+
+</script>
+
+
+</body>
+</html>

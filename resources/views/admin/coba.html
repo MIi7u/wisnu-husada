@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contoh Dua DataTables dalam Card</title>
+
+  <!-- Menyertakan CSS Bootstrap -->
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Menyertakan CSS DataTables -->
+  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.1/css/jquery.dataTables.min.css">
+
+  <!-- Menyertakan jQuery dan DataTables JS -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+  <style>
+    /* Styling untuk header tabel berwarna hijau */
+    th {
+      background-color: #076f1f; /* Warna hijau */
+      color: white; /* Warna teks putih */
+    }
+
+    /* Styling untuk header card berwarna hijau */
+    .card-header {
+      background-color: #09571c; /* Warna hijau untuk card header */
+      color: white; /* Warna teks putih pada card header */
+    }
+
+    /* Agar dropdown Pilih Dokter tidak melebihi ukuran card */
+    .form-control, .form-select {
+      width: 100%; /* Menjamin dropdown memenuhi lebar kontainer */
+    }
+
+    /* Menyediakan responsive untuk DataTable agar tidak melebihi card */
+    .table-responsive {
+        overflow-x: auto; /* Memungkinkan scroll horizontal jika tabel lebih lebar dari card */
+    }
+
+    /* Custom style for the Select2 */
+    .select2-container {
+        width: 100% !important;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container mt-4">
+    <!-- Card untuk Form Filter dan DataTable 1 -->
+    <div class="card mb-4">
+      <div class="card-header">
+        <h4>Pasien Rawat Jalan</h4>
+      </div>
+      <div class="card-body">
+        <!-- Form Filter-->
+        <form id="cekbox" method="POST" action="/admin/dpjbdetailrincian"> 
+          {{ csrfField() }}
+          <div class="row">
+            <!-- Input Tanggal Awal -->
+            <div class="col-12 col-md-4">
+              <label class="fw-bold">Tanggal Awal</label>
+              <input type="date" id="startDate" name="startDate" class="form-control" value="{{tanggal_awal }}">
+            </div>
+            <!-- Input Tanggal Akhir -->
+            <div class="col-12 col-md-4">
+              <label class="fw-bold">Tanggal Akhir</label>
+              <input type="date" id="endDate" name="endDate" class="form-control" value="{{tanggal_akhir }}">
+            </div>
+
+            <!-- Pilih Dokter -->
+            <div class="col-12 col-md-4">
+              <label class="fw-bold">Pilih Dokter</label>
+              <select class="form-select" id="nipDokter" name="nip_dokter">
+                  <option value="">Pilih Dokter</option>
+                  @foreach(data in dpjbdetail)
+                      <option value="{{data.nip_dokter }}"  {{ nip_dokter === data.nip_dokter ? 'selected' : '' }}>
+                          {{ data.nip_dokter }} - {{ data.nm_dokter }}-{{ data.nm_spesialis }}
+                      </option>
+                  @endforeach
+              </select>                  
+            </div>
+          </div>
+          <!-- Tombol Filter -->
+          <div class="text-center mt-3">
+            <button type="submit" class="btn btn-success w-100 w-md-auto">🔍 Filter Data</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+   
+    
+    <!-- DataTable 1 -->
+    <div class="card">
+      <div class="card-header">
+        <h4>Data Pasien Rawat Jalan</h4>
+      </div>
+      <div class="card-body">
+        <table id="table1" class="display table table-bordered mt-4">
+          <thead>
+            <tr>
+              <th>Nama Pasien</th>
+              <th>Nama Tindakan</th>
+              <th>Tarif Tindakan</th>
+              <th>Qty Tindakan</th>
+              <th>Jumlah Tagihan</th>
+            </tr>
+          </thead>
+          <tbody>
+            @each(data in prj)
+            <tr>
+              <td>{{ data.nm_pasien }}</td>
+              <td>{{ data.nm_tindakan }}</td>
+              <td>{{ data.biaya_tindakan }}</td>
+              <td>{{ data.qty_tindakan }}</td>
+              <td>{{ data.qty }}</td>
+            </tr>
+            @endeach
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    $(document).ready(function() {
+      $('#nipDokter').select2({
+        placeholder: "Pilih Dokter",
+        allowClear: true
+      });
+
+      // Initialize DataTable
+      $('#table1').DataTable();
+    });
+  </script>
+</body>
+</html>

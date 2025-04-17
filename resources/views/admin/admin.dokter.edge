@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dokter RSI</title>
+
+  
+  <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+  <script src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.2/xlsx.full.min.js"></script>
+ // <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  //<script src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
+  //<script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
+  //<script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.print.min.js"></script>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.1/css/jquery.dataTables.min.css">   
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" >
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  
+  <style>
+    #table2 td.dt-control {
+      background: url('https://www.datatables.net/examples/resources/details_open.png') no-repeat center center;
+      cursor: pointer;
+    }
+    #table2 tr.shown td.dt-control {
+      background: url('https://www.datatables.net/examples/resources/details_close.png') no-repeat center center;
+    }
+
+  body {
+  background-color:rgb(169, 126, 104); /* Warna pastel lembut, bisa diganti sesuai selera */
+  } 
+    /* Styling untuk header tabel berwarna hijau */
+    th {
+      background-color: #076f1f; /* Warna hijau */
+      color: white; /* Warna teks putih */
+    }
+    
+    /* Styling untuk header card berwarna hijau */
+    .card-header {
+      background: linear-gradient(to bottom, #8bc34a, #357905);
+      /*background-color: #09571c;  Warna hijau untuk card header */
+      color: white; /* Warna teks putih pada card header */
+    }
+
+    /* Agar dropdown Pilih Dokter tidak melebihi ukuran card */
+    .form-control, .form-select {
+      width: 100%; /* Menjamin dropdown memenuhi lebar kontainer */
+    }
+    /* Menyediakan responsive untuk DataTable agar tidak melebihi card */
+    .table-responsive {
+        overflow-x: auto; /* Memungkinkan scroll horizontal jika tabel lebih lebar dari card */
+    }
+     /* Custom style for the Select2 */
+     .select2-container {
+        width: 100% !important;
+    }
+  </style>
+   
+</head>
+<body>
+
+  <div class="container mt-4">
+    <!-- Card -->
+    <div  class="card mb-4 shadow" style="">
+      <div class="card-header">
+        <h5 class="mb-0">Data Dokter</h5>
+      </div>
+      <div class="card-body">
+       <div class="table-responsive">
+        <table id="dokterTable" class="table table-striped table-bordered dt-responsive nowrap" width="100%">
+          <thead>
+            <tr>
+              <th></th>
+              <th>NIP Dokter</th>
+              <th>Nama Dokter</th>
+              <th>Jenis Kelamin</th>
+              <th>Kode Spesialis</th>
+              <th>Nama Spesialis</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+        </div>
+      </div>
+  </div>
+  </div>
+
+ 
+  <!-- DataTables JS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
+
+  <script>
+    $(document).ready(function () {
+      const table = $('#dokterTable').DataTable({
+        processing: true,
+        responsive: true,
+        ajax: '/dpjbdetailrincian/datadokter', // ganti endpoint sesuai kebutuhan
+        columns: [
+          {
+            className: 'details-control',
+            orderable: false,
+            data: null,
+            defaultContent: '<i class="fas fa-plus-circle text-success"></i>',
+          },
+          { data: 'nip' },
+          { data: 'nama_dokter' },
+          { data: 'jk' },
+          { data: 'kd_spesialis' },
+          { data: 'nm_spesialis' }
+        ],
+        order: [[1, 'asc']],
+        dom: 'Bfrtip',
+        buttons: ['excel', 'pdf', 'print']
+      });
+
+      // Expandable row detail
+      $('#dokterTable tbody').on('click', 'td.details-control', function () {
+        const tr = $(this).closest('tr');
+        const row = table.row(tr);
+
+        if (row.child.isShown()) {
+          row.child.hide();
+          tr.removeClass('shown');
+        } else {
+          const data = row.data();
+          row.child(formatDetail(data)).show();
+          tr.addClass('shown');
+        }
+      });
+
+      function formatDetail(d) {
+        return `
+          <table class="table table-sm table-bordered mt-2">
+            <tr><th>NIP</th><td>${d.nip}</td></tr>
+            <tr><th>Nama</th><td>${d.nama_dokter}</td></tr>
+            <tr><th>Jenis Kelamin</th><td>${d.jk}</td></tr>
+            <tr><th>Spesialis</th><td>${d.kd_spesialis} - ${d.nm_spesialis}</td></tr>
+          </table>
+        `;
+      }
+    });
+  </script>
+</body>
+</html>

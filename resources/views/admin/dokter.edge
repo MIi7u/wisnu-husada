@@ -1,139 +1,182 @@
 <!DOCTYPE html>
-<html lang="id">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Data Dokter</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dokter RSI</title>
+
+  
+  <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+  <script src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.2/xlsx.full.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
+  <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
+  <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.print.min.js"></script>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.1/css/jquery.dataTables.min.css">   
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" >
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.1/css/buttons.dataTables.min.css">
+
+  
+<style>
+     td.details-control {
+      background: url('https://www.datatables.net/examples/resources/details_open.png') no-repeat center center;
+      cursor: pointer;
+    }
+     tr.shown td.details-control {
+      background: url('https://www.datatables.net/examples/resources/details_close.png') no-repeat center center;
+    }
+
+  body {
+  background-color:rgb(227, 205, 194); /* Warna pastel lembut, bisa diganti sesuai selera */
+  } 
+    /* Styling untuk header tabel berwarna hijau */
+    th {
+       background: linear-gradient(to bottom,rgb(240, 208, 163),rgb(153, 97, 13)); /* Warna hijau */
+      color: white; /* Warna teks putih */
+    }
+    
+    /* Styling untuk header card berwarna hijau */
+    .card-header {
+      background: linear-gradient(to bottom,rgb(135, 199, 231),rgb(5, 19, 121));
+      color: white; /* Warna teks putih pada card header */
+    }
+
+    /* Agar dropdown Pilih Dokter tidak melebihi ukuran card */
+    .form-control, .form-select {
+      width: 100%; /* Menjamin dropdown memenuhi lebar kontainer */
+    }
+    /* Menyediakan responsive untuk DataTable agar tidak melebihi card */
+    .table-responsive {
+        overflow-x: auto; /* Memungkinkan scroll horizontal jika tabel lebih lebar dari card */
+    }
+     /* Custom style for the Select2 */
+     .select2-container {
+        width: 100% !important;
+    }
+</style>
+   
 </head>
 <body>
+
     <div class="container mt-4">
-        <h2 class="mb-4">Manajemen Dokter</h2>
-    
-        <!-- Tombol Kembali ke Menu Utama -->
-        <button class="btn btn-secondary mb-3" id="btnKembali">Kembali ke Menu Utama</button>
-    
-        <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#modalDokter">Tambah Dokter</button>
-        
-        <div class="card p-3">
-            <table id="dokterTable" class="table table-striped">
-                <thead>
-                    <tr>
-                        <th>NIP</th>
-                        <th>Nama</th>
-                        <th>Jenis Kelamin</th>
-                        <th>Spesialis</th>
-                        <th>Aksi</th>
-                    </tr>
-                </thead>
-                <tbody>
-             @each(data in dokter)
-                    <tr>
-                        <td>{{ data.nip_dokter }}</td>
-                        <td>{{ data.nm_dokter }}</td>
-                        <td>{{ data.jenis_kelamin }}</td>
-                        <td>{{ data.nm_spesialis }}</td>
-                        <td>
-                            <button class="btn btn-warning btn-edit" 
-                                data-id="{{ dokter.nip_dokter }}" 
-                                data-nama="{{ dokter.nm_dokter }}" 
-                                data-jenis="{{ dokter.jenis_kelamin }}" 
-                                data-spesialis="{{ dokter.kd_spesialis }}">
-                                Edit
-                            </button>
-                            <button class="btn btn-danger btn-delete" data-id="{{ dokter.nip_dokter }}">
-                                Hapus
-                            </button>
-                        </td>
-                    </tr>
-                @endeach
-
-
-                </tbody>
-            </table>
-        </div>
+    <!-- Card -->
+    <div  class="card mb-4 shadow w-100" >
+      <div class="card-header">
+        <h5 class="mb-0">Data Dokter RSI </h5>
+      </div>
+      <div class="card-body">
+       <div class="table-responsive">
+        <table id="dokterTable" class="display responsive nowrap" >
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Kode Dokter</th>
+                    <th>Nama Dokter</th>
+                    <th>Jenis Kelamin</th>
+                    <th>Kode Spesialis</th>
+                    <th>Nama Spesialis</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
     </div>
-    
-    <script>
-        document.getElementById('btnKembali').addEventListener('click', function () {
-            window.location.href = '/'; // Menuju route baru
-        });
-    </script>
-    
-    <!-- MODAL FORM -->
-    <div class="modal fade" id="modalDokter" tabindex="-1" aria-labelledby="modalDokterLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header bg-primary text-white">
-                    <h5 class="modal-title" id="modalDokterLabel">Tambah Dokter</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form id="formDokter">
-                        <input type="hidden" id="nip_dokter_old">
-                        <div class="mb-3">
-                            <label for="nip_dokter" class="form-label">NIP Dokter</label>
-                            <input type="text" class="form-control" id="nip_dokter" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="nm_dokter" class="form-label">Nama Dokter</label>
-                            <input type="text" class="form-control" id="nm_dokter" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="jenis_kelamin" class="form-label">Jenis Kelamin</label>
-                            <select class="form-control" id="jenis_kelamin" required>
-                                <option value="L">Laki-laki</option>
-                                <option value="P">Perempuan</option>
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label for="kd_specialis" class="form-label">Spesialis</label>
-                            <input type="text" class="form-control" id="kd_specialis" required>
-                        </div>
-                        <button type="submit" class="btn btn-success">Simpan</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
+     </div>
+      </div>
+  </div>
+  
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+    
+    <!-- Export buttons -->
+    <script src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.print.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
 
     <script>
-        $(document).ready(function () {
-            $('#dokterTable').DataTable();
-
-            // Tombol Kembali ke Menu Utama
-            $('#btnKembali').click(function () {
-                window.location.href = '/'; // Ganti dengan URL menu utama yang sesuai
+        $(document).ready(function() {
+            var table = $('#dokterTable').DataTable({
+                responsive: true,
+                ajax: {
+                    url: "/admin/dokter/data",
+                    dataSrc: "data"
+                },
+                columns: [
+                    {
+                        className: 'details-control',
+                        orderable: true,
+                        data: null,
+                        defaultContent: ''
+                    },
+                    { data: "nip_dokter" },
+                    { data: "nm_dokter" },
+                    { data: "jenis_kelamin" },
+                    { data: "kd_spesialis" },
+                    { data: "nm_spesialis" }
+                ],
+                order: [[1, 'asc']],
+                dom: '<"row mb-2"' +
+                    '<"col-sm-4"l>' +                 // Show entries (kiri)
+                    '<"col-sm-4 text-center"B>' +     // Tombol export (tengah)
+                    '<"col-sm-4"f>' +                 // Search box (kanan)
+                    '>' +
+                    '<"row"<"col-sm-12"tr>>' +           // Tabel
+                    '<"row mt-2"' +
+                    '<"col-sm-5"i>' +                 // Info
+                    '<"col-sm-7"p>' +                 // Pagination
+                    '>',
+                buttons: [
+                    { extend: 'excelHtml5', title: 'Data_Dokter_DPJP' },
+                    { extend: 'pdfHtml5', title: 'Data_Dokter_DPJP' },
+                    { extend: 'print', title: 'Data Dokter DPJP' }
+                ],
+                language: {
+                    url: "//cdn.datatables.net/plug-ins/1.13.6/i18n/id.json"
+                }
             });
 
-            // Pastikan modal muncul saat tombol "Tambah Dokter" ditekan
-            $('#btnTambah').click(function () {
-                $('#modalDokter').modal('show');
-            });
+           function format(data) {
+                console.log("DATA DETAIL:", data);
 
-            // Submit Form Tambah/Update Dokter
-            $('#formDokter').submit(function (e) {
-                e.preventDefault();
-                let nip_dokter = $('#nip_dokter').val();
-                let nip_dokter_old = $('#nip_dokter_old').val();
-                let nm_dokter = $('#nm_dokter').val();
-                let jenis_kelamin = $('#jenis_kelamin').val();
-                let kd_specialis = $('#kd_specialis').val();
-                let url = nip_dokter_old ? '/update' : '/add';
+                var kdSpesialis = data.kd_spesialis || '-';
+                var nmSpesialis = data.nm_spesialis || '-';
 
-                $.post(url, { nip_dokter, nm_dokter, jenis_kelamin, kd_specialis }, function (res) {
-                    if (res.success) {
-                        $('#modalDokter').modal('hide');
-                        location.reload();
-                    }
-                });
-            });
+                return (
+                    '<table cellpadding="5" cellspacing="0" border="1" style="padding-left:50px; border-collapse: collapse; margin-top: 10px;">' +
+                        '<tbody>' +
+                            '<tr>' +
+                                '<td style="font-weight: bold; width: 150px;">Kode Spesialis:</td>' +
+                                '<td>' + kdSpesialis + '</td>' +
+                            '</tr>' +
+                            '<tr>' +
+                                '<td style="font-weight: bold;">Nama Spesialis:</td>' +
+                                '<td>' + nmSpesialis + '</td>' +
+                            '</tr>' +
+                        '</tbody>' +
+                    '</table>'
+                );
+            }
+
+            // Toggle expand/collapse detail baris
+            $('#dokterTable tbody').on('click', 'td.details-control', function () {
+                var tr = $(this).closest('tr');
+                var row = table.row(tr);
+
+                if (row.child.isShown()) {
+                    row.child.hide();
+                    tr.removeClass('shown');
+                } else {
+                    row.child(format(row.data())).show();
+                    tr.addClass('shown');
+                }
+            }); 
         });
     </script>
 </body>

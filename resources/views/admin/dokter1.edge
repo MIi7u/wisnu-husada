@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Dokter</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-4">
+        <h2 class="mb-4">Manajemen Dokter</h2>
+    
+        <!-- Tombol Kembali ke Menu Utama -->
+        <button class="btn btn-secondary mb-3" id="btnKembali">Kembali ke Menu Utama</button>
+    
+        <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#modalDokter">Tambah Dokter</button>
+        
+        <div class="card p-3">
+            <table id="dokterTable" class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>NIP</th>
+                        <th>Nama</th>
+                        <th>Jenis Kelamin</th>
+                        <th>Spesialis</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+             @each(data in dokter)
+                    <tr>
+                        <td>{{ data.nip_dokter }}</td>
+                        <td>{{ data.nm_dokter }}</td>
+                        <td>{{ data.jenis_kelamin }}</td>
+                        <td>{{ data.nm_spesialis }}</td>
+                        <td>
+                            <button class="btn btn-warning btn-edit" 
+                                data-id="{{ dokter.nip_dokter }}" 
+                                data-nama="{{ dokter.nm_dokter }}" 
+                                data-jenis="{{ dokter.jenis_kelamin }}" 
+                                data-spesialis="{{ dokter.kd_spesialis }}">
+                                Edit
+                            </button>
+                            <button class="btn btn-danger btn-delete" data-id="{{ dokter.nip_dokter }}">
+                                Hapus
+                            </button>
+                        </td>
+                    </tr>
+                @endeach
+
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <script>
+        document.getElementById('btnKembali').addEventListener('click', function () {
+            window.location.href = '/'; // Menuju route baru
+        });
+    </script>
+    
+    <!-- MODAL FORM -->
+    <div class="modal fade" id="modalDokter" tabindex="-1" aria-labelledby="modalDokterLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title" id="modalDokterLabel">Tambah Dokter</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="formDokter">
+                        <input type="hidden" id="nip_dokter_old">
+                        <div class="mb-3">
+                            <label for="nip_dokter" class="form-label">NIP Dokter</label>
+                            <input type="text" class="form-control" id="nip_dokter" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="nm_dokter" class="form-label">Nama Dokter</label>
+                            <input type="text" class="form-control" id="nm_dokter" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="jenis_kelamin" class="form-label">Jenis Kelamin</label>
+                            <select class="form-control" id="jenis_kelamin" required>
+                                <option value="L">Laki-laki</option>
+                                <option value="P">Perempuan</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="kd_specialis" class="form-label">Spesialis</label>
+                            <input type="text" class="form-control" id="kd_specialis" required>
+                        </div>
+                        <button type="submit" class="btn btn-success">Simpan</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $('#dokterTable').DataTable();
+
+            // Tombol Kembali ke Menu Utama
+            $('#btnKembali').click(function () {
+                window.location.href = '/'; // Ganti dengan URL menu utama yang sesuai
+            });
+
+            // Pastikan modal muncul saat tombol "Tambah Dokter" ditekan
+            $('#btnTambah').click(function () {
+                $('#modalDokter').modal('show');
+            });
+
+            // Submit Form Tambah/Update Dokter
+            $('#formDokter').submit(function (e) {
+                e.preventDefault();
+                let nip_dokter = $('#nip_dokter').val();
+                let nip_dokter_old = $('#nip_dokter_old').val();
+                let nm_dokter = $('#nm_dokter').val();
+                let jenis_kelamin = $('#jenis_kelamin').val();
+                let kd_specialis = $('#kd_specialis').val();
+                let url = nip_dokter_old ? '/update' : '/add';
+
+                $.post(url, { nip_dokter, nm_dokter, jenis_kelamin, kd_specialis }, function (res) {
+                    if (res.success) {
+                        $('#modalDokter').modal('hide');
+                        location.reload();
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

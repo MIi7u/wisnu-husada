@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Expandable DataTables</title>
+  <!-- DataTables CSS -->
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+  <style>
+    td.details-control {
+      background: url('https://www.datatables.net/examples/resources/details_open.png') no-repeat center center;
+      cursor: pointer;
+    }
+    tr.shown td.details-control {
+      background: url('https://www.datatables.net/examples/resources/details_close.png') no-repeat center center;
+    }
+  </style>
+</head>
+<body>
+  <h3>Data Pasien</h3>
+  <table id="example" class="display" style="width:100%">
+    <thead>
+      <tr>
+        <th></th>
+        <th>Nama Pasien</th>
+        <th>Tanggal Registrasi</th>
+        <th>Nama Tindakan</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="details-control"></td>
+        <td>ADINDA PERTIWI</td>
+        <td>08 Januari 2025</td>
+        <td>USG KANDUNGAN</td>
+      </tr>
+      <tr>
+        <td class="details-control"></td>
+        <td>JOKO SANTOSO</td>
+        <td>10 Januari 2025</td>
+        <td>JASA PEMERIKSAAN</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- JQuery -->
+  <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+  <!-- DataTables JS -->
+  <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+
+  <script>
+    $(document).ready(function () {
+      var table = $('#example').DataTable();
+
+      // Format detail row
+      function format(rowData) {
+        return `
+          <table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">
+            <tr>
+              <td>Kode Registrasi:</td>
+              <td>20250108560196</td>
+            </tr>
+            <tr>
+              <td>Jenis Pembayaran:</td>
+              <td>BPJS</td>
+            </tr>
+            <tr>
+              <td>Dokter:</td>
+              <td>dr. Budi</td>
+            </tr>
+          </table>`;
+      }
+
+      // Klik untuk toggle
+      $('#example tbody').on('click', 'td.details-control', function () {
+        var tr = $(this).closest('tr');
+        var row = table.row(tr);
+
+        if (row.child.isShown()) {
+          row.child.hide();
+          tr.removeClass('shown');
+        } else {
+          row.child(format(row.data())).show();
+          tr.addClass('shown');
+        }
+      });
+    });
+  </script>
+</body>
+</html>

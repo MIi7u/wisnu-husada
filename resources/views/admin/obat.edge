@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Data Obat RSI</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+</head>
+<body>
+<div class="container mt-4">
+  <div class="card shadow-sm">
+    <div class="card-header bg-primary text-white">
+      <h5 class="mb-0">Data Obat RSI</h5>
+    </div>
+    <div class="card-body">
+      <button class="btn btn-success mb-3" id="btnTambah">+ Tambah Obat</button>
+      <div class="table-responsive">
+        <table id="obatTable" class="table table-bordered table-hover">
+          <thead class="thead-light">
+            <tr>
+              <th>Kode</th>
+              <th>Nama</th>
+              <th>Satuan</th>
+              <th>Golongan</th>
+              <th>Tgl Kadaluwarsa</th>
+              <th>Keterangan 1</th>
+              <th>Keterangan 2</th>
+              <th>Aksi</th>
+            </tr>
+          </thead>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Form -->
+<div class="modal fade" id="modalObat" tabindex="-1">
+  <div class="modal-dialog">
+    <form id="formObat">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Form Obat</h5>
+          <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+        </div>
+        <div class="modal-body">
+          <input type="hidden" name="id">
+          <div class="form-group">
+            <label>Kode Item</label>
+            <input type="text" name="kd_item" class="form-control" required>
+          </div>
+          <div class="form-group">
+            <label>Nama Item</label>
+            <input type="text" name="nm_item" class="form-control" required>
+          </div>
+          <div class="form-group">
+            <label>Satuan</label>
+            <select name="satuan" class="form-control" required>
+              <option value="">-- Pilih --</option>
+              <option value="1">Tablet</option>
+              <option value="2">Kapsul</option>
+              <option value="3">Biji</option>
+              <option value="4">Botol</option>
+              <option value="5">Ampul</option>
+              <option value="6">Kaplet</option>
+              <option value="7">Buah</option>
+              <option value="8">Sachet</option>
+              <option value="9">Box</option>
+              <option value="10">Batang</option>
+            </select>
+          </div>
+            <label>Golongan</label>
+            <select name="golongan" class="form-control" required>
+                <option value="">-- Pilih --</option>
+                <option value="1">Obat Bebas</option>
+                <option value="2">Obat Bebas Terbatas</option>
+                <option value="3">Obat Keras</option>
+              </select>
+              
+          </div>
+          <div class="form-group">
+            <label>Tgl Kadaluwarsa</label>
+            <input type="date" name="tgl_kadal" class="form-control">
+          </div>
+          <div class="form-group">
+            <label>Keterangan 1</label>
+            <input type="text" name="ket1" class="form-control">
+          </div>
+          <div class="form-group">
+            <label>Keterangan 2</label>
+            <input type="text" name="ket2" class="form-control">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-success">Simpan</button>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Scripts -->
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script>
+let modal = $('#modalObat');
+let table = $('#obatTable').DataTable({
+  ajax: '/admin/obat/data',
+  columns: [ 
+    { data: 'kd_item' },
+    { data: 'nm_item' },
+    { data: 'satuan' },
+    { data: 'golongan' },
+    { data: 'tgl_kadal' },
+    { data: 'ket1' },
+    { data: 'ket2' },
+    {
+      data: null,
+      render: function(data) {
+        return `
+          <button class="btn btn-sm btn-warning btn-edit" data-id="${data.id}">Edit</button>
+          <button class="btn btn-sm btn-danger btn-hapus" data-id="${data.id}">Hapus</button>
+        `
+      }
+    }
+  ]
+});
+
+// Tambah
+$('#btnTambah').click(() => {
+  $('#formObat')[0].reset();
+  $('[name="id"]').val('');
+  modal.modal('show');
+});
+
+// Submit Form
+$('#formObat').on('submit', function(e) {
+  e.preventDefault();
+  let formData = $(this).serialize();
+  $.post('/admin/obat/simpan', formData, function() {
+    modal.modal('hide');
+    table.ajax.reload();
+  });
+});
+
+// Edit
+$('#obatTable').on('click', '.btn-edit', function() {
+  let id = $(this).data('id');
+  $.get(`/admin/obat/${id}`, function(data) {
+    for (let key in data) {
+      $(`[name="${key}"]`).val(data[key]);
+    }
+    modal.modal('show');
+  });
+});
+
+// Hapus
+$('#obatTable').on('click', '.btn-hapus', function() {
+  if (confirm('Yakin ingin menghapus data ini?')) {
+    let id = $(this).data('id');
+    $.ajax({
+      url: `/admin/obat/${id}`,
+      type: 'DELETE',
+      success: () => table.ajax.reload()
+    });
+  }
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Rekap Tindakan Pasien</title>
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+  <style>
+    td.details-control {
+      background: url('https://cdn.datatables.net/plug-ins/1.13.6/features/expand.png') no-repeat center center;
+      cursor: pointer;
+    }
+    tr.shown td.details-control {
+      background: url('https://cdn.datatables.net/plug-ins/1.13.6/features/collapse.png') no-repeat center center;
+    }
+  </style>
+</head>
+<body>
+  <h2>Rekap Tindakan Pasien</h2>
+  <table id="rekapTable" class="display" style="width:100%">
+    <thead>
+      <tr>
+        <th></th>
+        <th>No</th>
+        <th>Nama Pasien</th>
+        <th>No RM</th>
+        <th>Qty Visit</th>
+        <th>Tagihan Visit</th>
+        <th>Qty Konsul</th>
+        <th>Tagihan Konsul</th>
+        <th>Tarif BPJS</th>
+        <th>Sewa Alat</th>
+        <th>Total Diterima</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Data akan dimasukkan via JavaScript -->
+    </tbody>
+  </table>
+
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+  <script>
+    const sampleData = [
+      {
+        no: 1,
+        nama_pasien: "TUMINAH",
+        no_rm: "127375",
+        qty_visit: 0,
+        tagihan_visit: 0,
+        qty_konsul: 3,
+        tagihan_konsul: 150000,
+        tarif_bpjs: 3381400,
+        tagihan_sewa_alat: 0,
+        total: 676280,
+        detail: [
+          { tgl: "20/01/2025", kd: "2007", tindakan: "KONSULTASI SPESIALIS KELAS 3" },
+          { tgl: "20/03/2025", kd: "2007", tindakan: "KONSULTASI SPESIALIS KELAS 3" },
+          { tgl: "27/03/2025", kd: "2007", tindakan: "KONSULTASI SPESIALIS KELAS 3" }
+        ]
+      }
+    ];
+
+    function formatDetail(d) {
+      let html = `<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">
+        <tr><th>Tanggal</th><th>KD_TINDAKAN</th><th>Nama Tindakan</th></tr>`;
+      d.detail.forEach(row => {
+        html += `<tr>
+          <td>${row.tgl}</td>
+          <td>${row.kd}</td>
+          <td>${row.tindakan}</td>
+        </tr>`;
+      });
+      html += `</table>`;
+      return html;
+    }
+
+    $(document).ready(function () {
+      const table = $('#rekapTable').DataTable({
+        data: sampleData,
+        columns: [
+          {
+            className: 'details-control',
+            orderable: false,
+            data: null,
+            defaultContent: ''
+          },
+          { data: 'no' },
+          { data: 'nama_pasien' },
+          { data: 'no_rm' },
+          { data: 'qty_visit' },
+          { data: 'tagihan_visit' },
+          { data: 'qty_konsul' },
+          { data: 'tagihan_konsul' },
+          { data: 'tarif_bpjs' },
+          { data: 'tagihan_sewa_alat' },
+          { data: 'total' }
+        ],
+        order: [[1, 'asc']]
+      });
+
+      // Expand row
+      $('#rekapTable tbody').on('click', 'td.details-control', function () {
+        var tr = $(this).closest('tr');
+        var row = table.row(tr);
+
+        if (row.child.isShown()) {
+          row.child.hide();
+          tr.removeClass('shown');
+        } else {
+          row.child(formatDetail(row.data())).show();
+          tr.addClass('shown');
+        }
+      });
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,67 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: sans-serif;
+}
+
+/* Gaya untuk navbar */
+.navbar {
+  /* Ganti nilai warna sesuai kebutuhan Anda */
+  background: linear-gradient(to bottom, #8bc34a, #469c08);
+  padding: 1rem;
+}
+
+.navbar ul {
+  list-style: none;
+  display: flex;
+  justify-content: flex-start;
+}
+
+.navbar li {
+  margin-right: 2rem;
+}
+
+.navbar a {
+  text-decoration: none;
+  color: #ffffff;
+  font-weight: bold;
+  transition: color 0.3s ease;
+}
+
+.navbar a:hover {
+  color: #c8f7c5; /* Efek hover, boleh diganti */
+}
+
+/* Konten contoh */
+.content {
+  padding: 2rem;
+}
+body {
+  background: url('/images/background1.png') no-repeat center center fixed;
+  background-size: cover;
+}
+
+.navbar {
+  background-color: #28a745 !important;
+}
+
+.navbar-nav .nav-link {
+  color: white !important;
+}
+
+.dropdown-menu {
+  background-color: #218838;
+}
+
+.dropdown-item {
+  color: white !important;
+}
+
+.dropdown-item:hover {
+  background-color: #1e7e34;
+}
+

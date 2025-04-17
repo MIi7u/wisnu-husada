@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detail DPJP </title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        table.dataTable, table.dataTable th, table.dataTable td {
+            border: 1px solid #dee2e6 !important;
+        }
+        table.dataTable {
+            border-collapse: collapse !important;
+        }
+        table.dataTable thead th, table.dataTable tfoot th {
+            background-color:rgb(4, 87, 49) !important;
+            color: white !important;
+            text-align: center;
+        }
+        table.dataTable tbody tr:hover {
+            background-color: #f1f1f1;
+        }
+        table.dataTable tfoot tr:first-child td {
+            height: 20px;
+            border: none !important;
+            background-color: transparent !important;
+        }
+        .filter-card {
+        border: 1px solid #dee2e6;
+        border-radius: 10px;
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .filter-card .card-header {
+        background-color: rgb(4, 87, 49);
+        color: white;
+        font-weight: bold;
+        text-align: center;
+    }
+
+    .filter-options {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+        gap: 10px;
+    }
+
+    .filter-options .form-check {
+        background: #f8f9fa;
+        padding: 10px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        transition: all 0.3s ease-in-out;
+    }
+
+    .filter-options .form-check:hover {
+        background:rgb(86, 138, 78);
+        transform: scale(1.02);
+    }
+
+    .filter-options .form-check input {
+        transform: scale(1.2);
+    }
+
+    .filter-options .form-check i {
+        font-size: 18px;
+        color: rgb(4, 87, 49);
+    }
+    </style>
+</head>
+<body>
+
+<div class="container mt-4" id="reportContent">
+    <div class="card"><h5>Detail Data Pasien untuk DPJP: {{ nip_dokter }} </h5>
+        <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
+            <span></span>
+            <div>
+                <button id="exportExcel" class="btn btn-light btn-sm">📥 Export Excel</button>
+                <button id="exportWord" class="btn btn-light btn-sm">📄 Export Word</button>
+                <button id="exportPDF" class="btn btn-light btn-sm">🧾 Export PDF</button>
+            </div>
+        </div>
+        <div class="card-body">
+           <div class="card filter-card mt-3">
+    <div class="card-header">
+        <h5 class="mb-0">🩺 Filter Jenis Pasien</h5>
+    </div>
+    <div class="card-body">
+     <form id="cekbox" method="POST" action="/admin/lenkapdpjbdetail">
+         {{ csrfField() }}
+         <div class="col-md-4">
+                <label>Tanggal Awal</label>
+                <input type="date" id="startDate" name="startDate" class="form-control" value="{{ startDate }}">
+         </div>         
+         <div class="col-md-4"> 
+               <label>Tanggal Akhir</label>
+               <input type="date" id="endDate" name="endDate" class="form-control" value="{{ endDate }}">
+        </div>
+        <div class="filter-options">
+            <div class="form-check">
+                <input class="form-check-input filter-jenis-pasien" type="checkbox" name="jenis_pasien[]" id="rawatJalan" value="1"/>
+                <label class="form-check-label" for="rawatJalan">
+                    <i class="fas fa-user-md"></i> Rawat Jalan
+                </label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input filter-jenis-pasien" type="checkbox" name="jenis_pasien[]" id="rawatInap" value="2"/>
+                <label class="form-check-label" for="rawatInap">
+                      <i class="fas fa-procedures"></i> Rawat Inap
+                </label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input filter-jenis-pasien" type="checkbox"  name="jenis_pasien[]" id="igd" value="3"/>
+                <label class="form-check-label" for="igd">
+                    <i class="fas fa-ambulance"></i> IGD
+                </label>
+            </div>
+        </div>
+        <!-- Spinner loading -->
+        <div id="loadingSpinner" class="spinner-border text-primary d-none" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+        <button type="submit">Kirim</button>
+        </form>
+    </div>
+</div>
+            <table id="patientTable" class="table table-striped">
+                <thead>
+                    <tr>
+                            <th>NO</th>
+                            <th>Nama Pasien</th>
+                            <th>No RM</th>
+                            <th>Qty Visit</th>
+                            <th>Tagihan Visit Rp.</th>
+                            <th>Qty Konsul</th>
+                            <th>Tagihan Konsul Rp.</th>
+                            <th>Tagihan Tindakan Rp.</th>
+                            <th>Tagihan Sewa Alat Rp.</th>
+                            <th>Total Jumlah Diterima Rp.</th>
+                            <th>Qty Asal</th>
+                            
+                    </tr>
+                </thead>
+                <tbody>
+                    
+                  
+                    @each(data in lenkapdpjbdetail)
+                        <tr>
+                           <td>{{ index + 1 }}</td> <!-- NO (akan diisi DataTables) -->
+                            <td>{{ data.nm_pasien || 'Tidak ada data' }}</td>
+                            <td>{{ data.no_rm || 'Tidak Ada'}}</td>
+                            <td>{{ data.qty_visit }}</td>
+                            <td>{{ data.tagihan_visit }}</td>
+                            <td>{{ data.qty_konsul }}</td>
+                            <td>{{ data.total_tagihan_konsul }}</td>
+                            <td>{{ data.total_tagihan_umum}}</td>
+                            <td>{{ data.tagihan_sewa_alat }}</td>
+                            <td class="jumlah">{{ data.total_jumlah_diterima }}</td>
+                            <td>{{ data.qty_asal }}</td>
+                          
+                        </tr>
+                    @endeach
+                </tbody>
+                <tfoot>
+                    <tr><td colspan="8" style="height:20px; border: none;"></td></tr>
+                    <tr><td colspan="3">Total Rawat Jalan</td><td colspan="2" id="totalRawatJalan"></td></tr>
+                    <tr><td colspan="3">Total Rawat Inap</td><td colspan="2" id="totalRawatInap"></td></tr>
+                    <tr><td colspan="3">Total Sewa Alat</td><td colspan="2" id="totalSewaAlat"></td></tr>
+                    <tr><td colspan="3">Total Semua</td><td colspan="2" id="totalSemua"></td></tr>
+                    <tr><td colspan="3">PPn 21</td><td colspan="2" id="ppn21"></td></tr>
+                    <tr><td colspan="3" class="fw-bold text-primary">Yang Diterima</td><td colspan="2" class="fw-bold text-primary" id="yangDiterima"></td></tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- JS Library -->
+<script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+
+<!-- Export Library -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+<script>
+$(document).ready(function () {
+   if ($("#patientTable").length) {$("#patientTable").DataTable();}
+
+    
+
+    // Export Excel
+    $("#exportExcel").click(function () {
+        let wb = XLSX.utils.table_to_book(document.getElementById("patientTable"), { sheet: "Data DPJP" });
+        XLSX.writeFile(wb, "Data_DPJP.xlsx");
+    });
+
+    // Export Word
+    $("#exportWord").click(function () {
+        let table = document.getElementById("patientTable");
+        let html = `
+            <html>
+            <head>
+                <meta charset='UTF-8'>
+                <style>
+                    table, th, td { border: 1px solid black; border-collapse: collapse; padding: 5px; }
+                    th { background-color: rgb(4,87,49); color: white; }
+                </style>
+            </head>
+            <body>
+                <h2>Detail Data DPJP</h2>
+                ${table.outerHTML}
+            </body>
+            </html>
+        `;
+
+        let blob = new Blob(["\ufeff", html], { type: "application/msword" });
+        saveAs(blob, "Data_DPJP.doc");
+    });
+
+    // Export PDF
+    $("#exportPDF").click(function () {
+        let reportContent = document.querySelector("#reportContent");
+        if (!reportContent) {
+            console.error("Elemen #reportContent tidak ditemukan! Periksa HTML.");
+            return;
+        }
+
+        html2canvas(reportContent).then(canvas => {
+            const { jsPDF } = window.jspdf;
+            const pdf = new jsPDF('l', 'mm', 'a4');
+            let imgData = canvas.toDataURL("image/png");
+            let pdfWidth = pdf.internal.pageSize.getWidth();
+            let pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+
+            pdf.addImage(imgData, 'PNG', 0, 10, pdfWidth, pdfHeight);
+            pdf.save("Data_DPJP.pdf");
+        });
+    });
+    $('#filterForm').submit(function (e) {
+    let startDate = new Date($('#startDate').val());
+    let endDate = new Date($('#endDate').val());
+
+    if ($('#startDate').val() && $('#endDate').val() && startDate > endDate) {
+        e.preventDefault(); // Stop submit
+        $('#alertTanggal').removeClass('d-none'); // Tampilkan alert
+    } else {
+        $('#alertTanggal').addClass('d-none');
+        $('#loadingSpinner').removeClass('d-none'); // Tampilkan spinner
+    }
+});
+});
+</script>
+
+
+</body>
+</html>
