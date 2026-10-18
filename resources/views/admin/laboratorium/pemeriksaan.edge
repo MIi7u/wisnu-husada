@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <meta name="csrf-token" content="{{ csrfToken }}">
+  <title>SIMRS-Wisnuhusada | Proses Pemeriksaan Lab</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+@include("admin/laboratorium/_navbar")
+
+<div class="container-fluid py-4">
+  <div class="card shadow-sm mb-4">
+    <div class="card-header bg-white d-flex justify-content-between align-items-center">
+      <h5 class="mb-0"><i class="fas fa-microscope me-2"></i>Antrian Sampel &amp; Proses Pemeriksaan</h5>
+      <button class="btn btn-outline-secondary btn-sm" id="btnRefresh"><i class="fas fa-rotate me-1"></i>Refresh</button>
+    </div>
+    <div class="card-body p-0">
+      <table class="table table-hover mb-0 align-middle">
+        <thead class="table-light">
+          <tr><th>No. Permintaan</th><th>Pasien</th><th>Jenis Pemeriksaan</th><th>Status</th><th>Aksi</th></tr>
+        </thead>
+        <tbody id="antrianBody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+{{-- Modal Input Hasil --}}
+<div class="modal fade" id="modalHasil" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <form class="modal-content" id="formHasil">
+      <div class="modal-header">
+        <h5 class="modal-title"><i class="fas fa-vial me-2"></i>Input Hasil Pemeriksaan <span id="hasilNoReq" class="badge bg-secondary"></span></h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <table class="table table-sm">
+          <thead><tr><th>Parameter</th><th>Hasil</th><th>Satuan</th><th>Nilai Normal</th><th>Kritis?</th></tr></thead>
+          <tbody id="itemHasilBody"></tbody>
+        </table>
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-success"><i class="fas fa-save me-1"></i>Simpan Hasil (Kirim ke Validasi)</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+{{-- Modal Validasi --}}
+<div class="modal fade" id="modalValidasi" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"><i class="fas fa-user-doctor me-2"></i>Validasi Hasil (Spesialis Patologi Klinik)</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <table class="table table-sm">
+          <thead><tr><th>Parameter</th><th>Hasil</th><th>Satuan</th><th>Nilai Normal</th><th>Flag</th></tr></thead>
+          <tbody id="validasiBody"></tbody>
+        </table>
+      </div>
+      <div class="modal-footer">
+        <a href="#" class="btn btn-outline-primary" id="btnCetakValidasi" target="_blank"><i class="fas fa-print me-1"></i>Cetak PDF</a>
+        <button class="btn btn-danger" id="btnTolak"><i class="fas fa-xmark me-1"></i>Tolak / Revisi</button>
+        <button class="btn btn-success" id="btnSetujui"><i class="fas fa-check me-1"></i>Setujui &amp; Rilis</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="/scripts/laboratorium_pemeriksaan.js"></script>
+</body>
+</html>
