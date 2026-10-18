@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>SIMRS-Wisnuhusada | Laboratorium</title>
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark navbar-custom">
+  <div class="container-fluid">
+    <a class="navbar-link active-menu" href="/">
+      <i class="fas fa-house me-2"></i>
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+            data-bs-target="#navbarNav" aria-controls="navbarNav"
+            aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav me-auto">
+
+        <!-- Dropdown Rajal -->
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="rajalMenu"
+             role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Rawat Jalan
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="rajalMenu">
+            <li><a class="dropdown-item" href="#">Tarif di Ruangan</a></li>
+            <li><a class="dropdown-item" href="#">Rawat IGD</a></li>
+            <li><a class="dropdown-item" href="#">Obat/BHP di ruang (IGD)</a></li>
+          </ul>
+        </li>
+
+        <!-- Dropdown Laboratorium -->
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle active-menu" href="#" id="labMenu"
+             role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Laboratorium
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="labMenu">
+            <li><a class="dropdown-item" href="#">Permintaan Laboratorium</a></li>
+            <li><a class="dropdown-item" href="#">Pasien Laboratorium</a></li>
+            <li><a class="dropdown-item" href="#">Hasil Pemeriksaan Lab</a></li>
+          </ul>
+        </li>
+
+        <!-- Dropdown Ranap -->
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="ranapMenu"
+             role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Rawat Inap
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="ranapMenu">
+            <li><a class="dropdown-item" href="#">Bangsal</a></li>
+            <li><a class="dropdown-item" href="#">Tarif Ruang Ranap</a></li>
+            <li><a class="dropdown-item" href="#">Surveilans Ranap</a></li>
+          </ul>
+        </li>
+
+        <!-- Dropdown Master Laboratorium -->
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="masterLabMenu"
+             role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Master Laboratorium
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="masterLabMenu">
+            <li><a class="dropdown-item" href="#">Tarif di Ruangan Lab</a></li>
+            <li><a class="dropdown-item" href="#">Master Data Jenis Pemeriksaan Lab</a></li>
+            <li><a class="dropdown-item" href="#">Master Data Pemeriksaan Lab</a></li>
+            <li><a class="dropdown-item" href="#">Obat/BHP diruang (Lab)</a></li>
+          </ul>
+        </li>
+
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<div class="container-fluid py-4">
+  <div class="row">
+    <div class="col-12">
+      <div class="card shadow-sm">
+        <div class="card-header bg-white">
+          <h5 class="mb-0">
+            <i class="fas fa-flask me-2"></i>Layanan Laboratorium
+          </h5>
+        </div>
+        <div class="card-body">
+          <p class="text-muted">
+            Halaman menu Laboratorium. Silakan pilih salah satu menu di atas.
+          </p>
+          <div class="row g-3">
+            <div class="col-md-3">
+              <div class="border rounded p-3 text-center">
+                <i class="fas fa-clipboard-list fa-2x mb-2 text-primary"></i>
+                <div>Permintaan Lab</div>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="border rounded p-3 text-center">
+                <i class="fas fa-vial fa-2x mb-2 text-success"></i>
+                <div>Pasien Lab</div>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="border rounded p-3 text-center">
+                <i class="fas fa-file-medical fa-2x mb-2 text-warning"></i>
+                <div>Hasil Pemeriksaan</div>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="border rounded p-3 text-center">
+                <i class="fas fa-money-bill-wave fa-2x mb-2 text-danger"></i>
+                <div>Tarif Lab</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
