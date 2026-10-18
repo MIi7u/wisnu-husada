@@ -1,24 +1,37 @@
 'use strict'
 
+/*
+|--------------------------------------------------------------------------
+| Routes — SIMRS Wisnuhusada
+|--------------------------------------------------------------------------
+| Kelompok rute:
+|   1. Menu navigasi unit (halaman statis)
+|   2. Master data CRUD (Pegawai, Pabrik, Satuan, dst.)
+*/
+
 const Route = use('Route')
 
-// 🏠 Halaman utama
-Route.on('/').render('admin.menu')
-Route.get('/admin/menu_pendaftaran',({ view }) => {return view.render('admin.menu_pendaftaran')})
-Route.get('/admin/menu_keperawatan',({ view }) => {return view.render('admin.menu_keperawatan')})
-Route.get('/admin/menu_farmasi',({ view }) => {return view.render('admin.menu_farmasi')})
-Route.get('/admin/menu_radiologi',({ view }) => {return view.render('admin.menu_radiologi')})
-Route.get('/admin/menu_laboratorium',({ view }) => {return view.render('admin.menu_laboratorium')})
-Route.get('/admin/menu_kasir',({ view }) => {return view.render('admin.menu_kasir')})
-Route.get('/admin/menu_dokter',({ view }) => {return view.render('admin.menu_kasir')})
+// ===================== 1. Menu Navigasi Unit =====================
+Route.group(() => {
+    Route.on('/', 'DashboardController.index')
+    Route.on('/menu_pendaftaran', 'MenuUnitController.pendaftaran')
+    Route.on('/menu_keperawatan', 'MenuUnitController.keperawatan')
+    Route.on('/menu_farmasi', 'MenuUnitController.farmasi')
+    Route.on('/menu_radiologi', 'MenuUnitController.radiologi')
+    Route.on('/menu_laboratorium', 'MenuUnitController.laboratorium')
+    Route.on('/menu_kasir', 'MenuUnitController.kasir')
+    Route.on('/menu_dokter', 'MenuUnitController.dokter')
+}).prefix('admin').namespace('Admin')
 
-
-Route.get('/admin/pegawai', 'PegawaiController.index')
-Route.get('/admin/pegawai/data', 'PegawaiController.data')
-Route.post('/admin/pegawai/store', 'PegawaiController.store')
-Route.post('/admin/pegawai/update/:id', 'PegawaiController.update')
-Route.delete('/admin/pegawai/delete/:id', 'PegawaiController.delete')
-Route.get('/admin/pegawai/search','PegawaiController.search')
+// ===================== 2. Master Data =====================
+Route.group(() => {
+    Route.get('/', 'PegawaiController.index')
+    Route.get('/data', 'PegawaiController.data')
+    Route.get('/search', 'PegawaiController.search')
+    Route.post('/store', 'PegawaiController.store')
+    Route.post('/update/:id', 'PegawaiController.update')
+    Route.delete('/delete/:id', 'PegawaiController.delete')
+}).prefix('admin/pegawai')
 
 Route.group(() => {
     Route.get('/', 'PabrikController.index')
@@ -74,6 +87,31 @@ Route.group(() => {
     Route.post('/billing_kelompok/update/:id', 'BillingKelompokController.update')
     Route.delete('/billing_kelompok/delete/:id', 'BillingKelompokController.delete')
 }).prefix('admin')
+// ===================== 3. Modul Laboratorium =====================
+Route.group(() => {
+    // Halaman utama modul lab (terintegrasi dgn navbar menu_laboratorium)
+    Route.get('/', 'LaboratoriumController.index')
+
+    // Master Data Jenis Pemeriksaan Lab
+    Route.get('/jenis/data', 'LaboratoriumController.jenisData')
+    Route.get('/jenis/dropdown', 'LaboratoriumController.jenisDropdown')
+    Route.post('/jenis/store', 'LaboratoriumController.jenisStore')
+    Route.post('/jenis/update/:id', 'LaboratoriumController.jenisUpdate')
+    Route.delete('/jenis/delete/:id', 'LaboratoriumController.jenisDelete')
+
+    // Master Data Item Pemeriksaan Lab
+    Route.get('/item/data', 'LaboratoriumController.itemData')
+    Route.post('/item/store', 'LaboratoriumController.itemStore')
+    Route.post('/item/update/:id', 'LaboratoriumController.itemUpdate')
+    Route.delete('/item/delete/:id', 'LaboratoriumController.itemDelete')
+
+    // Tarif Lab per Ruang Layanan
+    Route.get('/tarif/data', 'LaboratoriumController.tarifData')
+    Route.post('/tarif/store', 'LaboratoriumController.tarifStore')
+    Route.post('/tarif/update/:id', 'LaboratoriumController.tarifUpdate')
+    Route.delete('/tarif/delete/:id', 'LaboratoriumController.tarifDelete')
+}).prefix('admin/laboratorium')
+
 // 🔒 Grup admin
 Route.group(() => {
   // ✅ Tampilkan halaman spesialis

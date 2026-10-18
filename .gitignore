@@ -25,3 +25,10 @@ database/*.sqlite
 # VSCode & Webstorm history directories
 .history
 .idea
+
+# Area kerja sementara (file cadangan hasil perapian struktur)
+.backup-refactor/
+scratch/
+
+# Direktori editor
+.nova/
