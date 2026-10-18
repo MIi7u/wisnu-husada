@@ -21,7 +21,7 @@ Route.group(() => {
     Route.on('/menu_laboratorium', 'MenuUnitController.laboratorium')
     Route.on('/menu_kasir', 'MenuUnitController.kasir')
     Route.on('/menu_dokter', 'MenuUnitController.dokter')
-}).prefix('admin').namespace('Http/Admin')
+}).prefix('admin').namespace('Admin')
 
 // ===================== 2. Master Data =====================
 Route.group(() => {
@@ -87,6 +87,31 @@ Route.group(() => {
     Route.post('/billing_kelompok/update/:id', 'BillingKelompokController.update')
     Route.delete('/billing_kelompok/delete/:id', 'BillingKelompokController.delete')
 }).prefix('admin')
+// ===================== 3. Modul Laboratorium =====================
+Route.group(() => {
+    // Halaman utama modul lab (terintegrasi dgn navbar menu_laboratorium)
+    Route.get('/', 'LaboratoriumController.index')
+
+    // Master Data Jenis Pemeriksaan Lab
+    Route.get('/jenis/data', 'LaboratoriumController.jenisData')
+    Route.get('/jenis/dropdown', 'LaboratoriumController.jenisDropdown')
+    Route.post('/jenis/store', 'LaboratoriumController.jenisStore')
+    Route.post('/jenis/update/:id', 'LaboratoriumController.jenisUpdate')
+    Route.delete('/jenis/delete/:id', 'LaboratoriumController.jenisDelete')
+
+    // Master Data Item Pemeriksaan Lab
+    Route.get('/item/data', 'LaboratoriumController.itemData')
+    Route.post('/item/store', 'LaboratoriumController.itemStore')
+    Route.post('/item/update/:id', 'LaboratoriumController.itemUpdate')
+    Route.delete('/item/delete/:id', 'LaboratoriumController.itemDelete')
+
+    // Tarif Lab per Ruang Layanan
+    Route.get('/tarif/data', 'LaboratoriumController.tarifData')
+    Route.post('/tarif/store', 'LaboratoriumController.tarifStore')
+    Route.post('/tarif/update/:id', 'LaboratoriumController.tarifUpdate')
+    Route.delete('/tarif/delete/:id', 'LaboratoriumController.tarifDelete')
+}).prefix('admin/laboratorium')
+
 // 🔒 Grup admin
 Route.group(() => {
   // ✅ Tampilkan halaman spesialis

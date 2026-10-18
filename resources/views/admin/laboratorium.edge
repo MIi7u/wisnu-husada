@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <meta name="csrf-token" content="{{ csrfToken }}">
+  <title>SIMRS-Wisnuhusada | Laboratorium</title>
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+  <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark navbar-custom">
+  <div class="container-fluid">
+    <a class="navbar-link active-menu" href="/"><i class="fas fa-house me-2"></i></a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav me-auto">
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">Rawat Jalan</a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="/admin/menu_laboratorium">Kembali ke Menu Lab</a></li>
+          </ul>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link active-menu" href="/admin/laboratorium"><i class="fas fa-flask me-1"></i>Laboratorium</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/admin/menu_kasir">Kasir</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/admin/ruang_layanan">Master Ruang</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<div class="container mt-4">
+  <div class="card shadow-sm mb-4">
+    <div class="card-header bg-white d-flex justify-content-between align-items-center">
+      <h5 class="mb-0"><i class="fas fa-flask me-2"></i>Modul Laboratorium</h5>
+      <span class="badge bg-secondary">{{ title }}</span>
+    </div>
+    <div class="card-body">
+      <p class="text-muted mb-0">Kelola master data pemeriksaan laboratorium dan tarif yang terintegrasi dengan ruang layanan &amp; billing kasir.</p>
+    </div>
+  </div>
+
+  <ul class="nav nav-tabs" id="labTabs" role="tablist">
+    <li class="nav-item"><button class="nav-link active" data-bs-toggle="tab" data-bs-target="#tab-jenis" type="button">Jenis Pemeriksaan Lab</button></li>
+    <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-item" type="button">Item Pemeriksaan Lab</button></li>
+    <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-tarif" type="button">Tarif Lab per Ruang</button></li>
+  </ul>
+
+  <div class="tab-content pt-3">
+
+    <!-- ============ TAB JENIS ============ -->
+    <div class="tab-pane fade show active" id="tab-jenis">
+      <div class="card">
+        <div class="card-header d-flex justify-content-between">
+          <h6 class="card-title-osx mb-0">Master Data Jenis Pemeriksaan Lab</h6>
+          <button class="btn btn-primary btn-sm" id="btnAddJenis">Tambah Data</button>
+        </div>
+        <div class="card-body">
+          <table id="jenisTable" class="table table-bordered table-hover">
+            <thead>
+              <tr><th width="5%">No</th><th>Kode Jenis</th><th>Nama Pemeriksaan</th><th>Ruang</th><th>Satuan Harga</th><th>Aktif</th><th>Aksi</th></tr>
+            </thead>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ TAB ITEM ============ -->
+    <div class="tab-pane fade" id="tab-item">
+      <div class="card">
+        <div class="card-header d-flex justify-content-between">
+          <h6 class="card-title-osx mb-0">Master Data Item Pemeriksaan Lab</h6>
+          <button class="btn btn-primary btn-sm" id="btnAddItem">Tambah Data</button>
+        </div>
+        <div class="card-body">
+          <table id="itemTable" class="table table-bordered table-hover">
+            <thead>
+              <tr><th width="5%">No</th><th>Kode Item</th><th>Nama Item</th><th>Jenis Pemeriksaan</th><th>Satuan</th><th>Harga</th><th>Urutan</th><th>Aksi</th></tr>
+            </thead>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ TAB TARIF ============ -->
+    <div class="tab-pane fade" id="tab-tarif">
+      <div class="card">
+        <div class="card-header d-flex justify-content-between">
+          <h6 class="card-title-osx mb-0">Tarif Lab per Ruang Layanan</h6>
+          <button class="btn btn-primary btn-sm" id="btnAddTarif">Tambah Data</button>
+        </div>
+        <div class="card-body">
+          <table id="tarifTable" class="table table-bordered table-hover">
+            <thead>
+              <tr><th width="5%">No</th><th>Ruang</th><th>Jenis Pemeriksaan</th><th>Tarif</th><th>Aksi</th></tr>
+            </thead>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ===== MODAL JENIS ===== -->
+<div class="modal fade" id="jenisModal">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <form id="jenisForm">
+        <input type="hidden" id="jenisSaveMethod" value="add">
+        <input type="hidden" id="jenisId">
+        <div class="modal-header">
+          <h5 class="modal-title">Form Jenis Pemeriksaan Lab</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label>Kode Jenis</label>
+              <input type="text" class="form-control" name="kode_jenis" id="kode_jenis" required>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label>Nama Pemeriksaan</label>
+              <input type="text" class="form-control" name="nama_pemeriksaan" id="nama_pemeriksaan" required>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label>Ruang Layanan</label>
+              <select class="form-select" name="kode_ruang" id="kode_ruang">
+                <option value="">-- Pilih Ruang --</option>
+              </select>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label>Satuan Harga</label>
+              <select class="form-select" name="satuan_harga" id="satuan_harga">
+                <option value="Paket">Paket</option>
+                <option value="Item">Item</option>
+              </select>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label>Status</label>
+              <select class="form-select" name="aktif" id="aktif">
+                <option value="true">Aktif</option>
+                <option value="false">Nonaktif</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-primary">Simpan</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- ===== MODAL ITEM ===== -->
+<div class="modal fade" id="itemModal">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <form id="itemForm">
+        <input type="hidden" id="itemSaveMethod" value="add">
+        <input type="hidden" id="itemId">
+        <div class="modal-header">
+          <h5 class="modal-title">Form Item Pemeriksaan Lab</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label>Kode Item</label>
+              <input type="text" class="form-control" name="kode_item" id="kode_item" required>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label>Nama Item</label>
+              <input type="text" class="form-control" name="nama_item" id="nama_item" required>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label>Jenis Pemeriksaan</label>
+              <select class="form-select" name="kode_jenis" id="itemKodeJenis">
+                <option value="">-- Pilih Jenis --</option>
+              </select>
+            </div>
+            <div class="col-md-3 mb-3">
+              <label>Satuan</label>
+              <input type="text" class="form-control" name="satuan" id="satuan" placeholder="mis: %dL, mg/dL">
+            </div>
+            <div class="col-md-3 mb-3">
+              <label>Harga</label>
+              <input type="number" min="0" class="form-control" name="harga" id="harga">
+            </div>
+            <div class="col-md-3 mb-3">
+              <label>Urutan</label>
+              <input type="number" min="0" class="form-control" name="urutan" id="urutan">
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-primary">Simpan</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- ===== MODAL TARIF ===== -->
+<div class="modal fade" id="tarifModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form id="tarifForm">
+        <input type="hidden" id="tarifSaveMethod" value="add">
+        <input type="hidden" id="tarifId">
+        <div class="modal-header">
+          <h5 class="modal-title">Form Tarif Lab</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label>Ruang Layanan</label>
+            <select class="form-select" name="kode_ruang" id="tarifKodeRuang">
+              <option value="">-- Pilih Ruang --</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label>Jenis Pemeriksaan</label>
+            <select class="form-select" name="kode_jenis" id="tarifKodeJenis">
+              <option value="">-- Pilih Jenis --</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label>Tarif (Rp)</label>
+            <input type="number" min="0" class="form-control" name="tarif" id="tarif" required>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-primary">Simpan</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="/scripts/laboratorium.js"></script>
+</body>
+</html>
