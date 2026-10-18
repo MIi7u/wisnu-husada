@@ -47,7 +47,8 @@ const namedMiddleware = {
   Ceklogin: 'App/Middleware/Ceklogin',
   Leveladmin: 'App/Middleware/Leveladmin',
   Levelpedagang: 'App/Middleware/Levelpedagang',
-  Levelsemua: 'App/Middleware/Levelsemua'
+  Levelsemua: 'App/Middleware/Levelsemua',
+  cors: 'Adonis/Middleware/Cors'
 }
 
 /*

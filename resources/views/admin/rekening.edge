@@ -1,0 +1,126 @@
+<meta name="csrf-token" content="{{ csrfToken }}">
+
+<div class="container mt-4">
+
+<div class="card">
+
+<div class="card-header d-flex justify-content-between">
+
+    <div class="window-actions">
+        <span class="btn-close-osx red btnCardClose"></span>
+        <span class="btn-close-osx yellow"></span>
+        <span class="btn-close-osx green"></span>
+    </div>
+
+    <h4 class="card-title-osx">
+        Data Rekening
+    </h4>
+
+    <button class="btn btn-primary"
+            id="btnAdd">
+
+        Tambah Data
+
+    </button>
+
+</div>
+
+<div class="card-body">
+
+<table id="rekeningTable"
+       class="table table-bordered table-hover">
+
+    <thead>
+
+        <tr>
+            <th width="5%">No</th>
+            <th>Kode Rekening</th>
+            <th>Nama Rekening</th>
+            <th width="15%">Aksi</th>
+        </tr>
+
+    </thead>
+
+</table>
+
+</div>
+
+</div>
+
+</div>
+
+<!-- MODAL -->
+
+<div class="modal fade"
+     id="rekeningModal">
+
+<div class="modal-dialog">
+
+<div class="modal-content">
+
+<form id="rekeningForm">
+
+<input type="hidden"
+       id="saveMethod"
+       value="add">
+
+<input type="hidden"
+       id="kode_rek_lama"
+       name="kode_rek_lama">
+
+<div class="modal-header">
+
+    <h5 class="modal-title">
+        Form Rekening
+    </h5>
+
+    <button type="button"
+            class="btn-close"
+            data-bs-dismiss="modal">
+    </button>
+
+</div>
+
+<div class="modal-body">
+
+    <div class="mb-3">
+
+        <label>Kode Rekening</label>
+
+        <input type="text"
+               class="form-control"
+               id="kode_rek"
+               name="kode_rek">
+
+    </div>
+
+    <div class="mb-3">
+
+        <label>Nama Rekening</label>
+
+        <input type="text"
+               class="form-control"
+               id="nama_rek"
+               name="nama_rek">
+
+    </div>
+
+</div>
+
+<div class="modal-footer">
+
+    <button class="btn btn-primary">
+        Simpan
+    </button>
+
+</div>
+
+</form>
+
+</div>
+
+</div>
+
+</div>
+
+<script src="/js/rekening.js"></script>

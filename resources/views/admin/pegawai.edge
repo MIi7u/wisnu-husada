@@ -1,0 +1,435 @@
+<meta name="csrf-token" content="{{ csrfToken }}">
+
+
+<body class="p-3">
+<div class="container">
+  <div class="card shadow">
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <h4 class="mb-0">Data Pegawai</h4>
+      </div>
+     <div class="card-body">
+        <ul class="nav nav-tabs mb-3" id="pegawaiTab">
+            <li class="nav-item">
+                <button class="nav-link active"
+                        data-bs-toggle="tab"
+                        data-bs-target="#tabPegawai">
+                    Data Pegawai
+                </button>
+            </li>
+
+            <li class="nav-item">
+                <button class="nav-link"
+                        data-bs-toggle="tab"
+                        data-bs-target="#tabMapping">
+                    Mapping Ruang
+                </button>
+            </li>
+        </ul>
+
+     <!-- KONTEN TAB -->
+    <div class="tab-content" id="pegawaiTabContent">
+
+       <!-- TAB PEGAWAI -->
+       <div class="tab-pane fade show active" id="tabPegawai">
+        <div class="d-flex justify-content-between mb-3">
+                <h5>Mapping Ruang</h5>
+                <button class="btn btn-primary" id="btnAdd">
+                    + Tambah Pegawai</button>
+            </div>
+         <table id="pegawaiTable" class="table table-bordered table-hover">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>NIK</th>
+                    <th>NIP</th>
+                    <th>Nama Lengkap</th>
+                    <th>JK</th>
+                    <th>Ruang Kerja</th>
+                    <th>No HP</th>
+                    <th>Status</th>
+                    <th>Aksi</th>
+                </tr>
+            </thead>
+         </table>
+       </div>
+       
+     <!-- TAB MAPPING -->
+        <div class="tab-pane fade" id="tabMapping">
+            <div class="d-flex justify-content-between mb-3">
+                <h5>Mapping Ruang</h5>
+                <button class="btn btn-primary" id="btnAddAkses">
+                    + Tambah Mapping
+                </button>
+            </div>
+            <table id="aksesTable" class="table table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>NIP</th>
+                        <th>Nama Pegawai</th>
+                        <th>Link Halaman</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+    </div>
+</div>
+</div> 
+
+<!-- Modal Akses -->
+<div class="modal fade" id="aksesModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <form id="aksesForm" enctype="multipart/form-data">
+                <input type="hidden" id="akses_id" name="akses_id">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        Mapping Ruang
+                    </h5>
+                    <button type="button"
+                            class="btn-close"
+                            data-bs-dismiss="modal">
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label>Pegawai</label>
+                        <select class="form-select"
+                                id="nip_akses"
+                                name="nip">
+                            <option value="">
+                                -- Pilih Pegawai --
+                            </option>
+                            @each(item in pegawai)
+                            <option
+                                value="{{ item.nik }}">
+                                {{ item.nama_lengkap }}
+                            </option>
+                            @endeach
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label>Ruang Layanan</label>
+                        <select class="form-select"
+                                id="kode_ruang"
+                                name="kode_ruang">
+                            <option value="">
+                                -- Pilih Ruang --
+                            </option>
+                            @each(item in ruang)
+                            <option
+                                value="{{ item.kode_ruang }}">
+                                {{ item.nama_ruang }}
+                            </option>
+                            @endeach
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button"
+                            class="btn btn-secondary"
+                            data-bs-dismiss="modal">
+                        Batal
+                    </button>
+                    <button type="submit"
+                            class="btn btn-primary">
+                        Simpan
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+   
+    <!-- Modal Form -->
+        <div class="modal fade" id="pegawaiModal" tabindex="-1">
+          <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+            <form id="pegawaiForm" enctype="multipart/form-data">
+            <input type="hidden" id="saveMethod" name="saveMethod" value="add">
+            <input type="hidden" id="id" name="id">
+                <div class="modal-header">
+                <h5 class="modal-title">Form Pegawai</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                <input type="hidden" id="old_foto" name="old_foto">
+        
+                <div class="row">
+
+                <div class="col-md-6 mb-3">
+                <label>NIK</label>
+                <input type="text"
+                    class="form-control"
+                    name="nik"
+                    id="nik">
+                </div>
+
+                <div class="col-md-6 mb-3">
+                <label>NIP</label>
+                <input type="text"
+                    class="form-control"
+                    name="nip"
+                    id="nip">
+                </div>
+
+                <div class="col-md-6 mb-3">
+                <label>Ruang Kerja</label>
+                    <select class="form-select"
+                            name="ruang_kerja"
+                            id="ruang_kerja">
+                    <option value="">
+                    -- Pilih Ruang --
+                    </option>
+                    @each(item in ruang)
+                    <option value="{{ item.nama_ruang }}">
+                        {{ item.nama_ruang }}
+                    </option>
+                    @endeach
+                    </select>
+                </div>
+
+                <div class="col-md-3 mb-3">
+                <label>Gelar Depan</label>
+                <input type="text"
+                    class="form-control"
+                    name="gelar_depan">
+                </div>
+
+                <div class="col-md-3 mb-3">
+                <label>Gelar Belakang</label>
+                <input type="text"
+                    class="form-control"
+                    name="gelar_belakang">
+                </div>
+
+                <div class="col-md-6 mb-3">
+                <label>Kategori Pegawai</label>
+                <select class="form-select"
+                        name="kategori_pegawai"
+                        id="kategori_pegawai">
+                    <option value="">
+                        -- Pilih Kategori Pegawai --
+                    </option>
+                    <option value="Dokter">
+                        Dokter
+                    </option>
+                    <option value="Perawat">
+                        Perawat
+                    </option>
+                    <option value="Bidan">
+                        Bidan
+                    </option>
+                    <option value="Administrasi">
+                        Administrasi
+                    </option>
+                    <option value="Manajemen">
+                        Manajemen
+                    </option>
+                    <option value="Apoteker">
+                        Apoteker
+                    </option>
+                    <option value="Gizi">
+                        Gizi
+                    </option>
+                    <option value="Lain-Lain">
+                        Lain-Lain
+                    </option>
+                </select>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                <label>SIP</label>
+                <input type="text"
+                    class="form-control"
+                    name="sip">
+                </div>
+
+                <div class="col-md-6 mb-3">
+                <label>Tempat Lahir</label>
+                <input type="text"
+                    class="form-control"
+                    name="tempat_lahir">
+                </div>
+
+                <div class="col-md-6 mb-3">
+                <label>Tanggal Lahir</label>
+                <input type="date"
+                    class="form-control"
+                    name="tanggal_lahir">
+                </div>
+
+                <div class="col-md-6 mb-3">
+                <label>Jenis Kelamin</label>
+                <div class="form-check form-check-inline">
+                <input class="form-check-input"
+                type="radio"
+                name="jenis_kelamin"
+                id="jk_l"
+                value="Laki-laki">
+                <label class="form-check-label" for="jk_l">
+                    Laki-laki
+                </label>
+                </div>
+                <div class="form-check form-check-inline">
+                <input class="form-check-input"
+                type="radio"
+                name="jenis_kelamin"
+                id="jk_p"
+                value="Perempuan">
+                    <label class="form-check-label" for="jk_p">
+                    Perempuan
+                    </label>
+                </div>
+
+                </div>
+
+                <div class="col-md-6 mb-3">
+                <label>Agama</label>    
+                <select class="form-select" name="agama">
+                    <option value="Islam"> Islam </option>
+                    <option value="Katolik">Katolik</option>
+                    <option value="Protestan">Protestan</option>
+                    <option value="Hindu">Hindu</option>
+                    <option value="Budha">Budha</option>
+                </select>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                <label>Pendidikan</label>
+                <input type="text"
+                    class="form-control"
+                    name="pendidikan_terakhir">
+                </div>
+
+                <div class="col-md-6 mb-3">
+                <label>Status Nikah</label>
+
+                <select class="form-select"
+                        name="status_nikah">
+
+                <option value="Belum">
+                Belum
+                </option>
+
+                <option value="Menikah">
+                Menikah
+                </option>
+
+                <option value="Cerai">
+                Cerai
+                </option>
+
+                </select>
+
+                </div>
+
+                <div class="col-md-6 mb-3">
+                <label>Golongan Darah</label>
+
+                <select class="form-select"
+                        name="golongan_darah">
+
+                <option value="A">A</option>
+                <option value="B">B</option>
+                <option value="AB">AB</option>
+                <option value="O">O</option>
+                </select>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                <label>Nomor HP</label>
+                <input type="text"
+                    class="form-control"
+                    name="nomor_hp">
+                </div>
+
+                <div class="col-md-6 mb-3">
+                <label>Email</label>
+                <input type="email"
+                    class="form-control"
+                    name="email">
+                </div>
+
+                <div class="col-md-6 mb-3">
+                <label>NPWP</label>
+                <input type="text"
+                    class="form-control"
+                    name="npwp">
+                </div>
+
+                
+                <div class="col-md-12 mb-3">
+                    <label>Alamat</label>
+                    <textarea class="form-control" name="alamat"></textarea>
+                </div>
+
+                <div class="col-md-3 mb-3">
+                <label>Provinsi</label>
+                <select class="form-select" id="provinsi" name="provinsi">
+                    <option value="">
+                    -- Pilih Provinsi --
+                    </option>
+                </select>
+                </div>
+
+                <div class="col-md-3 mb-3">
+                    <label>Kabupaten</label>
+                    <select class="form-select" id="kabupaten" name="kabupaten">
+                    <option value="">
+                    -- Pilih Kabupaten --
+                    </option>
+                    </select>
+                </div>
+
+                <div class="col-md-3 mb-3">
+                    <label>Kecamatan</label>
+                    <select class="form-select" id="kecamatan" name="kecamatan">
+                        <option value="">
+                        -- Pilih Kecamatan --
+                        </option>
+                    </select>
+                </div>
+
+                <div class="col-md-3 mb-3">
+                    <label>Desa</label>
+                    <select class="form-select" id="desa" name="desa">
+                        <option value="">
+                        -- Pilih Desa --
+                        </option>
+                    </select>
+                </div>
+            </div>
+          <div class="row">
+            <div class="col-md-6 mb-3">
+                <label>Status Keaktifan</label>
+                <select class="form-select"
+                        name="status_keaktifan">
+                    <option value="Aktif">Aktif</option>
+                    <option value="Nonaktif">Nonaktif</option>
+                </select>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label>Pas Foto</label>
+                <input type="file"
+                    class="form-control"
+                    name="pas_foto">
+            </div>
+        </div>  
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                <button type="submit" class="btn btn-primary">Simpan</button>
+            </div>
+        </form>
+        </div>
+    </div>
+</div> 
+
+
+</body>
+
+<script src="/js/wilayah.js"></script>
+<script src="/js/akses.js"></script>
+<script src="/js/pegawai.js"></script>

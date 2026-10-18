@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="csrf-token" content="{{ csrfToken }}">
+  <title>Data Spesialis</title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
+  <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.bootstrap5.min.css">
+
+  <style>
+    th {
+      background: linear-gradient(to bottom, #f0d0a3, #99610d);
+      color: white;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container mt-5">
+  <div class="card shadow-lg">
+    <div class="card-header text-white d-flex justify-content-between align-items-center" 
+         style="background: linear-gradient(to top, #007bff, #00c6ff);">
+      <h4 class="mb-0">Data Spesialis</h4>
+      <button class="btn btn-success" id="btnAdd">Tambah Spesialis</button>
+    </div>
+    <div class="card-body">
+      <table id="spesialisTable" class="table table-bordered table-striped w-100">
+        <thead>
+          <tr>
+            <th>Kode</th>
+            <th>Nama Spesialis</th>
+            <th>Keterangan</th>
+            <th>Aksi</th>
+          </tr>
+        </thead>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Tambah/Edit -->
+<div class="modal fade" id="spesialisModal" tabindex="-1">
+  <div class="modal-dialog">
+    <form id="spesialisForm">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Form Spesialis</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <input type="hidden" id="formType">
+          <input type="hidden" id="spesialisId">
+
+          <div class="mb-3">
+            <label>Kode Spesialis</label>
+            <input type="text" class="form-control" id="kd_spesialis" name="kd_spesialis" required>
+          </div>
+          <div class="mb-3">
+            <label>Nama Spesialis</label>
+            <input type="text" class="form-control" id="nm_spesialis" name="nm_spesialis" required>
+          </div>
+          <div class="mb-3">
+            <label>Keterangan</label>
+            <textarea class="form-control" id="keterangan" name="keterangan"></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary">Simpan</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- JS -->
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.bootstrap5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+
+<script>
+$(document).ready(function(){
+
+  function getCsrfToken() {
+    return document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+  }
+
+  $.ajaxSetup({
+    headers: {
+      'X-CSRF-TOKEN': getCsrfToken()
+    }
+  });
+
+  var table = $('#spesialisTable').DataTable({
+    ajax: { url: "/admin/spesialis/list",
+            dataSrc: "data"
+          },
+    columns: [
+      { data: 'kd_spesialis' },
+      { data: 'nm_spesialis' },
+      { data: 'keterangan' },
+      { 
+        data: null,
+        render: function(data, type, row) {
+          var kode = data.kd_spesialis;
+          return '<button class="btn btn-sm btn-warning btnEdit" data-id="' + kode + '">Edit</button> ' +
+                 '<button class="btn btn-sm btn-danger btnDelete" data-id="' + kode + '">Hapus</button>';
+        }
+      }
+    ],
+    order: [[1, 'asc']],
+    dom: "<'row mb-2'<'col-sm-4'l><'col-sm-4 text-center'B><'col-sm-4'f>>" +
+         "<'row'<'col-sm-12'tr>>" +
+         "<'row mt-2'<'col-sm-5'i><'col-sm-7'p>>",
+    buttons: [
+      { extend: 'excelHtml5', title: 'Data_Spesialis' },
+      { extend: 'pdfHtml5', title: 'Data_Spesialis' }
+    ],
+    language: {
+      url: "//cdn.datatables.net/plug-ins/1.13.6/i18n/id.json"
+    }
+  });
+
+  $('#btnAdd').click(function(){
+    $('#spesialisForm')[0].reset();
+    $('#formType').val('add');
+    $('#kd_spesialis').prop('readonly', false);
+    $('#spesialisModal').modal('show');
+  });
+
+  $('#spesialisTable').on('click', '.btnEdit', function(){
+    var data = table.row($(this).closest('tr')).data();
+    $('#formType').val('edit');
+    $('#spesialisId').val(data.kd_spesialis);
+    $('#kd_spesialis').val(data.kd_spesialis).prop('readonly', true);
+    $('#nm_spesialis').val(data.nm_spesialis);
+    $('#keterangan').val(data.keterangan);
+    $('#spesialisModal').modal('show');
+  });
+
+  $('#spesialisTable').on('click', '.btnDelete', function(){
+    var id = $(this).data('id');
+    if(confirm('Yakin ingin menghapus data ini?')){
+      $.ajax({
+        url: '/admin/spesialis/' + id,
+        type: 'DELETE',
+        success: function(res) {
+          alert(res.message || 'Data berhasil dihapus');
+          table.ajax.reload();
+        },
+        error: function(xhr) {
+          alert('Gagal: ' + (xhr.responseJSON?.message || 'Terjadi kesalahan'));
+        }
+      });
+    }
+  });
+
+  $('#spesialisForm').submit(function(e){
+    e.preventDefault();
+    var type = $('#formType').val();
+    var id = $('#spesialisId').val();
+    var data = {
+      kd_spesialis: $('#kd_spesialis').val(),
+      nm_spesialis: $('#nm_spesialis').val(),
+      keterangan: $('#keterangan').val()
+    };
+
+    if(type == 'add') {
+      $.post('/admin/spesialis', data)
+        .done(function(res) {
+          alert(res.message || 'Data berhasil disimpan');
+          $('#spesialisModal').modal('hide');
+          table.ajax.reload();
+        })
+        .fail(function(xhr) {
+          alert('Simpan gagal: ' + (xhr.responseJSON?.message || 'Periksa data Anda'));
+        });
+    } else {
+      $.post('/admin/spesialis/' + id, {
+        kd_spesialis: data.kd_spesialis,
+        nm_spesialis: data.nm_spesialis,
+        keterangan: data.keterangan,
+        _method: 'PUT'
+      })
+      .done(function(res) {
+        alert(res.message || 'Data berhasil diupdate');
+        $('#spesialisModal').modal('hide');
+        table.ajax.reload();
+      })
+      .fail(function(xhr) {
+        alert('Update gagal: ' + (xhr.responseJSON?.message || 'Periksa data Anda'));
+      });
+    }
+  });
+});
+</script>
+
+</body>
+</html>

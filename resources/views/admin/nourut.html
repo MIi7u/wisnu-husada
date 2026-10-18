@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Menu Pop-up Rumah Sakit</title>
+  <style>
+    /* Reset */
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    nav {
+      background: #333;
+    }
+
+    nav ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+    }
+
+    nav ul li {
+      position: relative;
+    }
+
+    nav a {
+      display: block;
+      padding: 12px 20px;
+      color: white;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    nav li:hover {
+      background: #444;
+    }
+
+    /* Submenu */
+    nav ul ul {
+      display: none;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      background: #444;
+      flex-direction: column;
+      min-width: 180px;
+      z-index: 99;
+    }
+
+    nav ul li:hover > ul {
+      display: block;
+    }
+
+    /* Sub-submenu */
+    nav ul ul ul {
+      left: 100%;
+      top: 0;
+    }
+
+    nav ul ul li {
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <ul>
+    <li><a href="#">Beranda</a></li>
+    <li>
+      <a href="#">Master</a>
+      <ul>
+        <li>
+          <a href="#">Pasien</a>
+          <ul>
+            <li><a href="/admin/pasienBpjs">Pasien BPJS</a></li>
+            <li><a href="/admin/pasienUmum">Pasien Umum</a></li>
+            <li><a href="/admin/pasienAsuransi">Pasien Asuransi</a></li>
+          </ul>
+        </li>
+        <li><a href="/admin/dokter">Dokter</a></li>
+        <li><a href="/admin/spesialis">Spesialis</a></li>
+      </ul>
+    </li>
+    <li>
+      <a href="#">Laporan</a>
+      <ul>
+        <li><a href="/admin/pending">Pending BPJS</a></li>
+        <li><a href="/admin/rincian">Rincian Jasa Medis BPJS</a></li>
+        <li><a href="/admin/nonbpjs">Rincian Jasa Medis NON BPJS</a></li>
+      </ul>
+    </li>
+    <li><a href="#">Kontak</a></li>
+  </ul>
+</nav>
+
+</body>
+</html>

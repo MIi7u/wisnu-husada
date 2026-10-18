@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="csrf-token" content="{{ csrfToken }}">
+  <title>Basecode</title>
+   <!-- CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
+  <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.bootstrap5.min.css">
+
+  <style>
+    body {
+      background: url('/images/bg1.png') no-repeat center center fixed;
+      background-size: cover;
+    }
+    .card-header {
+      background: #0d6efd;
+      color: #fff;
+      font-weight: bold;
+    }
+    .modal-header {
+      background: #198754;
+      color: #fff;
+    }
+    table thead th {
+      background: #0d6efd;
+      color: #fff;
+    }
+    .modal-backdrop.show {
+      background: url('https://images.unsplash.com/photo-1581092918367-1f4b7f3e1f7a') no-repeat center center/cover;
+      opacity: 0.8;
+    }
+  </style>
+</head>
+<body class="p-4">
+
+<div class="container">
+  <div class="card shadow">
+    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+      <h5 class="mb-0">Manajemen Basecode</h5>
+      <button class="btn btn-light btn-sm" id="btnAdd">+ Tambah</button>
+    </div>
+    <div class="card-body">
+      <table id="basecodeTable" class="table table-striped table-bordered">
+        <thead class="table-primary">
+          <tr>
+            <th>Kode</th>
+            <th>Nama</th>
+            <th>Status</th>
+            <th>Modifier (comma)</th>
+            <th>Aksi</th>
+          </tr>
+        </thead>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="basecodeModal" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <form id="basecodeForm">
+        <div class="modal-header bg-primary text-white">
+          <h5 class="modal-title">Basecode</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+
+        <div class="modal-body">
+          <!-- kd_basecode -->
+          <div class="mb-3">
+            <label class="form-label">Kode Basecode</label>
+            <div class="input-group">
+              <span class="input-group-text">Kode</span>
+              <input type="text" class="form-control" id="kd_basecode" name="kd_basecode" required>
+            </div>
+          </div>
+
+          <!-- nm_basecode -->
+          <div class="mb-3">
+            <label class="form-label">Nama Basecode</label>
+            <div class="input-group">
+              <span class="input-group-text">Nama</span>
+              <input type="text" class="form-control" id="nm_basecode" name="nm_basecode" required>
+            </div>
+          </div>
+
+          <!-- status -->
+          <div class="mb-3">
+            <label class="form-label">Status</label>
+            <select class="form-select" id="status" name="status">
+              <option value="Aktif">Aktif</option>
+              <option value="Nonaktif">Nonaktif</option>
+            </select>
+          </div>
+
+          <!-- concat area -->
+          <div class="mb-2">
+            <label class="form-label">Tambah Modifier</label>
+            <div class="input-group">
+              <span class="input-group-text">Pilih</span>
+              <select id="ddModifier" class="form-select">
+                <option value="">-- pilih --</option>
+                @each(m in modifiers)
+                  <option value="{{ m.code }}">{{ m.code }} - {{ m.kelompok_item }}</option>
+                @endeach
+              </select>
+              <button class="btn btn-success" type="button" id="btnAddCode">ADD</button>
+              <button class="btn btn-outline-secondary" type="button" id="btnClearCodes">Clear</button>
+            </div>
+            <div class="form-text">Klik ADD untuk menambahkan kode ke field di bawah (dipisah koma).</div>
+          </div>
+
+          <!-- field code (hasil concatenasi) -->
+          <div class="mb-3">
+            <label class="form-label">Modifier (comma separated)</label>
+            <div class="input-group">
+              <span class="input-group-text">Code</span>
+              <input type="text" class="form-control" id="code" name="code" readonly>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button class="btn btn-primary" type="submit">Simpan</button>
+          <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Tutup</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.8/js/dataTables.bootstrap5.min.js"></script>
+
+<script>
+$(function () {
+  var table = $('#basecodeTable').DataTable({
+    ajax: { url: '/admin/basecode/data', dataSrc: 'data' },
+    columns: [
+      { data: 'kd_basecode' },
+      { data: 'nm_basecode' },
+      { data: 'status' },
+      { data: 'code' },
+      {
+        data: null,
+        render: function (d) {
+          return '<button class="btn btn-warning btn-sm me-1 editBtn" data-id="' + d.kd_basecode + '">Edit</button>' +
+                 '<button class="btn btn-danger btn-sm deleteBtn" data-id="' + d.kd_basecode + '">Hapus</button>';
+        }
+      }
+    ]
+  });
+
+  var modal = new bootstrap.Modal(document.getElementById('basecodeModal'));
+  var editMode = false;
+  var editKey  = null;
+
+  // tombol tambah (open modal kosong)
+  $('#btnAdd').on('click', function(){
+    editMode = false;
+    editKey = null;
+    $('#basecodeForm')[0].reset();
+    $('#kd_basecode').prop('disabled', false);
+    $('#code').val('');
+    modal.show();
+  });
+
+  // klik edit
+  $('#basecodeTable').on('click', '.editBtn', function(){
+    editMode = true;
+    editKey = $(this).data('id');
+    $.get('/admin/basecode/data', function(res){
+      var row = res.data.find(function(r){ return r.kd_basecode === editKey; });
+      if (!row) return;
+      $('#kd_basecode').val(row.kd_basecode).prop('disabled', true);
+      $('#nm_basecode').val(row.nm_basecode);
+      $('#status').val(row.status);
+      $('#code').val(row.code || '');
+      modal.show();
+    });
+  });
+
+  // hapus
+  $('#basecodeTable').on('click', '.deleteBtn', function(){
+    if (!confirm('Hapus data ini?')) return;
+    var key = $(this).data('id');
+    $.ajax({
+      url: '/admin/basecode/delete/' + key,
+      type: 'DELETE',
+      headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+      success: function(){ table.ajax.reload(); }
+    });
+  });
+
+  // tombol ADD untuk concat code
+  $('#btnAddCode').on('click', function(){
+    var selected = $('#ddModifier').val();
+    if (!selected) return;
+    var current = $('#code').val().trim();
+    var list = current ? current.split(',').map(function(s){ return s.trim(); }) : [];
+    // hindari duplikat
+    if (list.indexOf(selected) === -1) { list.push(selected); }
+    $('#code').val(list.join(','));
+  });
+
+  // tombol clear
+  $('#btnClearCodes').on('click', function(){
+    $('#code').val('');
+  });
+
+  // submit form
+  $('#basecodeForm').on('submit', function(e){
+    e.preventDefault();
+    var url = editMode ? '/admin/basecode/update/' + editKey : '/admin/basecode/store';
+    $.ajax({
+      url: url,
+      type: 'POST',
+      data: $(this).serialize(),
+      headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+      success: function(){
+        modal.hide();
+        table.ajax.reload();
+      }
+    });
+  });
+});
+</script>
+</body>
+</html>

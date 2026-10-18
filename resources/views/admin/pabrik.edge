@@ -1,0 +1,110 @@
+<meta name="csrf-token" content="{{ csrfToken }}">
+
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header d-flex justify-content-between">
+            <div class="window-actions">
+                <span class="btn-close-osx red btnCardClose"></span>
+                <span class="btn-close-osx yellow"></span>
+                <span class="btn-close-osx green"></span>
+            </div>
+            <h4 class="card-title-osx">
+                Data Pabrik
+            </h4>
+            <button class="btn btn-primary" id="btnAdd">
+                Tambah Data
+            </button>
+        </div>
+        <div class="card-body">
+            <table id="pabrikTable" class="table table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <th width="5%">No</th>
+                        <th>Kode Pabrik</th>
+                        <th>Nama Pabrik</th>
+                        <th>Kota</th>
+                        <th>No Telp</th>
+                        <th>Keterangan</th>
+                        <th width="15%">Aksi</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+
+<div class="modal fade" id="pabrikModal">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <form id="pabrikForm">
+                <input type="hidden"
+                       id="saveMethod"
+                       value="add">
+                <input type="hidden"
+                       id="kode_lama">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        Form Pabrik
+                    </h5>
+                    <button type="button"
+                            class="btn-close"
+                            data-bs-dismiss="modal">
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label>Kode Pabrik</label>
+                            <input type="text"
+                                   class="form-control"
+                                   id="kode_pabrik"
+                                   name="kode_pabrik">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label>Nama Pabrik</label>
+                            <input type="text"
+                                   class="form-control"
+                                   id="nama_pabrik"
+                                   name="nama_pabrik">
+                        </div>
+                        <div class="col-md-12 mb-3">
+                            <label>Alamat</label>
+                            <textarea class="form-control"
+                                      id="alamat"
+                                      name="alamat"></textarea>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label>No Telp</label>
+                            <input type="text"
+                                   class="form-control"
+                                   id="no_telp"
+                                   name="no_telp">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label>Kota</label>
+                            <input type="text"
+                                   class="form-control"
+                                   id="kota"
+                                   name="kota">
+                        </div>
+                        <div class="col-md-12 mb-3">
+                            <label>Keterangan</label>
+                            <textarea class="form-control"
+                                      id="keterangan"
+                                      name="keterangan"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary">
+                        Simpan
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="/js/pabrik.js"></script>

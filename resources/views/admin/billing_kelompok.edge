@@ -1,0 +1,157 @@
+<meta name="csrf-token" content="{{ csrfToken }}">
+
+<div class="container mt-4">
+    <div class="card">
+
+        <div class="card-header d-flex justify-content-between align-items-center">
+
+            <div class="window-actions">
+                <span class="btn-close-osx red btnCardClose"></span>
+                <span class="btn-close-osx yellow"></span>
+                <span class="btn-close-osx green"></span>
+            </div>
+
+            <h4 class="card-title-osx">
+                Data Billing Kelompok
+            </h4>
+
+            <button class="btn btn-primary" id="btnAdd">
+                + Tambah Data
+            </button>
+
+        </div>
+
+        <div class="card-body">
+
+            <table id="billingTable"
+                   class="table table-bordered table-hover">
+
+                <thead>
+                <tr>
+                    <th width="5%">No</th>
+                    <th>Nama Tarif Kelompok</th>
+                    <th>Kategori</th>
+                    <th width="15%">Aksi</th>
+                </tr>
+                </thead>
+
+            </table>
+
+        </div>
+
+    </div>
+</div>
+
+
+<!-- MODAL -->
+
+<div class="modal fade"
+     id="billingModal"
+     tabindex="-1">
+
+    <div class="modal-dialog modal-lg">
+
+        <div class="modal-content">
+
+            <form id="billingForm">
+
+                <input type="hidden"
+                       id="id"
+                       name="id">
+
+                <input type="hidden"
+                       id="saveMethod"
+                       value="add">
+
+                <!-- HEADER -->
+
+                <div class="modal-header">
+
+                    <h5 class="modal-title">
+                        Billing Kelompok
+                    </h5>
+
+                    <button type="button"
+                            class="btn-close"
+                            data-bs-dismiss="modal">
+                    </button>
+
+                </div>
+
+                <!-- BODY -->
+
+                <div class="modal-body">
+
+                    <div class="row">
+
+                        <div class="col-md-12 mb-3">
+
+                            <label class="form-label">
+                                Nama Tarif Kelompok
+                            </label>
+
+                            <input type="text"
+                                   class="form-control"
+                                   id="nama_tarif_kelompok"
+                                   name="nama_tarif_kelompok"
+                                   required>
+
+                        </div>
+
+                        <div class="col-md-12 mb-3">
+
+                            <label class="form-label">
+                                Kategori
+                            </label>
+
+                            <select class="form-select"
+                                    id="kategori"
+                                    name="kategori"
+                                    required>
+
+                                <option value="">
+                                    -- Pilih --
+                                </option>
+
+                                <option value="Alkes">Alkes</option>
+                                <option value="BMHP">BMHP</option>
+                                <option value="Kamar/Akomodasi">Kamar/Akomodasi</option>
+                                <option value="Keperawatan">Keperawatan</option>
+                                <option value="Konsultasi">Konsultasi</option>
+                                <option value="Laboratorium">Laboratorium</option>
+                                <option value="Obat">Obat</option>
+                                <option value="Pelayanan Darah">Pelayanan Darah</option>
+                                <option value="Penunjang">Penunjang</option>
+                                <option value="Prosedur Bedah">Prosedur Bedah</option>
+                                <option value="Prosedur Non Bedah">Prosedur Non Bedah</option>
+                                <option value="Prosedur Tenaga Ahli">Prosedur Tenaga Ahli</option>
+                                <option value="Radiologi">Radiologi</option>
+                                <option value="Rawat Intensif">Rawat Intensif</option>
+                                <option value="Rehabilitasi">Rehabilitasi</option>
+                                <option value="Sewa Alat">Sewa Alat</option>
+
+                            </select>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- FOOTER -->
+                <div class="modal-footer">
+                    <button type="button"
+                            class="btn btn-secondary"
+                            data-bs-dismiss="modal">
+                        Batal
+                    </button>
+                    <button type="submit"
+                            class="btn btn-primary">
+                        Simpan
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script src="/js/billing_kelompok.js"></script>

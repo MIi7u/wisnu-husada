@@ -1,0 +1,593 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Master Pasien</title>
+
+  <!-- CSRF token untuk AJAX -->
+  <meta name="csrf-token" content="{{ csrfToken }}">
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- DataTables CSS -->
+   <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+
+  <link href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css" rel="stylesheet">
+  <link href="https://cdn.datatables.net/buttons/2.4.1/css/buttons.dataTables.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" rel="stylesheet">
+
+  <style>
+    td.details-control {
+      cursor: pointer;}
+    .required::after {
+      content: " *";
+      color: red;
+    }
+
+    .card {
+        border-radius: 15px;
+    }
+    
+    .card-header {
+      background: linear-gradient(to bottom,rgb(94, 84, 209),rgb(27, 42, 154));
+      color: #fff;
+      font-weight: bold;
+    }
+    .modal-header {
+      background:linear-gradient(to bottom,rgb(31, 117, 58),rgb(97, 193, 95));
+      color: #fff;
+    }
+    .table thead th  {
+      background: linear-gradient(to bottom,rgb(31, 117, 58),rgb(97, 193, 95));
+      color: #fff;
+    }
+    .modal-backdrop.show {
+      background: url('https://images.unsplash.com/photo-1581092918367-1f4b7f3e1f7a') no-repeat center center/cover;
+      opacity: 0.8;
+    }
+  </style>
+   
+  <script src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
+
+</head>
+<body class="p-3">
+<div class="container mt-4">
+  <div class="card shadow">
+    <div class="card-header  text-white d-flex justify-content-between align-items-center">
+      <h5 class="mb-0">Daftar Pasien</h5>
+      <button id="btnAdd" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#pendaftaranModal">Tambah Pasien</button>
+    </div>
+    <div class="card-body">
+      <table id="pasienTable" class="table table-striped table-bordered w-100" >
+        <thead>
+          <tr>
+            <th></th>
+            <th>No RM</th>
+            <th>No Identitas</th>
+            <th>Nama Lengkap</th>
+            <th>Jenis Kelamin</th>
+            <th>Alamat</th>
+            <th>Aksi</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+    <div class="modal fade" id="pendaftaranModal" tabindex="-1" aria-labelledby="pendaftaranLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="pendaftaranLabel">Pendaftaran Pasien Baru</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <form id="patientForm">
+            <div class="row g-3">
+
+              <!-- Nomor RM -->
+              <div class="col-md-4">
+                <label class="form-label required">Nomor RM</label>
+                <div class="input-group">
+                  <input type="text" name="no_rm" id="no_rm" class="form-control" value="" required>
+                </div>
+              </div>
+
+              <!-- Alamat Pasien -->
+              <div class="col-md-4">
+                <label class="form-label required">Alamat</label>
+                <div class="input-group">
+                  <input type="text" name="alamat" id="alamat" class="form-control" placeholder="Jl. Example No 1" required>
+                </div>
+              </div>
+
+              <!-- Kode POS -->
+              <div class="col-md-2">
+                <label class="form-label">Kode POS</label>
+                <div class="input-group">
+                  <input type="text" name="kode_pos" id="kode_pos" class="form-control" placeholder="Kode POS">
+                </div>
+              </div>
+
+              <!-- No Telepon -->
+              <div class="col-md-2">
+                <label class="form-label required">No Telp</label>
+                <div class="input-group">
+                  <input type="text" name="no_telepon" id="no_telepon" class="form-control" placeholder="08xxxxxxxxxx" required>
+                </div>
+              </div>
+
+              <!-- No Identitas -->
+              <div class="col-md-4">
+                <label class="form-label required">No Identitas</label>
+                <div class="input-group">
+                  <input type="text" name="no_identitas" id="no_identitas" class="form-control" placeholder="No Identitas Diri" required>
+                </div>
+              </div>
+
+              <!-- RT -->
+              <div class="col-md-2">
+                <label class="form-label">RT</label>
+                <div class="input-group">
+                  <input type="text" name="rt" id="rt" class="form-control">
+                </div>
+              </div>
+
+              <!-- RW -->
+              <div class="col-md-2">
+                <label class="form-label">RW</label>
+                <div class="input-group">
+                  <input type="text" name="rw" id="rw" class="form-control">
+                </div>
+              </div>
+
+              <!-- Pendidikan -->
+              <div class="col-md-4">
+                <label class="form-label">Pendidikan</label>
+                <div class="input-group">
+                  <select class="form-select" name="pendidikan" id="pendidikan">
+                    <option selected disabled>--Pilih--</option>
+                    <option>SD</option>
+                    <option>SMP</option>
+                    <option>SMA</option>
+                    <option>S1</option>
+                    <option>S2</option>
+                    <option>S3</option>
+                    <option>Tidak Sekolah</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- No KK -->
+              <div class="col-md-4">
+                <label class="form-label">No KK</label>
+                <div class="input-group">
+                  <input type="text" name="no_kk" id="no_kk" class="form-control" placeholder="No KK">
+                </div>
+              </div>
+
+              <!-- Provinsi -->
+              <div class="col-md-4">
+                <label class="form-label required">Provinsi</label>
+                <div class="input-group">
+                  <select class="form-select select2 " name="provinsi" id="provinsi" required>
+                  </select>
+                </div>
+              </div>
+
+              <!-- Pekerjaan -->
+              <div class="col-md-2">
+                <label class="form-label">Pekerjaan</label>
+                <div class="input-group">
+                  <select class="form-select" name="pekerjaan" id="pekerjaan">
+                    <option selected disabled>--Pilih--</option>
+                    <option>Karyawan</option>
+                    <option>Wiraswasta</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- Golongan Darah -->
+              <div class="col-md-2">
+                <label class="form-label">Golongan Darah</label>
+                <div class="input-group">
+                  <select class="form-select" name="golongan_darah" id="golongan_darah">
+                    <option selected disabled>--Pilih--</option>
+                    <option>A</option>
+                    <option>B</option>
+                    <option>AB</option>
+                    <option>O</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- Nama Lengkap -->
+              <div class="col-md-4">
+                <label class="form-label required">Nama Lengkap</label>
+                <div class="input-group">
+                  <input type="text" name="nama_lengkap" id="nama_lengkap" class="form-control" placeholder="Nama Lengkap" required>
+                </div>
+              </div>
+
+              <!-- Kabupaten -->
+              <div class="col-md-4">
+                <label class="form-label required">Kabupaten</label>
+                <div class="input-group">
+                  <select class="form-select select2" name="kabupaten" id="kabupaten" required>
+                  </select>
+                </div>
+              </div>
+
+              <!-- Status Pernikahan -->
+              <div class="col-md-2">
+                <label class="form-label">Status Pernikahan</label>
+                <div class="input-group">
+                  <select class="form-select" name="status_pernikahan" id="status_pernikahan">
+                    <option selected disabled>--Pilih--</option>
+                    <option>Menikah</option>
+                    <option>Belum Menikah</option>
+                    <option>Janda / Duda</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- Kewarganegaraan -->
+              <div class="col-md-2">
+                <label class="form-label required">Kewarganegaraan</label><br>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" name="kewarganegaraan" value="WNI" checked required>
+                  <label class="form-check-label">WNI</label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" name="kewarganegaraan" value="WNA">
+                  <label class="form-check-label">WNA</label>
+                </div>
+              </div>
+
+              <!-- Tempat Lahir -->
+              <div class="col-md-2">
+                <label class="form-label required">Tempat Lahir</label>
+                <div class="input-group">
+                  <input type="text" name="tempat_lahir" id="tempat_lahir" class="form-control" placeholder="Tempat Lahir" required>
+                </div>
+              </div>
+
+              <!-- Tanggal Lahir -->
+              <div class="col-md-2">
+                <label class="form-label required">Tanggal Lahir</label>
+                <div class="input-group">
+                  <input type="date" name="tanggal_lahir" id="tanggal_lahir" class="form-control" required>
+                </div>
+              </div>
+
+              <!-- Kecamatan -->
+              <div class="col-md-4">
+                <label class="form-label required">Kecamatan</label>
+                <div class="input-group">
+                  <select class="form-select select2" name="kecamatan" id="kecamatan" required>
+                  </select>
+                </div>
+              </div>
+
+              <!-- Hubungan Penanggung Jawab -->
+              <div class="col-md-4">
+                <label class="form-label">Hubungan Penanggung Jawab</label>
+                <div class="input-group">
+                  <select class="form-select" name="hubungan_pj" id="hubungan_pj">
+                    <option selected disabled>--Pilih--</option>
+                    <option>Orang Tua</option>
+                    <option>Anak</option>
+                    <option>Suami/Istri</option>
+                    <option>Kerabat</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- Agama -->
+              <div class="col-md-2">
+                <label class="form-label">Agama</label>
+                <div class="input-group">
+                  <select class="form-select" name="agama" id="agama">
+                    <option selected disabled>--Pilih--</option>
+                    <option>Islam</option>
+                    <option>Protestan</option>
+                    <option>Katolik</option>
+                    <option>Budha</option>
+                    <option>Hindu</option>
+                    <option>Lain-Lain</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- Jenis Kelamin -->
+              <div class="col-md-2">
+                <label class="form-label required">Jenis Kelamin</label><br>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" name="jenis_kelamin" value="L" required>
+                  <label class="form-check-label">L</label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" name="jenis_kelamin" value="P">
+                  <label class="form-check-label">P</label>
+                </div>
+              </div>
+
+              <!-- Kelurahan -->
+              <div class="col-md-4">
+                <label class="form-label required">Kelurahan</label>
+                <div class="input-group">
+                  <select class="form-select" name="kelurahan" id="kelurahan" required>
+                  </select>
+                </div>
+              </div>
+
+              <!-- Nama Penanggung Jawab -->
+              <div class="col-md-2">
+                <label class="form-label">Penanggung Jawab</label>
+                <div class="input-group">
+                  <input type="text" name="nama_pj" id="nama_pj" class="form-control" placeholder="Nama Penanggung ">
+                </div>
+              </div>
+
+              <!-- Nomor RM Ibu -->
+              <div class="col-md-2">
+                <label class="form-label">Nomor RM Ibu</label>
+                <div class="input-group">
+                  <input type="text" name="no_rm_ibu" id="no_rm_ibu" class="form-control" placeholder="Nomor RM Ibu">
+                </div>
+              </div>
+            </div>
+
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+              <button type="submit" class="btn btn-primary" id="savePatient">Daftar</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+</div>
+  <!-- jQuery, Bootstrap, DataTables, dan Buttons -->
+ 
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+
+<script>
+$(document).ready(function() {
+  $('.select2').select2({ theme: 'bootstrap-5', placeholder: 'Pilih...', allowClear: true });
+  var csrfToken = $('meta[name="csrf-token"]').attr('content');
+
+  var table = $('#pasienTable').DataTable({
+    processing: true,
+    serverSide: true,
+    ajax: '/admin/pasien',
+    columns: [
+      {
+        className: 'details-control',
+        orderable: false,
+        data: null,
+        defaultContent: ''
+      },
+      { data: 'no_rm' },
+      { data: 'no_identitas' },
+      { data: 'nama_lengkap' },
+      { data: 'jenis_kelamin' },
+      { data: 'alamat' },
+      {
+        data: null,
+        orderable: false,
+        render: function(data, type, row) {
+          return '<button class="btn btn-sm btn-info btn-view" data-no_rm="' + row.no_rm + '">View</button> ' +
+                 '<button class="btn btn-sm btn-warning btn-edit" data-no_rm="' + row.no_rm + '">Edit</button> ' +
+                 '<button class="btn btn-sm btn-danger btn-delete" data-no_rm="' + row.no_rm + '">Hapus</button>';
+        }
+      }
+    ],
+    order: [[1, 'desc']]
+  });
+
+  // Format child row
+  function formatDetail(d) {
+    return '<div class="p-3 bg-light">' +
+             '<div class="row">' +
+               '<div class="col-md-4"><strong>Tempat / Tanggal Lahir:</strong> ' + (d.tempat_lahir || '-') + ' / ' + (d.tanggal_lahir || '-') + '</div>' +
+               '<div class="col-md-4"><strong>Prov/Kab/Kec:</strong> ' + (d.provinsi || '-') + ' / ' + (d.kabupaten || '-') + ' / ' + (d.kecamatan || '-') + '</div>' +
+               '<div class="col-md-4"><strong>Kelurahan:</strong> ' + (d.kelurahan || '-') + '</div>' +
+             '</div>' +
+             '<div class="row mt-2">' +
+               '<div class="col-md-4"><strong>Pendidikan:</strong> ' + (d.pendidikan || '-') + '</div>' +
+               '<div class="col-md-4"><strong>Pekerjaan:</strong> ' + (d.pekerjaan || '-') + '</div>' +
+               '<div class="col-md-4"><strong>Gol. Darah:</strong> ' + (d.golongan_darah || '-') + '</div>' +
+             '</div>' +
+             '<div class="row mt-2">' +
+               '<div class="col-md-4"><strong>Nama PJ:</strong> ' + (d.nama_pj || '-') + '</div>' +
+               '<div class="col-md-4"><strong>Hubungan PJ:</strong> ' + (d.hubungan_pj || '-') + '</div>' +
+               '<div class="col-md-4"><strong>No RM Ibu:</strong> ' + (d.no_rm_ibu || '-') + '</div>' +
+             '</div>' +
+           '</div>';
+  }
+
+  // Expand / collapse
+  $('#pasienTable tbody').on('click', 'td.details-control', function() {
+    var tr = $(this).closest('tr');
+    var row = table.row(tr);
+
+    if (row.child.isShown()) {
+      row.child.hide();
+      tr.removeClass('shown');
+    } else {
+      row.child(formatDetail(row.data())).show();
+      tr.addClass('shown');
+    }
+  });
+
+  // Tombol View
+  $('#pasienTable tbody').on('click', '.btn-view', function() {
+    var no_rm = $(this).data('no_rm');
+    $.get('/admin/pasien/' + no_rm, function(data) {
+      alert('Detail: ' + JSON.stringify(data));
+    });
+  });
+
+  // Tombol Edit
+  $('#pasienTable tbody').on('click', '.btn-edit', function() {
+    var no_rm = $(this).data('no_rm');
+    $.get('/admin/pasien/' + no_rm, function(data) {
+      for (var k in data) {
+        var el = $('#' + k);
+        if (el.length) {
+          if (el.attr('type') === 'radio') {
+            $('input[name="' + k + '"][value="' + data[k] + '"]').prop('checked', true);
+          } else {
+            el.val(data[k]);
+          }
+        }
+      }
+      $('#no_rm').prop('readonly', true);
+      $('#savePatient').text('Update');
+      var modal = new bootstrap.Modal(document.getElementById('pendaftaranModal'));
+      modal.show();
+      $('#patientForm').data('mode', 'edit').data('no_rm', no_rm);
+    });
+  });
+
+  // Tombol Delete
+  $('#pasienTable tbody').on('click', '.btn-delete', function() {
+    var no_rm = $(this).data('no_rm');
+    if (!confirm('Hapus pasien ' + no_rm + ' ?')) return;
+    $.ajax({
+      url: '/admin/pasien/' + no_rm,
+      type: 'DELETE',
+      headers: { 'X-CSRF-TOKEN': csrfToken },
+      success: function(res) {
+        alert(res.message);
+        table.ajax.reload(null, false);
+      },
+      error: function(xhr) {
+        alert('Gagal menghapus: ' + (xhr.responseJSON.message || xhr.statusText));
+      }
+    });
+  });
+
+  // Tombol Add
+  $('#btnAdd').on('click', function() {
+    $('#patientForm')[0].reset();
+    $('#no_rm').prop('readonly', false);
+    $('#savePatient').text('Daftar');
+    $('#patientForm').data('mode', 'create').removeData('no_rm');
+  });
+
+  // Submit Form
+  $('#patientForm').on('submit', function(e) {
+    e.preventDefault();
+    var mode = $(this).data('mode') || 'create';
+    var no_rm_key = $(this).data('no_rm');
+    var formData = {};
+    $(this).serializeArray().forEach(function(item) {
+      formData[item.name] = item.value;
+    });
+
+    if (mode === 'create') {
+      $.ajax({
+        url: '/admin/pasien',
+        method: 'POST',
+        data: JSON.stringify(formData),
+        contentType: 'application/json',
+        headers: { 'X-CSRF-TOKEN': csrfToken },
+        success: function(res) {
+          alert(res.message);
+          table.ajax.reload();
+          bootstrap.Modal.getInstance(document.getElementById('pendaftaranModal')).hide();
+        },
+        error: function(xhr) {
+          alert('Gagal simpan: ' + (xhr.responseJSON.message || JSON.stringify(xhr.responseJSON)));
+        }
+      });
+    } else {
+      $.ajax({
+        url: '/admin/pasien/' + no_rm_key,
+        method: 'PUT',
+        data: JSON.stringify(formData),
+        contentType: 'application/json',
+        headers: { 'X-CSRF-TOKEN': csrfToken },
+        success: function(res) {
+          alert(res.message);
+          table.ajax.reload(null, false);
+          bootstrap.Modal.getInstance(document.getElementById('pendaftaranModal')).hide();
+        },
+        error: function(xhr) {
+          alert('Gagal update: ' + (xhr.responseJSON.message || JSON.stringify(xhr.responseJSON)));
+        }
+      });
+    }
+  });
+
+  // Reset Form saat Modal ditutup
+  $('#pendaftaranModal').on('hidden.bs.modal', function() {
+    $('#patientForm')[0].reset();
+    $('.select2').val(null).trigger('change');
+    $('#no_rm').prop('readonly', false);
+    $('#patientForm').removeData('mode').removeData('no_rm');
+    $('#savePatient').text('Daftar');
+  });
+
+  // Load Provinsi
+  $.get('/admin/wilayah/provinsi', function(data) {
+    $('#provinsi').append('<option value="">Pilih Provinsi</option>');
+    data.forEach(function(item) {
+      $('#provinsi').append('<option value="' + item.code + '">' + item.name + '</option>');
+    });
+  });
+
+  // Provinsi -> Kabupaten
+  $('#provinsi').change(function() {
+    var code = $(this).val();
+    $('#kabupaten').empty().append('<option>Loading...</option>');
+    $('#kecamatan').empty().append('<option>Pilih Kecamatan</option>');
+    $('#kelurahan').empty().append('<option>Pilih Kelurahan</option>');
+    if (code) {
+      $.get('/admin/wilayah/kabupaten/' + code, function(data) {
+        $('#kabupaten').empty().append('<option value="">Pilih Kabupaten</option>');
+        data.forEach(function(item) {
+          $('#kabupaten').append('<option value="' + item.code + '">' + item.name + '</option>');
+        });
+      });
+    }
+  });
+
+  // Kabupaten -> Kecamatan
+  $('#kabupaten').change(function() {
+    var code = $(this).val();
+    $('#kecamatan').empty().append('<option>Loading...</option>');
+    $('#kelurahan').empty().append('<option>Pilih Kelurahan</option>');
+    if (code) {
+      $.get('/admin/wilayah/kecamatan/' + code, function(data) {
+        $('#kecamatan').empty().append('<option value="">Pilih Kecamatan</option>');
+        data.forEach(function(item) {
+          $('#kecamatan').append('<option value="' + item.code + '">' + item.name + '</option>');
+        });
+      });
+    }
+  });
+
+  // Kecamatan -> Kelurahan
+  $('#kecamatan').change(function() {
+    var code = $(this).val();
+    $('#kelurahan').empty().append('<option>Loading...</option>');
+    if (code) {
+      $.get('/admin/wilayah/kelurahan/' + code, function(data) {
+        $('#kelurahan').empty().append('<option value="">Pilih Kelurahan</option>');
+        data.forEach(function(item) {
+          $('#kelurahan').append('<option value="' + item.code + '">' + item.name + '</option>');
+        });
+      });
+    }
+  });
+});
+</script>
+
+</body>
+</html>

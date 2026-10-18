@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>SIMRS-Wisnuhusada</title>
+  
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+  <link rel="stylesheet" href="/css/style.css">
+  <script src="/js/cariPegawai.js"></script>
+</head>
+<body>
+<header class="d-flex justify-content-between align-items-center p-2 text-white" style="background-color: #2d6e5c;">
+    <!-- Kiri -->
+    <h5 class="mb-0">SIMRS Klinik Utama Wishnu Husada</h5>
+    <!-- Kanan -->
+    <div class="d-flex align-items-center gap-2">
+        <select id="cariPegawai"><option selected>- Pilih -</option></select>
+        <!-- User -->
+       <div id="pegawaiTerpilih" class="ms-3 text-white fw-bold">
+    </div>
+    <img src="/images/logo_wisnu.png" alt="Logo" height="50">
+</header>
+<nav class="navbar navbar-expand-lg navbar-dark navbar-custom">
+  <div class="container-fluid">
+    <a class="navbar-link active-menu" href="#">
+      <i class="fas fa-house me-2"></i>
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" 
+            data-bs-target="#navbarNav" aria-controls="navbarNav" 
+            aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+      
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav me-auto">
+        <!-- Dropdown stok penyesuaian gudang-->
+        <li class="nav-item dropdown">
+          <a class="nav-link" href="#" id="spgMenu" 
+             role="button"  aria-expanded="false">
+             Stok Penyesuaian Gudang
+          </a>
+        </li>
+        <!-- Dropdown gudang -->
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="rajalMenu" 
+             role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Gudang
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="gdangMenuMenu">
+            <li><a class="dropdown-item" href="/admin/">Penerimaan</a></li>
+            <li><a class="dropdown-item" href="/admin/">Transaksi Lain</a></li>
+            <li><a class="dropdown-item" href="/admin/">Surat Pemesanan</a></li>
+         </ul>
+        </li>
+
+         <!-- Dropdown kasir -->
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="ranapMenu" 
+             role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Kasir Pelayanan
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="Billing Umum">
+            <li><a class="dropdown-item" href="/admin/">Laporan Tagihan</a></li>
+            <li><a class="dropdown-item" href="/admin/">Laporan Billing Tenaga Kesehatan</a></li>
+            <li><a class="dropdown-item" href="/admin/">Rujukan Masuk</a></li>
+            <li><a class="dropdown-item" href="/admin/">Pasien Rawat Inap Operasi</a></li>
+          </ul>
+        </li>
+        <!-- Dropdown stok harian -->
+        <li class="nav-item dropdown">
+          <a class="nav-link" href="#" id="pasien_ranapMenu" 
+             role="button"  aria-expanded="false">
+             Stok Harian
+          </a>
+        </li>
+         <!-- Dropdown farmasi -->
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="farmasiMenu" 
+             role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Farmasi
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="Billing Umum">
+            <li><a class="dropdown-item" href="/admin/">Farmasi IGD</a></li>
+            <li><a class="dropdown-item" href="/admin/">Farmasi Rawat Inap</a></li>
+            <li><a class="dropdown-item" href="/admin/">Farmasi Rawat Jalan</a></li>
+          </ul>
+        </li>
+        <!-- Dropdown cppt farmasi -->
+        <li class="nav-item dropdown">
+          <a class="nav-link" href="#" id="info_pasienMenu" 
+             role="button" aria-expanded="false">
+             CPPT Farmasi
+          </a>
+        </li>
+
+          <!-- Dropdown laporan gudang -->
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="farmasiMenu" 
+             role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Laporan Gudang
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="Laporan gudang">
+            <li><a class="dropdown-item" href="/admin/">Laporan Penerimaan</a></li>
+            <li><a class="dropdown-item" href="/admin/">Kartu Stok</a></li>
+            <li><a class="dropdown-item" href="/admin/">Stok Gudang</a></li>
+            <li><a class="dropdown-item" href="/admin/">Monitoring Pemesanan</a></li>
+            <li><a class="dropdown-item" href="/admin/">Laporan Mutasi</a></li>
+            <li><a class="dropdown-item" href="/admin/">Laporan Faktur</a></li>
+            <li><a class="dropdown-item" href="/admin/">Penggunaan Obat</a></li>
+          </ul>
+        </li>
+
+        <!-- Dropdown Kasir Non Admisi -->
+        <li class="nav-item dropdown">
+          <a class="nav-link" href="#" id="info_pasienMenu" 
+             role="button" aria-expanded="false"><i class="fas fa-user-injured me-2"></i>
+             Kasir Non Admisi
+          </a>
+        </li>
+
+          <!-- Dropdown Menu Lainnya-->
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="farmasiMenu" 
+             role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Menu Lainnya
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="Laporan gudang">
+            <li><a class="dropdown-item" href="/admin/">Kasir Billing masterMenu</a></li>
+            <li class="dropdown-submenu">
+              <a class="dropdown-item">Master Gudang</a>
+                <ul class="dropdown-menu">
+                  <li><a class="dropdown-item menu-link" data-page="/admin/pabrik">Master Pabrik</a></li>
+                  <li><a class="dropdown-item menu-link" data-page="/admin/satuan">Master Satuan</a></li>    
+                  <li><a class="dropdown-item menu-link" data-page="/admin/rekening" >Rekening</a></li>
+                  <li><a class="dropdown-item menu-link" data-page="/admin/>Master Barang/Obat</a></li>
+                  <li><a class="dropdown-item" >Kelompok Obat</a></li>
+                </ul>
+            <li><a class="dropdown-item" href="/admin/">Rekam Medis RS</a></li>
+            <li><a class="dropdown-item" href="/admin/">Maping Tarif ICD 9</a></li>
+            <li><a class="dropdown-item" href="/admin/">Paket Resep</a></li>
+          </ul>
+        </li>
+      </ul>
+  </div>
+</nav>
+
+<!-- CONTENT DINAMIS -->
+
+<div class="container-fluid mt-3">
+    <div id="main-content">
+       
+    </div>
+</div>
+<div class="footer-osx">
+
+    <div class="footer-left">
+        Copyright © 2026
+        <strong>TIM SIMRS Klinik Utama Wisnu Husada</strong>
+        All rights reserved.
+        <strong>Developed For </strong>Klinik Utama Wisnu Husada
+    </div>
+
+    <div class="footer-right">
+        Halaman ini dimuat dalam
+        <span id="loadTime">0.000</span> detik
+    </div>
+
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
+<script src="/js/app.js"></script>
+</body>
+</html>

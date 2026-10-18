@@ -3,89 +3,148 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1.0">
-  <title>RSI</title>
+  <title>SIMRS-Wisnuhusada</title>
   
   <!-- Bootstrap CSS -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-
-  <style>
-    /* Contoh background umum untuk body */
-    body {
-      background: url('images/background.png') no-repeat center center fixed;
-      background-size: cover;
-    }
-
-    /* Navbar dengan gradasi hijau */
-    .navbar-custom {
-      background: linear-gradient(to bottom, #8bc34a, #357905);
-    }
-
-    /* Karena warna navbar gelap, gunakan navbar-dark agar teks dan toggler putih */
-    .navbar-custom .navbar-brand,
-    .navbar-custom .nav-link,
-    .navbar-custom .navbar-toggler-icon {
-      color: #fff !important;
-    }
-
-    /* Dropdown hijau */
-    .dropdown-menu {
-      background-color: #218838;
-    }
-    .dropdown-item {
-      color: #fff !important;
-    }
-    .dropdown-item:hover {
-      background-color: #1e7e34;
-    }
-  </style>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <script src="/js/cariPegawai.js"></script>
 </head>
 <body>
 
-  <!-- Pakai kelas kustom: navbar-dark + navbar-custom -->
-  <nav class="navbar navbar-expand-lg navbar-dark navbar-custom">
-    <div class="container-fluid">
-      <a class="navbar-brand" href="#">RSI</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" 
-              data-bs-target="#navbarNav" aria-controls="navbarNav" 
-              aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
+<nav class="navbar navbar-expand-lg navbar-dark navbar-custom">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">Dasboard</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" 
+            data-bs-target="#navbarNav" aria-controls="navbarNav" 
+            aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
 
-      <!-- Menu -->
-      <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav me-auto">
-          <!-- Dropdown Master -->
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="masterMenu" 
-               role="button" data-bs-toggle="dropdown" aria-expanded="false">
-              Master
-            </a>
-            <ul class="dropdown-menu" aria-labelledby="masterMenu">
-              <li><a class="dropdown-item" href="/admin/dokter">Dokter</a></li>
-            </ul>
-          </li>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav me-auto">
 
-          <!-- Dropdown Laporan -->
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="laporanMenu" 
-               role="button" data-bs-toggle="dropdown" aria-expanded="false">
-              Laporan
-            </a>
-            <ul class="dropdown-menu" aria-labelledby="laporanMenu">
-              <li><a class="dropdown-item" href="/admin/pending">Pending BPJS</a></li>
-              <li><a class="dropdown-item" href="/admin/rincian">Rincian Jasa Medis BPJS</a></li>
-              <li><a class="dropdown-item" href="/admin/nonbpjs">Rincian Jasa Medis NON BPJS</a></li>
-            </ul>
-          </li>
-        </ul>
+        <!-- Dropdown Transaksi -->
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="transaksiMenu" 
+             role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Gudang
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="transaksiMenu">
+            <li><a class="dropdown-item" href="/admin/">Permintaan </a></li>
+            <li><a class="dropdown-item" href="/admin/">Penerimaan </a></li>
+            <li><a class="dropdown-item" href="/admin/">Transaksi Lain </a></li>
+            <li><a class="dropdown-item" href="/admin/">Surat Pesanan </a></li>
+          </ul>
+        </li>
+        <!-- Dropdown Master -->
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="masterMenu" 
+             role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Master Menu
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="masterMenu">
+            <!-- Submenu Master Menu -->
+             <li><a class="dropdown-item menu-link" href="#" data-page="">Menu</a></li>
+             <li><a class="dropdown-item menu-link" href="#" data-page="">Roles</a></li>
+             <li><a class="dropdown-item menu-link" href="#" data-page="/admin/ruang_layanan">Ruang Layanan</a></li>
+             <li><a class="dropdown-item menu-link" href="#" data-page="/admin/billing_kelompok">Biling Kelompok</a></li>
+             <li><a class="dropdown-item menu-link" href="#" data-page="/admin/pegawai">Data Pegawai</a></li>
+             <li><a class="dropdown-item menu-link" href="#" data-page="">Jadwal Praktik Dokter</a></li>
+             <li><a class="dropdown-item menu-link" href="#" data-page="">Info Kamar</a></li>
+             <li><a class="dropdown-item menu-link" href="#" data-page="/admin/dokter">Dokter</a></li>
+             <li><a class="dropdown-item menu-link" href="#" data-page="">Maping RME Rajal</a></li>
+             <li><a class="dropdown-item menu-link" href="#" data-page="">Kode BPJS</a></li>
+          </ul>
+        </li>
 
-        <!-- Logo di sisi kanan -->
-        <img src="images/logo_rsi.png" alt="Logo" height="40">
+        <!-- Dropdown Laporan Gudang -->
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="laporanMenu" 
+             role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Laporan Gudang
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="laporanMenu">
+            <li><a class="dropdown-item" href="/admin/pending">Laporan Penerimaan</a></li>
+            <li><a class="dropdown-item" href="/admin/rincian">Kartu Stock</a></li>
+            <li><a class="dropdown-item" href="/admin/nonbpjs">Penggunaan Per Obat</a></li>
+            <li><a class="dropdown-item" href="/admin/nonbpjs">Stok Gudang</a></li>
+            <li><a class="dropdown-item" href="/admin/nonbpjs">Monitoring Pemesanan</a></li>
+            <li><a class="dropdown-item" href="/admin/nonbpjs">Laporan Mutasi</a></li>
+            <li><a class="dropdown-item" href="/admin/nonbpjs">Laporan Faktur</a></li>
+             <li><a class="dropdown-item" href="/admin/nonbpjs">Penggunaan Obat</a></li>
+          </ul>
+        </li>
+
+        <!-- Dropdown Kasir Biling Master -->  
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="laporanMenu" 
+             role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Kasir Biling Master
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="laporanMenu">
+            <li><a class="dropdown-item" href="/admin/pending">Billing Master(kasir)</a></li>
+            <li><a class="dropdown-item" href="/admin/rincian">Billing Kelompok (Kasir)</a></li>
+          </ul>
+        </li>
+
+        <!-- Dropdown  Master Gudang -->  
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="laporanMenu" 
+             role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Master Gudang
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="laporanMenu">
+            <li><a class="dropdown-item" href="/admin/pending">Master Pabrik</a></li>
+            <li><a class="dropdown-item" href="/admin/rincian">Master Satuan</a></li>
+            <li><a class="dropdown-item" href="/admin/nonbpjs">Rekening</a></li>
+            <li><a class="dropdown-item" href="/admin/nonbpjs">Master Barang/Obat/Bmhp</a></li>
+            <li><a class="dropdown-item" href="/admin/nonbpjs">Master Suplier</a></li>
+            <li><a class="dropdown-item" href="/admin/nonbpjs">Kelompok Obat</a></li>
+          </ul>
+        </li>
+
+        <!-- Dropdown  Setting Bed -->  
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="laporanMenu" 
+             role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Setting Bed
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="laporanMenu">
+            <li><a class="dropdown-item" href="/admin/pending">Pending BPJS</a></li>
+            <li><a class="dropdown-item" href="/admin/rincian">Rincian Jasa Medis BPJS</a></li>
+            <li><a class="dropdown-item" href="/admin/nonbpjs">Rincian Jasa Medis NON BPJS</a></li>
+          </ul>
+        </li>
+      </ul>
+      <div class="d-flex">
+          <select id="cariPegawai">
+          </select>
       </div>
+      <div id="pegawaiTerpilih" class="ms-3 text-white fw-bold">
+       
+      </div>
+       <img src="/images/logo_wisnu.png" alt="Logo" height="50">
     </div>
-  </nav>
+  </div>
+</nav>
 
-  <!-- Bootstrap JS (Popper sudah include di bundle) -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<!-- CONTENT DINAMIS -->
+
+<div class="container-fluid mt-3">
+    <div id="main-content">
+       
+    </div>
+</div>
+
+<script src="/js/app.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
 </body>
 </html>

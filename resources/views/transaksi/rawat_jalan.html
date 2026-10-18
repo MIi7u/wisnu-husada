@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Pendaftaran Pasien Rawat Jalan</title>
+  <!-- Bootstrap 5 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- DataTables -->
+  <link href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" rel="stylesheet">
+  <link href="https://cdn.datatables.net/responsive/2.5.0/css/responsive.bootstrap5.min.css" rel="stylesheet">
+  <style>
+    td.details-control {
+      background: url('https://cdn.datatables.net/1.10.20/images/resources/details_open.png') no-repeat center center;
+      cursor: pointer;
+    }
+    tr.shown td.details-control {
+      background: url('https://cdn.datatables.net/1.10.20/images/resources/details_close.png') no-repeat center center;
+    }
+
+    .card-header {
+      background: linear-gradient(90deg, #0d6efd, #0b5ed7); /* Biru gradasi */
+      color: white;
+      font-weight: bold;
+      font-size: 1.2rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    table.dataTable thead th {
+      background-color: #0d6efd;
+      color: #fff;
+      border-bottom: 2px solid #0b5ed7;
+      text-align: center;
+    }
+  </style>
+</head>
+<body class="bg-light">
+
+<div class="container py-4">
+  <div class="card shadow-lg border-0">
+    <div class="card-header">
+      Data Dokter
+    </div>
+    <div class="card-body">
+         <div class="mb-3 text-end">
+             <button class="btn btn-success mb-3" id="btnAdd">+ Tambah Data</button>
+          </div>
+      <div class="table-responsive">
+        <table id="dokterTable" class="table table-striped table-bordered">
+          <thead>
+            <tr>
+              <th>NIP</th>
+              <th>Nama Dokter</th>
+              <th>Spesialis</th>
+              <th>Aksi</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>12345</td>
+              <td>dr. Budi</td>
+              <td>Spesialis Jantung</td>
+              <td class="text-center">
+                <button class="btn btn-sm btn-warning">Edit</button>
+                <button class="btn btn-sm btn-danger">Hapus</button>
+              </td>
+            </tr>
+            <tr>
+              <td>67890</td>
+              <td>dr. Siti</td>
+              <td>Spesialis Anak</td>
+              <td class="text-center">
+                <button class="btn btn-sm btn-warning">Edit</button>
+                <button class="btn btn-sm btn-danger">Hapus</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Modal Pendaftaran Pasien Rawat Jalan -->
+<div class="modal fade" id="pendaftaranModal" tabindex="-1" aria-labelledby="pendaftaranLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header bg-warning">
+        <h5 class="modal-title" id="pendaftaranLabel">PENDAFTARAN PASIEN RAWAT JALAN</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <!-- Row 1 -->
+          <div class="row g-3 mb-3">
+            <div class="col-md-4">      
+              <div class="input-group">
+                <span class="input-group-text">No R M<i class="bi bi-card-list"></i></span>
+                <input type="text" class="form-control" id="noRekamMedik">
+              </div>
+            </div>
+            <div class="col-md-4">        
+              <div class="input-group">
+                <span class="input-group-text">Nama<i class="bi bi-person"></i></span>
+                <select class="form-select" id="nama">
+                  <option value="">-- Pilih --</option>
+                  <option>Nama 1</option>
+                  <option>Nama 2</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-md-4">        
+              <div class="input-group">
+                <span class="input-group-text">Nama Keluarga<i class="bi bi-people"></i></span>
+                <input type="text" class="form-control" id="namaKeluarga">
+              </div>
+            </div>
+          </div>
+
+          <!-- Row 2 -->
+          <div class="row g-3 mb-3">
+            <div class="col-md-4">
+
+              <div class="input-group">
+                <span class="input-group-text">Jenis Kelamin<i class="bi bi-gender-ambiguous"></i></span>
+                <select class="form-select" id="jenisKelamin">
+                  <option value="">-- Pilih --</option>
+                  <option value="L">Laki-laki</option>
+                  <option value="P">Perempuan</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="input-group">
+                <span class="input-group-text">T. Lahir<i class="bi bi-geo-alt"></i></span>
+                <input type="text" class="form-control" id="tempatLahir" placeholder="Tempat Lahir">
+              </div>
+            </div>
+            <div class="col-md-4"> 
+              <div class="row g-2">
+                <div class="col">
+                  <div class="input-group">
+                    <span class="input-group-text">Tgl</span>
+                    <input type="number" class="form-control">
+                  </div>
+                </div>
+                <div class="col">
+                  <div class="input-group">
+                    <span class="input-group-text">Bln</span>
+                    <input type="number" class="form-control" >
+                  </div>
+                </div>
+                <div class="col">
+                  <div class="input-group">
+                    <span class="input-group-text">Thn</span>
+                    <input type="number" class="form-control" >
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+ <!-- Alamat & Kontak -->
+<div class="row g-2 mb-3 align-items-start">
+  <!-- Alamat -->
+  <div class="col-md-4">
+    <div class="mb-2">
+      <div class="input-group">
+        <span class="input-group-text">Alamat KTP<i class="bi bi-house"></i></span>
+        <textarea class="form-control" rows="3"></textarea>
+      </div>
+    </div>
+    <div class="mb-2">
+      <div class="input-group">
+        <span class="input-group-text">Alamat <i class="bi bi-house-door"></i></span>
+        <textarea class="form-control" rows="3"></textarea>
+      </div>
+    </div>
+  </div>
+
+  <!-- Wilayah -->
+  <div class="col-md-4">
+    <div class="mb-2">
+      <div class="input-group">
+        <span class="input-group-text">Provinsi<i class="bi bi-geo"></i></span>
+        <input type="text" class="form-control">
+      </div>
+    </div>
+    <div class="mb-2">
+      <div class="input-group">
+        <span class="input-group-text">Kabupaten<i class="bi bi-geo"></i></span>
+        <input type="text" class="form-control">
+      </div>
+    </div>
+    <div class="mb-2">
+      <div class="input-group">
+        <span class="input-group-text">Kecamatan<i class="bi bi-geo"></i></span>
+        <input type="text" class="form-control">
+      </div>
+    </div>
+    <div class="mb-2">
+      <div class="input-group">
+        <span class="input-group-text">Kelurahan<i class="bi bi-geo"></i></span>
+        <input type="text" class="form-control">
+      </div>
+    </div>
+  </div>
+
+  <!-- RT/RW/Kontak -->
+<!-- RT/RW/Kontak -->
+<div class="col-md-4">
+  <div class="row g-1"> <!-- ubah g-1 ke g-0 -->
+    <!-- RT -->
+    <div class="col-md-4">
+      <div class="mb-2">
+        <div class="input-group">
+          <span class="input-group-text">RT</span>
+          <input type="text" class="form-control">
+        </div>
+      </div>
+    </div>
+    <!-- RW -->
+    <div class="col-md-3">
+      <div class="mb-2">
+        <div class="input-group">
+          <span class="input-group-text">RW</span>
+          <input type="text" class="form-control">
+        </div>
+      </div>
+    </div>
+    <!-- Kode -->
+    <div class="col-md-5">
+      <div class="mb-2">
+        <div class="input-group">
+          <span class="input-group-text">Kode</span>
+          <input type="text" class="form-control">
+        </div>
+      </div>
+    </div>
+</div>
+    <!-- Telepon -->
+<div class="row g-0">
+    <div class="col-md-12">
+      <div class="mb-2">
+        <div class="input-group">
+          <span class="input-group-text">Telepon<i class="bi bi-telephone"></i></span>
+          <input type="text" class="form-control">
+        </div>
+      </div>
+    </div>
+
+    <!-- Email -->
+    <div class="col-md-12">
+      <div class="mb-2">
+        <div class="input-group">
+          <span class="input-group-text">Email<i class="bi bi-envelope-at"></i></span>
+          <input type="email" class="form-control">
+        </div>
+      </div>
+    </div>
+
+    <!-- Facebook -->
+    <div class="col-md-9">
+      <div class="mb-2">
+        <div class="input-group">
+          <span class="input-group-text">Facebook<i class="bi bi-facebook"></i></span>
+          <input type="text" class="form-control">
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="form-check mt-2">
+        <input class="form-check-input" type="checkbox" id="wna">
+        <label class="form-check-label" for="wna">WNA</label>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+  
+  
+
+
+          <!-- Row 5 -->
+          <div class="row g-3 mb-3">
+            <div class="col-md-4">
+              <label class="form-label">Tanggal</label>
+              <div class="input-group">
+                <span class="input-group-text"><i class="bi bi-calendar"></i></span>
+                <input type="date" class="form-control">
+              </div>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Dokter</label>
+              <div class="input-group">
+                <span class="input-group-text"><i class="bi bi-person-badge"></i></span>
+                <input type="text" class="form-control">
+                <button class="btn btn-outline-secondary" type="button"><i class="bi bi-binoculars"></i></button>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Cara Masuk</label>
+              <div class="input-group">
+                <span class="input-group-text"><i class="bi bi-door-open"></i></span>
+                <select class="form-select">
+                  <option value="rawatJalan">Rawat Jalan</option>
+                  <option value="rawatInap">Rawat Inap</option>
+                  <option value="igd">IGD</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tabs -->
+          <ul class="nav nav-tabs mb-3">
+            <li class="nav-item"><button class="nav-link active" data-bs-toggle="tab" data-bs-target="#tabSuamiIstri">Suami/Istri</button></li>
+            <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tabAyah">Ayah</button></li>
+            <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tabIbu">Ibu</button></li>
+            <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tabDiagnosa">Diagnosa Awal</button></li>
+          </ul>
+          <div class="tab-content">
+            <div class="tab-pane fade show active" id="tabSuamiIstri">
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <label class="form-label">Nama</label>
+                  <div class="input-group">
+                    <span class="input-group-text"><i class="bi bi-person-heart"></i></span>
+                    <input type="text" class="form-control">
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label">Pendidikan</label>
+                  <div class="input-group">
+                    <span class="input-group-text"><i class="bi bi-book"></i></span>
+                    <input type="text" class="form-control">
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="tab-pane fade" id="tabAyah">...</div>
+            <div class="tab-pane fade" id="tabIbu">...</div>
+            <div class="tab-pane fade" id="tabDiagnosa">
+              <textarea class="form-control" rows="3"></textarea>
+            </div>
+          </div>
+
+          <!-- Buttons -->
+          <div class="d-flex justify-content-end mt-3">
+            <button type="button" class="btn btn-secondary me-2" data-bs-dismiss="modal">Batal</button>
+            <button type="submit" class="btn btn-success">Simpan</button>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <small class="text-muted">Form Pendaftaran Pasien Rawat Jalan</small>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<!-- Script -->
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+<script>
+// Data detail untuk expand row
+function formatDetail(rowData) {
+  return `
+    <table class="table table-sm table-bordered">
+      <tr><th>Tanggal Lahir</th><td>12-01-1990</td></tr>
+      <tr><th>Jenis Kelamin</th><td>Laki-laki</td></tr>
+      <tr><th>Nomor Telepon</th><td>08123456789</td></tr>
+      <tr><th>Asuransi</th><td>BPJS</td></tr>
+    </table>
+  `;
+}
+
+$(document).ready(function() {
+  var table = $('#pasienTable').DataTable({
+    responsive: true,
+    columnDefs: [
+      { orderable: false, className: 'details-control', targets: 0 }
+    ],
+    order: [[1, 'asc']],
+    dom: "<'row mb-2'<'col-sm-4'l><'col-sm-4 text-center'B><'col-sm-4'f>>" +
+         "<'row'<'col-sm-12'tr>>" +
+         "<'row mt-2'<'col-sm-5'i><'col-sm-7'p>>",
+    buttons: [
+      { extend: 'excelHtml5', title: 'Data_Tindakan' },
+      { extend: 'pdfHtml5', title: 'Data_Tindakan' }
+    ],
+    language: { url: "//cdn.datatables.net/plug-ins/1.13.6/i18n/id.json" }
+  });
+  });
+
+  // Event untuk expand row
+  $('#pasienTable tbody').on('click', 'td.details-control', function() {
+    var tr = $(this).closest('tr');
+    var row = table.row(tr);
+
+    if (row.child.isShown()) {
+      row.child.hide();
+      tr.removeClass('shown');
+    } else {
+      row.child(formatDetail(row.data())).show();
+      tr.addClass('shown');
+    }
+  });
+
+  // Event submit form modal
+  $('#formPasien').on('submit', function(e) {
+    e.preventDefault();
+    var data = $(this).serializeArray();
+    var noRM = data.find(f => f.name === 'no_rm').value;
+    var nama = data.find(f => f.name === 'nama').value;
+    var alamat = data.find(f => f.name === 'alamat').value;
+
+    table.row.add(['', noRM, nama, alamat]).draw();
+    $('#modalPasien').modal('hide');
+    this.reset();
+  });
+
+  $('#btnAdd').click(function(){
+    
+    $('#pendaftaranModal').modal('show');
+  });
+});
+</script>
+</body>
+</html>

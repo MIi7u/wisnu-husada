@@ -1,0 +1,666 @@
+/* =========================================
+BODY
+========================================= */
+
+body {
+    background: url('/images/bg1.png') no-repeat center center fixed;
+    background-size: cover;
+    font-family: 'Segoe UI', sans-serif;
+    padding-bottom:80px;
+}
+
+/* =========================================
+NAVBAR
+========================================= */
+.header {
+            background-color: #2d6e5c;
+            color: white;
+            padding: 15px 20px;
+        }
+        
+        .top-bar {
+            height: 3px;
+            background-color: #2d6e5c; /* atau warna lain sesuai keinginan */
+        }
+.navbar-custom{
+    background:
+        linear-gradient(
+            to bottom,
+            #a7c9ec,
+            #197a9e
+        );
+    border-top:
+        1px solid rgba(255,255,255,.4);
+    border-bottom:
+        1px solid rgba(0,0,0,.1);
+}
+.nav-link{
+    transition:.15s;
+}
+.nav-link:active{
+    transform:translateY(2px);
+    box-shadow:
+        inset 0 3px 5px rgba(0,0,0,.3);
+}
+
+.dropdown-submenu {
+    position: relative;
+}
+.dropdown-submenu > .dropdown-menu {
+    top: 0;
+    left: 100%;
+    margin-top: 0;
+    margin-left: .1rem;
+    display: none;
+    position: absolute;
+}
+
+.dropdown-submenu:hover > .dropdown-menu{
+    display:block;
+    animation: fadeMenu .15s ease;
+}
+
+@keyframes fadeMenu{
+    from{
+        opacity:0;
+        transform:translateX(10px);
+    }
+    to{
+        opacity:1;
+        transform:translateX(0);
+    }
+}
+.dropdown-submenu > a::after{
+    content: "▶";
+    float: right;
+    font-size: 10px;
+    margin-top: 4px;
+}
+.dropdown-menu .dropdown-item:hover{
+    background: linear-gradient(
+        to bottom,
+        #4aa3df,
+        #197a9e
+    );
+    color:white;
+}
+.dropdown-submenu .dropdown-menu{
+    border-radius:12px;
+    box-shadow:
+        0 10px 30px rgba(0,0,0,.25);
+}
+
+/* supaya tidak tertutup */
+.navbar,
+.dropdown-menu{
+    overflow: visible !important;
+}
+
+.dropdown-menu{
+    z-index: 9999;
+}
+/* =========================================
+GLASS CARD
+========================================= */
+
+.content-wrapper{
+    background: rgba(255,255,255,0.30) !important;
+    backdrop-filter: blur(18px) saturate(180%);
+    -webkit-backdrop-filter: blur(18px) saturate(180%);
+    border-radius: 22px;
+    border: 1px solid rgba(255,255,255,0.25);
+    box-shadow:
+        0 8px 32px rgba(0,0,0,0.35),
+        inset 0 1px 0 rgba(255,255,255,0.15);
+    overflow: hidden;
+}
+
+.content-wrapper::before{
+    content:'';
+    position:absolute;
+    inset:0;
+    background:
+        linear-gradient(
+            135deg,
+            rgba(255,255,255,0.10),
+            rgba(255,255,255,0.02)
+        );
+    pointer-events:none;
+}
+
+/* =========================================
+CARD GLASSMORPHISM
+========================================= */
+
+.card{
+    background: rgba(255,255,255,0.30) !important;
+    backdrop-filter: blur(18px) saturate(180%);
+    -webkit-backdrop-filter: blur(18px) saturate(180%);
+    border-radius: 22px !important;
+    border: 1px solid rgba(255,255,255,0.18) !important;
+    box-shadow:
+        0 8px 32px rgba(0,0,0,0.35),
+        inset 0 1px 0 rgba(255,255,255,0.08);
+    overflow: hidden;
+    position: relative;
+}
+
+/* =========================================
+CARD BODY
+========================================= */
+
+.card-body{
+    overflow-x:auto;
+    background: transparent !important;
+    color: white !important;
+}
+
+/* =========================================
+DATATABLES WRAPPER
+========================================= */
+
+.dataTables_wrapper{
+    width:100% !important;
+    color:white !important;
+}
+.dataTables_scroll{
+    width:100% !important;
+}
+
+table.dataTable{
+    width:100% !important;
+    overflow:hidden;
+    border-radius:18px;
+}
+
+/* =========================================
+DATATABLES TOP
+========================================= */
+
+.dataTables_wrapper .dataTables_length{
+    float:left;
+}
+
+.dataTables_wrapper .dataTables_filter{
+    float:right;
+    text-align:right;
+}
+
+/* =========================================
+DATATABLES BOTTOM
+========================================= */
+
+.dataTables_wrapper .dataTables_info{
+    float:left;
+    padding-top:10px;
+}
+
+.dataTables_wrapper .dataTables_paginate{
+    float:right;
+    padding-top:5px;
+}
+
+/* CLEAR FLOAT */
+
+.dataTables_wrapper .row::after{
+    content:'';
+    display:block;
+    clear:both;
+}
+.dataTables_filter label{
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+.dataTables_length label{
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+/* =========================================
+DATATABLE HEADER OSX BLACK
+========================================= */
+
+table.dataTable thead th{
+    background:
+        linear-gradient(
+            180deg,
+            #5a5a5a 0%,
+            #2b2b2b 40%,
+            #101010 50%,
+            #000000 100%
+        ) !important;
+
+    color:white !important;
+    border:none !important;
+    font-weight:600;
+    padding:16px 14px !important;
+    position:sticky;
+    top:0;
+    z-index:10;
+    vertical-align:middle;
+}
+
+/* GLOSSY EFFECT */
+
+table.dataTable thead th::before{
+
+    content:'';
+
+    position:absolute;
+
+    top:0;
+    left:0;
+
+    width:100%;
+    height:50%;
+
+    background:
+        linear-gradient(
+            180deg,
+            rgba(255,255,255,0.25),
+            rgba(255,255,255,0)
+        );
+}
+
+/* HEADER BORDER */
+
+table.dataTable thead tr{
+
+    border-bottom:
+        1px solid rgba(255,255,255,0.08);
+}
+/* =========================================
+HEADER PERMEN
+========================================= */
+
+.card-header{
+    background:
+        linear-gradient(
+            180deg,
+            #5a5a5a 0%,
+            #2b2b2b 40%,
+            #101010 50%,
+            #000000 100%
+        ) !important;
+
+    color: white !important;
+    border: none !important;
+    position: relative;
+}
+
+.card-header::before{
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 50%;
+    background: linear-gradient(
+        180deg,
+        rgba(255,255,255,0.28),
+        rgba(255,255,255,0)
+    );
+}
+
+/* =========================================
+DATATABLES EXPAND BUTTON
+========================================= */
+
+td.dt-control {
+    text-align: center;
+    vertical-align: middle;
+    cursor: pointer;
+}
+
+/* ICON + */
+
+td.dt-control::before {
+    content: '+';
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: linear-gradient(45deg,#00c6ff,#0072ff);
+    color: white;
+    font-weight: bold;
+    font-size: 18px;
+    box-shadow: 0 4px 10px rgba(0,114,255,0.4);
+    transition: 0.3s;
+}
+
+/* HOVER */
+
+td.dt-control:hover::before {
+    transform: scale(1.1);
+}
+
+/* ICON - */
+
+tr.shown td.dt-control::before {
+    content: '-';
+    background: linear-gradient(45deg,#ff416c,#ff4b2b);
+    box-shadow: 0 4px 10px rgba(255,75,43,0.4);
+}
+
+tr:hover{
+   box-shadow:0 0 15px rgba(0,200,255,.4);
+}
+
+/* =========================================
+MODAL OSX STYLE
+========================================= */
+
+.modal-content{
+    background: rgba(30,30,30,0.55) !important;
+    backdrop-filter: blur(30px);
+    -webkit-backdrop-filter: blur(30px);
+
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 22px;
+
+    box-shadow:
+        0 20px 50px rgba(0,0,0,0.45),
+        inset 0 1px 0 rgba(255,255,255,0.08);
+
+    overflow: hidden;
+}
+
+/* HEADER OSX */
+
+.modal-header{
+
+    background:
+        linear-gradient(
+            180deg,
+            rgba(255,255,255,0.18),
+            rgba(255,255,255,0.03)
+        );
+
+    border-bottom:
+        1px solid rgba(255,255,255,0.08);
+
+    padding: 14px 20px;
+
+    position: relative;
+}
+
+/* OSX TRAFFIC LIGHT */
+
+.modal-header::before{
+    content:'';
+    position:absolute;
+    left:20px;
+    top:50%;
+    transform:translateY(-50%);
+    width:12px;
+    height:12px;
+    border-radius:50%;
+    background:#ff5f57;
+    box-shadow:
+        20px 0 #febc2e,
+        40px 0 #28c840;
+}
+
+/* TITLE */
+
+.modal-title{
+    color:white !important;
+    font-weight:600;
+    margin-left:70px;
+}
+
+/* BODY */
+
+.modal-body{
+
+    color:white;
+}
+
+/* FOOTER */
+
+.modal-footer{
+
+    border-top:
+        1px solid rgba(255,255,255,0.08);
+
+    background:
+        rgba(255,255,255,0.03);
+}
+
+/* INPUT OSX */
+
+
+.modal-content .form-control,
+.modal-content .form-select{
+   background-color:
+        rgba(255, 255, 255, 0.382);
+    color:white;
+    border:
+        1px solid rgba(255,255,255,.15);
+    border-radius:25px !important;
+    min-height:42px;
+    padding-left:20px;
+    padding-right:50px;
+    backdrop-filter:blur(12px);
+    -webkit-backdrop-filter:blur(12px);
+    box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.15),
+        0 0 0 3px rgba(0,122,255,.15);
+}
+.modal-content .form-control:focus,
+.modal-content .form-select:focus{
+   background-color:
+        rgba(255,255,255,.12);
+    color:white;
+    border:
+        1px solid rgba(255,255,255,.15);
+    border-radius:25px !important;
+    min-height:42px;
+    padding-left:20px;
+    padding-right:50px;
+    backdrop-filter:blur(12px);
+    -webkit-backdrop-filter:blur(12px);
+    box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.15),
+        0 0 0 3px rgba(0,122,255,.15);
+}
+.modal-content .form-select,
+.modal-content input[type="file"]{
+    height:44px !important;
+    min-height:44px !important;
+    border-radius:18px !important;
+    padding-top:8px;
+    padding-bottom:8px;
+}
+.modal-content input[type="file"]::file-selector-button{
+    height:42px;
+    border:none;
+    border-radius:18px;
+    margin-right:10px;
+    padding:0 15px;
+    background:#0d6efd;
+    color:white;
+    cursor:pointer;
+    transition:.3s;
+}
+.modal-content input[type="file"]::file-selector-button:hover{
+    background:#0b5ed7;
+}
+
+/* LABEL */
+
+.modal-content label{
+    color:
+        rgba(255,255,255,0.85);
+    font-weight:500;
+}
+
+/* CLOSE BUTTON */
+
+.btn-close{
+
+    filter: invert(1);
+}
+.modal-dialog{
+    transform: scale(.96);
+    transition: .25s ease;
+}
+
+.modal.show .modal-dialog{
+    transform: scale(1);
+}
+.modal-header,
+.modal-footer{
+    border:none !important;
+}
+
+/* =========================================
+OSX WINDOW BUTTONS
+========================================= */
+
+.window-actions{
+    display:flex;
+    gap:10px;
+    align-items:center;
+}
+
+/* BUTTON */
+
+.btn-close-osx{
+    width:14px;
+    height:14px;
+    border-radius:50%;
+    display:inline-block;
+    box-shadow:
+        inset 0 1px 1px rgba(255,255,255,.45),
+        0 1px 2px rgba(0,0,0,.4);
+}
+
+/* RED */
+
+.btn-close-osx.red{
+    background:
+        linear-gradient(
+            180deg,
+            #ff7b72,
+            #ff5f57
+        );
+}
+
+/* YELLOW */
+
+.btn-close-osx.yellow{
+    background:
+        linear-gradient(
+            180deg,
+            #ffd86a,
+            #febc2e
+        );
+}
+
+/* GREEN */
+
+.btn-close-osx.green{
+    background:
+        linear-gradient(
+            180deg,
+            #62f087,
+            #28c840
+        );
+}
+
+/* TITLE */
+
+.card-title-osx{
+    color:white;
+    margin:0;
+    margin-left:20px;
+    font-weight:600;
+    flex:1;
+}
+.btn-close-osx:hover::after{
+    content:'✕';
+    color:rgba(0,0,0,.55);
+    font-size:10px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100%;
+}
+.select2-container{
+    width:300px !important;
+}
+.select2-container--default
+.select2-selection--single{
+    height:42px !important;
+    border-radius:12px !important;
+}
+.select2-selection__rendered{
+    line-height:40px !important;
+}
+.select2-selection{
+    height:42px !important;
+    border-radius:10px !important;
+}
+.select2-selection__arrow{
+    height:40px !important;
+}
+.gear-spin{
+    animation: spin 3s linear infinite;
+}
+
+@keyframes spin{
+    from{
+        transform: rotate(0deg);
+    }
+    to{
+        transform: rotate(360deg);
+    }
+}
+
+/* ===========================
+   FOOTER OSX
+=========================== */
+
+.footer-osx{
+
+    position:fixed;
+    bottom:0;
+    left:20px;
+    right:20px;
+
+    height:60px;
+
+    background:
+        rgba(255,255,255,.85);
+
+    backdrop-filter:blur(15px);
+    -webkit-backdrop-filter:blur(15px);
+
+    border-radius:0 0 20px 20px;
+
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    padding:0 30px;
+
+    box-shadow:
+        0 -5px 20px rgba(0,0,0,.15);
+
+    z-index:9999;
+
+    color:#444;
+    font-size:14px;
+}
+
+.footer-left strong{
+    color:#1d7eb8;
+}
+
+.footer-right{
+    font-weight:500;
+}

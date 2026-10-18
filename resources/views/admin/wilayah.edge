@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Pilih Wilayah</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" rel="stylesheet" />
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+</head>
+<body class="bg-light">
+  <div class="container py-5">
+    <h1 class="mb-4 text-center">Pilih Wilayah</h1>
+    <div class="row">
+      <div class="col-md-3">
+        <label class="form-label">Provinsi</label>
+        <select id="provinsi" class="form-select select2"></select>
+      </div>
+      <div class="col-md-3">
+        <label class="form-label">Kabupaten</label>
+        <select id="kabupaten" class="form-select select2"></select>
+      </div>
+      <div class="col-md-3">
+        <label class="form-label">Kecamatan</label>
+        <select id="kecamatan" class="form-select select2"></select>
+      </div>
+      <div class="col-md-3">
+        <label class="form-label">Kelurahan</label>
+        <select id="kelurahan" class="form-select select2"></select>
+      </div>
+    </div>
+  </div>
+
+<script>
+$(document).ready(function() {
+  $('.select2').select2({ theme: 'bootstrap-5', placeholder: 'Pilih...', allowClear: true });
+
+  // Load Provinsi
+  $.get('/admin/wilayah/provinsi', function(data) {
+    $('#provinsi').append('<option value="">Pilih Provinsi</option>');
+    data.forEach(function(item) {
+      $('#provinsi').append('<option value="' + item.code + '">' + item.name + '</option>');
+    });
+  });
+
+  // Provinsi -> Kabupaten
+  $('#provinsi').change(function() {
+    var code = $(this).val();
+    $('#kabupaten').empty().append('<option>Loading...</option>');
+    $('#kecamatan').empty().append('<option>Pilih Kecamatan</option>');
+    $('#kelurahan').empty().append('<option>Pilih Kelurahan</option>');
+    if (code) {
+      $.get('/admin/wilayah/kabupaten/' + code, function(data) {
+        $('#kabupaten').empty().append('<option value="">Pilih Kabupaten</option>');
+        data.forEach(function(item) {
+          $('#kabupaten').append('<option value="' + item.code + '">' + item.name + '</option>');
+        });
+      });
+    }
+  });
+
+  // Kabupaten -> Kecamatan
+  $('#kabupaten').change(function() {
+    var code = $(this).val();
+    $('#kecamatan').empty().append('<option>Loading...</option>');
+    $('#kelurahan').empty().append('<option>Pilih Kelurahan</option>');
+    if (code) {
+      $.get('/admin/wilayah/kecamatan/' + code, function(data) {
+        $('#kecamatan').empty().append('<option value="">Pilih Kecamatan</option>');
+        data.forEach(function(item) {
+          $('#kecamatan').append('<option value="' + item.code + '">' + item.name + '</option>');
+        });
+      });
+    }
+  });
+
+  // Kecamatan -> Kelurahan
+  $('#kecamatan').change(function() {
+    var code = $(this).val();
+    $('#kelurahan').empty().append('<option>Loading...</option>');
+    if (code) {
+      $.get('/admin/wilayah/kelurahan/' + code, function(data) {
+        $('#kelurahan').empty().append('<option value="">Pilih Kelurahan</option>');
+        data.forEach(function(item) {
+          $('#kelurahan').append('<option value="' + item.code + '">' + item.name + '</option>');
+        });
+      });
+    }
+  });
+});
+</script>
+</body>
+</html>

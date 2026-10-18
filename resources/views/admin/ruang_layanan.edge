@@ -1,0 +1,164 @@
+<meta name="csrf-token" content="{{ csrfToken }}">
+
+<div class="container mt-4">
+   <div class="card">
+       <div class="card-header d-flex justify-content-between">
+       <div class="window-actions">
+              <span class="btn-close-osx red btnCardClose"></span>
+              <span class="btn-close-osx yellow"></span>
+              <span class="btn-close-osx green"></span>
+       </div>
+              <h4 class="card-title-osx">Data Ruang Layanan</h4>
+              <button class="btn btn-primary" id="btnAdd">
+                     Tambah Data
+              </button>
+       </div>
+       <div class="card-body">
+       <table id="ruangTable"
+              class="table table-bordered table-hover">
+       <thead>
+         <tr>
+              <th width="5%">No</th>
+              <th>Kode Ruang</th>
+              <th>Kode BPJS</th>
+              <th>Nama Ruang</th>
+              <th>Instalasi</th>
+              <th>Jenis Pelayanan</th>
+              <th>Aksi</th>
+         </tr>
+       </thead>
+       </table>
+   </div>
+ </div>
+</div>
+
+<!-- MODAL -->
+
+<div class="modal fade" id="ruangModal">
+       <div class="modal-dialog modal-lg">
+              <div class="modal-content">
+              <form id="ruangForm">
+                     <input type="hidden" id="saveMethod" value="add">
+                     <input type="hidden" id="id">
+                     <div class="modal-header">
+                            <h5 class="modal-title">Form Ruang Layanan</h5>
+                            <button type="button"
+                                   class="btn-close"
+                                   data-bs-dismiss="modal">
+                            </button>
+                     </div>
+                     <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                   <label>Kode Ruang</label>
+                                   <input type="text"
+                                          class="form-control"
+                                          name="kode_ruang"
+                                          id="kode_ruang">            
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                   <label>Kode BPJS</label>
+                                   <input type="text"
+                                          class="form-control"
+                                          name="kode_bpjs"
+                                          id="kode_bpjs">
+                            </div>
+                            <div class="col-md-12 mb-3">
+                                   <label>Nama Ruang</label>
+                                   <input type="text"
+                                          class="form-control"
+                                          name="nama_ruang"
+                                          id="nama_ruang">
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                   <label>Instalasi Bidang</label>
+                                   <select class="form-select"
+                                          name="instalasi_bidang"
+                                          id="instalasi_bidang">
+                                   <option value="">
+                                          -- Pilih Instalasi --
+                                   </option>
+                                   <option value="Wakil Direktur Umum">
+                                          Wakil Direktur Umum
+                                   </option>
+                                   <option value="Bagian Umum dan Administrasi">
+                                          Bagian Umum dan Administrasi
+                                   </option>
+                                   <option value="Bagian Keuangan">
+                                          Bagian Keuangan
+                                   </option>
+                                   <option value="Bidang Diklit">
+                                          Bidang Diklit
+                                   </option>
+                                   <option value="Bidang Pelayanan Medis">
+                                          Bidang Pelayanan Medis
+                                   </option>
+                                   <option value="Bidang Keperawatan">
+                                          Bidang Keperawatan
+                                   </option>
+                                   <option value="Bidang Penunjang">
+                                          Bidang Penunjang
+                                   </option>
+                                   <option value="Instalasi Rawat Jalan">
+                                          Instalasi Rawat Jalan
+                                   </option>
+                                   <option value="Instalasi Rawat Inap">
+                                          Instalasi Rawat Inap
+                                   </option>
+                                   <option value="Instalasi Gawat Darurat">
+                                          Instalasi Gawat Darurat
+                                   </option>
+                                   <option value="Instalasi Laboratorium">
+                                          Instalasi Laboratorium
+                                   </option>
+                                   <option value="Instalasi Radiologi">
+                                          Instalasi Radiologi
+                                   </option>
+                                   <option value="Instalasi TI">
+                                          Instalasi TI
+                                   </option>
+                                   <option value="Wakil Direktur Pelayanan">
+                                          Wakil Direktur Pelayanan
+                                   </option>
+                                   <option value="Direktur">
+                                          Direktur
+                                   </option>
+                                   </select>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                   <label>Jenis Pelayanan</label>
+                                   <select class="form-select"
+                                          name="kode_jenis_pelayanan"
+                                          id="kode_jenis_pelayanan">
+                                   <option value="">
+                                          --Pilih--
+                                   </option>
+                                   <option value="Rawat Inap">
+                                          Rawat Inap
+                                   </option>
+                                   <option value="Rawat Jalan">
+                                          Rawat Jalan
+                                   </option>
+                                   <option value="Penunjang">
+                                          Penunjang
+                                   </option>
+                                   <option value="-">
+                                          -
+                                   </option>
+                                   </select>
+                            </div>
+                        </div>
+                     </div>
+                     <div class="modal-footer">
+                            <button class="btn btn-primary">
+                            Simpan
+                            </button>
+                     </div>
+                </form>
+              </div>
+       </div>
+</div>
+
+<script src="/js/ruang_layanan.js"></script>

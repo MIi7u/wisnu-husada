@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Pendaftaran Pasien Baru</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    .required::after {
+      content: " *";
+      color: red;
+    }
+     body {
+      background: url('/images/bg1.png') no-repeat center center fixed;
+      background-size: cover;
+    }
+    .card-header {
+      background: linear-gradient(to bottom,rgb(135, 199, 231),rgb(5, 19, 121));
+      color: #fff;
+      font-weight: bold;
+    }
+    .modal-header {
+      background:linear-gradient(to bottom,rgb(31, 117, 58),rgb(97, 193, 95));
+      color: #fff;
+    }
+    table thead th {
+      background: #0d6efd;
+      color: #fff;
+    }
+    .modal-backdrop.show {
+      background: url('https://images.unsplash.com/photo-1581092918367-1f4b7f3e1f7a') no-repeat center center/cover;
+      opacity: 0.8;
+    }
+  </style>
+</head>
+<body>
+<div class="container my-4">
+  <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#pendaftaranModal">
+    Pendaftaran Pasien Baru
+  </button>
+</div>
+
+<div class="modal fade" id="pendaftaranModal" tabindex="-1" aria-labelledby="pendaftaranLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="pendaftaranLabel">Pendaftaran Pasien Baru</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="row g-3">
+
+            <!-- Nomor RM -->
+            <div class="col-md-4">
+              <label class="form-label required">Nomor RM</label>
+              <div class="input-group">
+                <input type="text" class="form-control" value="058274" readonly>
+              </div>
+            </div>
+
+            <!-- Alamat Pasien -->
+            <div class="col-md-4">
+              <label class="form-label required">Alamat</label>
+              <div class="input-group">
+                <input type="text" class="form-control" placeholder="Jl. Example No 1" required>
+              </div>
+            </div>
+
+            <!-- Kode POS -->
+            <div class="col-md-2">
+              <label class="form-label">Kode POS</label>
+              <div class="input-group">
+                <input type="text" class="form-control" placeholder="Kode POS">
+              </div>
+            </div>
+
+            <!-- No Telepon -->
+            <div class="col-md-2">
+              <label class="form-label required">No Telp</label>
+              <div class="input-group">
+                <input type="text" class="form-control" placeholder="08xxxxxxxxxx" required>
+              </div>
+            </div>
+
+            <!-- No Identitas -->
+            <div class="col-md-4">
+              <label class="form-label required">No Identitas</label>
+              <div class="input-group">
+                <input type="text" class="form-control" placeholder="No Identitas Diri" required>
+              </div>
+            </div>
+
+            <!-- RT -->
+            <div class="col-md-2">
+              <label class="form-label">RT</label>
+              <div class="input-group">
+                <input type="text" class="form-control">
+              </div>
+            </div>
+
+            <!-- RW -->
+            <div class="col-md-2">
+              <label class="form-label">RW</label>
+              <div class="input-group">
+                <input type="text" class="form-control">
+              </div>
+            </div>
+            <!-- Pendidikan -->
+            <div class="col-md-4">
+              <label class="form-label">Pendidikan</label>
+              <div class="input-group">
+                <select class="form-select">
+                  <option selected disabled>--Pilih--</option>
+                  <option>SD</option>
+                  <option>SMP</option>
+                  <option>SMA</option>
+                  <option>S 1</option>
+                  <option>S 2</option>
+                  <option>S 3</option>
+                  <option>Tidak Sekolah</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- No KK -->
+            <div class="col-md-4">
+              <label class="form-label">No KK</label>
+              <div class="input-group">
+                <input type="text" class="form-control" placeholder="No KK">
+              </div>
+            </div>
+
+            <!-- Provinsi -->
+            <div class="col-md-4">
+              <label class="form-label required">Provinsi</label>
+              <div class="input-group">
+                <select class="form-select" required>
+                  <option selected disabled>--Pilih Provinsi--</option>
+                  <option>Jawa Tengah</option>
+                  <option>Jawa Barat</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Pekerjaan -->
+            <div class="col-md-2">
+              <label class="form-label">Pekerjaan</label>
+              <div class="input-group">
+                <select class="form-select">
+                  <option selected disabled>--Pilih--</option>
+                  <option>Karyawan</option>
+                  <option>Wiraswasta</option>
+                </select>
+              </div>
+            </div>
+             <!-- Golongan Darah -->
+            <div class="col-md-2">
+              <label class="form-label">Golongan Darah</label>
+              <div class="input-group">
+                <select class="form-select">
+                  <option selected disabled>--Pilih--</option>
+                  <option>A</option>
+                  <option>B</option>
+                  <option>AB</option>
+                  <option>O</option>
+                </select>
+              </div>
+            </div>
+
+            
+            <!-- Nama Lengkap -->
+            <div class="col-md-4">
+              <label class="form-label required">Nama Lengkap</label>
+              <div class="input-group">
+                <input type="text" class="form-control" placeholder="Nama Lengkap" required>
+              </div>
+            </div>
+
+            <!-- Kabupaten -->
+            <div class="col-md-4">
+              <label class="form-label required">Kabupaten</label>
+              <div class="input-group">
+                <select class="form-select" required>
+                  <option selected disabled>--Pilih Kabupaten--</option>
+                  <option>Semarang</option>
+                  <option>Surakarta</option>
+                </select>
+              </div>
+            </div>
+         <!-- Status Pernikahan -->
+            <div class="col-md-2">
+              <label class="form-label">Status Pernikahan</label>
+              <div class="input-group">
+                <select class="form-select">
+                  <option selected disabled>--Pilih--</option>
+                  <option>Menikah</option>
+                  <option>Belum Menikah</option>
+                  <option>Janda / Duda</option>
+                </select>
+              </div>
+            </div>
+             <!-- Kewarganegaraan -->
+            <div class="col-md-2">
+              <label class="form-label required">Kewarganegaraan</label><br>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="kewarganegaraan" value="WNI" checked required>
+                <label class="form-check-label">WNI</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="kewarganegaraan" value="WNA">
+                <label class="form-check-label">WNA</label>
+              </div>
+            </div>
+            
+           
+            <!-- Tempat Lahir -->
+            <div class="col-md-2">
+              <label class="form-label required">Tempat Lahir</label>
+              <div class="input-group">
+                <input type="text" class="form-control" placeholder="Tempat Lahir" required>
+              </div>
+            </div>
+
+            <!-- Tanggal Lahir -->
+            <div class="col-md-">
+              <label class="form-label required">Tanggal Lahir</label>
+              <div class="input-group">
+                <input type="date" class="form-control" required>
+              </div>
+            </div>
+
+            
+            <!-- Kecamatan -->
+            <div class="col-md-4">
+              <label class="form-label required">Kecamatan</label>
+              <div class="input-group">
+                <select class="form-select" required>
+                  <option selected disabled>--Pilih Kecamatan--</option>
+                  <option>Tembalang</option>
+                  <option>Candisari</option>
+                </select>
+              </div>
+            </div>
+
+             <!-- Hubungan Penanggung Jawab -->
+            <div class="col-md-4">
+              <label class="form-label">Hubungan Penanggung Jawab</label>
+              <div class="input-group">
+                <select class="form-select">
+                  <option selected disabled>--Pilih--</option>
+                  <option>Orang Tua</option>
+                  <option>Anak</option>
+                  <option>Suami/Istri</option>
+                  <option>Kerabat</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Agama -->
+            <div class="col-md-2">
+              <label class="form-label">Agama</label>
+              <div class="input-group">
+                <select class="form-select">
+                  <option selected disabled>--Pilih--</option>
+                  <option>Islam</option>
+                  <option>Protestan</option>
+                  <option>Katolik</option>
+                  <option>Budha</option>
+                  <option>Hindu</option>
+                  <option>Lain-Lain</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Jenis Kelamin -->
+            <div class="col-md-2">
+              <label class="form-label required">Jenis Kelamin</label><br>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="jenisKelamin" value="L" required>
+                <label class="form-check-label">L</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="jenisKelamin" value="P">
+                <label class="form-check-label">P</label>
+              </div>
+            </div>
+
+            <!-- Kelurahan -->
+            <div class="col-md-4">
+              <label class="form-label required">Kelurahan</label>
+              <div class="input-group">
+                <select class="form-select" required>
+                  <option selected disabled>--Pilih Kelurahan--</option>
+                  <option>Manyaran</option>
+                  <option>Meteseh</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Nama Penanggung Jawab -->
+            <div class="col-md-2">
+              <label class="form-label">Penanggung Jawab</label>
+              <div class="input-group">
+                <input type="text" class="form-control" placeholder="Nama Penanggung ">
+              </div>
+            </div>
+
+            <!-- Nomor RM Ibu -->
+            <div class="col-md-2">
+              <label class="form-label">Nomor RM Ibu</label>
+              <div class="input-group">
+                <input type="text" class="form-control" placeholder="Nomor RM Ibu">
+              </div>
+            </div>
+          </div>
+          <div class="mt-4">
+            <button type="submit" class="btn btn-primary">Daftar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

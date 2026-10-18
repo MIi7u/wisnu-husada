@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>CRUD Tindakan</title>
+
+  <!-- Bootstrap 5 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <!-- DataTables -->
+  <link href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" rel="stylesheet" />
+
+  <style>
+    .body {
+      background: url('/images/bg1.png') no-repeat center center fixed;
+      background-size: cover;
+    }
+    .card-header {
+      background: #0d6efd;
+      color: #fff;
+      font-weight: bold;
+    }
+    .modal-header {
+      background: #198754;
+      color: #fff;
+    }
+    table thead th{
+      background: #0d6efd;
+      color: #fff;
+    }
+    .dataTables_filter input {
+      border: 1px solid #ddd;
+      padding: 5px 10px;
+    }
+
+    /* Background belakang modal */
+    .modal-backdrop.show {
+      background: url('https://images.unsplash.com/photo-1581092918367-1f4b7f3e1f7a') no-repeat center center/cover;
+      opacity: 0.8;
+    }
+  </style>
+</head>
+<body>
+  <div class="container mt-5">
+    <div class="card shadow-lg">
+     <div class="card-header d-flex justify-content-between align-items-center">
+        <h5 class="mb-0"> Manajemen Tindakan Medis</h5>
+        <button class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#formModal" onclick="resetForm()">
+            Tambah Tindakan
+            </button>
+      </div>
+      <div class="card-body">
+       
+
+        <table id="tindakanTable" class="table table-striped table-bordered">
+          <thead>
+            <tr>
+              <th>Kode</th>
+              <th>Nama Tindakan</th>
+              <th>Detail</th>
+              <th>Tarif</th>
+              <th>Kode ACC</th>
+              <th>Keterangan</th>
+              <th>Aksi</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Form -->
+  <div class="modal fade" id="formModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalTitle">Tambah Tindakan</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <form id="tindakanForm">
+            <!-- Kode Tindakan -->
+            <div class="input-group mb-3">
+              <span class="input-group-text">Kode</span>
+              <input type="text" class="form-control" id="kdTindakan" placeholder="Kode tindakan" />
+            </div>
+            <!-- Nama Tindakan -->
+            <div class="input-group mb-3">
+              <span class="input-group-text">Nama</span>
+              <input type="text" class="form-control" id="nmTindakan" placeholder="Nama tindakan" required />
+            </div>
+            <!-- Detail -->
+            <div class="input-group mb-3">
+              <span class="input-group-text">Detail</span>
+              <textarea class="form-control" id="detail" rows="2" placeholder="Deskripsi tindakan"></textarea>
+            </div>
+            <!-- Tarif -->
+            <div class="input-group mb-3">
+              <span class="input-group-text">Rp</span>
+              <input type="number" class="form-control" id="tarif" placeholder="0" min="0" step="1000" required />
+              <span class="input-group-text">,00</span>
+            </div>
+            <!-- Kode ACC -->
+            <div class="input-group mb-3">
+              <span class="input-group-text">Kode ACC</span>
+              <input type="text" class="form-control" id="kdAcc" placeholder="ACC01" required />
+            </div>
+            <!-- Keterangan -->
+            <div class="input-group mb-3">
+              <span class="input-group-text">Keterangan</span>
+              <textarea class="form-control" id="keterangan" rows="2" placeholder="Catatan tambahan"></textarea>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+          <button type="submit" class="btn btn-primary" form="tindakanForm">Simpan</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+  <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+
+  <script>
+    let table;
+
+    $(document).ready(function () {
+      table = $('#tindakanTable').DataTable({
+        ajax: '/admin/tindakan/data',
+        columns: [
+          { data: 'kd_tindakan' },
+          { data: 'nm_tindakan' },
+          { data: 'detail' },
+          { 
+            data: 'tarif',
+            render: function (data) {
+              return 'Rp ' + parseInt(data).toLocaleString();
+            }
+          },
+          { data: 'kd_acc' },
+          { data: 'keterangan' },
+          {
+            data: 'kd_tindakan',
+            orderable: false,
+            searchable: false,
+            render: function (data) {
+              return '<button class="btn btn-sm btn-warning" onclick="editTindakan(\'' + data + '\')">Edit</button>' +
+                     ' <button class="btn btn-sm btn-danger ms-1" onclick="deleteTindakan(\'' + data + '\')">Hapus</button>';
+            }
+          }
+        ]
+      });
+    });
+
+    function resetForm() {
+      $('#tindakanForm')[0].reset();
+      $('#kdTindakan').val('');
+      $('#modalTitle').text('Tambah Tindakan');
+    }
+
+    $('#tindakanForm').on('submit', async function (e) {
+      e.preventDefault();
+      const kode = $('#kdTindakan').val();
+      const url = kode ? '/tindakan/' + kode : '/tindakan';
+      const method = kode ? 'PUT' : 'POST';
+
+      const data = {
+        nmTindakan: $('#nmTindakan').val(),
+        detail: $('#detail').val(),
+        tarif: $('#tarif').val(),
+        kdAcc: $('#kdAcc').val(),
+        keterangan: $('#keterangan').val()
+      };
+
+      $.ajax({
+        url: url,
+        method: method,
+        data: data,
+        success: function () {
+          alert(method === 'POST' ? 'Data berhasil ditambahkan' : 'Data berhasil diupdate');
+          $('#formModal').modal('hide');
+          table.ajax.reload();
+        },
+        error: function () {
+          alert('Gagal menyimpan data.');
+        }
+      });
+    });
+
+    function editTindakan(kode) {
+      $.get('/tindakan/data', function (data) {
+        const item = data.find(function(t) { return t.kd_tindakan === kode; });
+        if (item) {
+          $('#kdTindakan').val(item.kd_tindakan);
+          $('#nmTindakan').val(item.nm_tindakan);
+          $('#detail').val(item.detail);
+          $('#tarif').val(item.tarif);
+          $('#kdAcc').val(item.kd_acc);
+          $('#keterangan').val(item.keterangan);
+          $('#modalTitle').text('Edit Tindakan');
+          $('#formModal').modal('show');
+        }
+      });
+    }
+
+    function deleteTindakan(kode) {
+      if (confirm('Yakin ingin menghapus data ini?')) {
+        $.ajax({
+          url: '/tindakan/' + kode,
+          method: 'DELETE',
+          success: function () {
+            alert('Data berhasil dihapus');
+            table.ajax.reload();
+          },
+          error: function () {
+            alert('Gagal menghapus data.');
+          }
+        });
+      }
+    }
+  </script>
+</body>
+</html>

@@ -1,140 +1,282 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Data Dokter</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" rel="stylesheet">
+  <meta name="csrf-token" content="{{ csrfToken }}">
+  <meta charset="UTF-8">
+  <title>Data Dokter</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
+  <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.1/css/buttons.bootstrap5.min.css">
+  <style>
+    .card-header {
+      background: linear-gradient(to bottom,rgb(135, 199, 231),rgb(5, 19, 121));
+      color: white;
+      font-weight: bold;
+    }
+    .modal-header{
+      background: linear-gradient(to bottom,rgb(135, 199, 231),rgb(5, 19, 121));
+      color: white;
+      font-weight: bold;
+    }
+
+    table.dataTable thead th {
+      background: linear-gradient(to bottom,rgb(31, 117, 58),rgb(97, 193, 95));
+      color: white;
+    }
+
+     .custom-select {
+    border-radius: 12px; 
+    padding: 10px 14px;
+    font-size: 16px;
+    border: 1px solid #ced4da;
+    background: linear-gradient(to right, #f8f9fa, #ffffff);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+    transition: all 0.3s ease-in-out;
+  }
+
+  .custom-select:focus {
+    border-color: #4e73df;
+    box-shadow: 0 0 8px rgba(78,115,223,0.5);
+    outline: none;
+  }
+
+  .form-label {
+    color: #4e73df;
+    font-weight: bold;
+  }
+  </style>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+  <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+  <script src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
 </head>
-<body>
-    <div class="container mt-4">
-        <h2 class="mb-4">Manajemen Dokter</h2>
-    
-        <!-- Tombol Kembali ke Menu Utama -->
-        <button class="btn btn-secondary mb-3" id="btnKembali">Kembali ke Menu Utama</button>
-    
-        <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#modalDokter">Tambah Dokter</button>
-        
-        <div class="card p-3">
-            <table id="dokterTable" class="table table-striped">
-                <thead>
-                    <tr>
-                        <th>NIP</th>
-                        <th>Nama</th>
-                        <th>Jenis Kelamin</th>
-                        <th>Spesialis</th>
-                        <th>Aksi</th>
-                    </tr>
-                </thead>
-                <tbody>
-             @each(data in dokter)
-                    <tr>
-                        <td>{{ data.nip_dokter }}</td>
-                        <td>{{ data.nm_dokter }}</td>
-                        <td>{{ data.jenis_kelamin }}</td>
-                        <td>{{ data.nm_spesialis }}</td>
-                        <td>
-                            <button class="btn btn-warning btn-edit" 
-                                data-id="{{ dokter.nip_dokter }}" 
-                                data-nama="{{ dokter.nm_dokter }}" 
-                                data-jenis="{{ dokter.jenis_kelamin }}" 
-                                data-spesialis="{{ dokter.kd_spesialis }}">
-                                Edit
-                            </button>
-                            <button class="btn btn-danger btn-delete" data-id="{{ dokter.nip_dokter }}">
-                                Hapus
-                            </button>
-                        </td>
-                    </tr>
-                @endeach
-
-
-                </tbody>
-            </table>
-        </div>
+<body class="p-3">
+<div class="container">
+  <div class="card shadow">
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <h4 class="mb-0">Data Dokter</h4>
+      <button class="btn btn-light" id="btnAdd">+ Tambah Dokter</button>
     </div>
-    
-    <script>
-        document.getElementById('btnKembali').addEventListener('click', function () {
-            window.location.href = '/'; // Menuju route baru
-        });
-    </script>
-    
-    <!-- MODAL FORM -->
-    <div class="modal fade" id="modalDokter" tabindex="-1" aria-labelledby="modalDokterLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header bg-primary text-white">
-                    <h5 class="modal-title" id="modalDokterLabel">Tambah Dokter</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form id="formDokter">
-                        <input type="hidden" id="nip_dokter_old">
-                        <div class="mb-3">
-                            <label for="nip_dokter" class="form-label">NIP Dokter</label>
-                            <input type="text" class="form-control" id="nip_dokter" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="nm_dokter" class="form-label">Nama Dokter</label>
-                            <input type="text" class="form-control" id="nm_dokter" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="jenis_kelamin" class="form-label">Jenis Kelamin</label>
-                            <select class="form-control" id="jenis_kelamin" required>
-                                <option value="L">Laki-laki</option>
-                                <option value="P">Perempuan</option>
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label for="kd_specialis" class="form-label">Spesialis</label>
-                            <input type="text" class="form-control" id="kd_specialis" required>
-                        </div>
-                        <button type="submit" class="btn btn-success">Simpan</button>
-                    </form>
-                </div>
+    <div class="card-body">
+      <table id="dokterTable" class="table table-bordered table-striped w-100">
+        <thead>
+          <tr>
+            <th></th>
+            <th>NIP</th>
+            <th>Nama Dokter</th>
+            <th>Jenis Kelamin</th>
+            <th>Spesialis</th>
+            <th>Aksi</th>
+          </tr>
+        </thead>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Form -->
+<div class="modal fade" id="dokterModal" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <form id="dokterForm" enctype="multipart/form-data">
+      <input type="hidden" id="saveMethod" name="saveMethod" value="add">
+        <div class="modal-header">
+          <h5 class="modal-title">Form Dokter</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <input type="hidden" id="old_foto" name="old_foto">
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label>NIP Dokter</label>
+              <input type="text" name="nip_dokter" id="nip_dokter" class="form-control" required>
             </div>
+            <div class="col-md-6 mb-3">
+              <label>Nama Dokter</label>
+              <input type="text" name="nm_dokter" id="nm_dokter" class="form-control" required>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label for="jenis_kelamin" class="form-label fw-bold">Jenis Kelamin</label>
+                <select name="jenis_kelamin" id="jenis_kelamin" class="form-select custom-select" required>
+                    <option value="">--Pilih--</option>
+                    <option value="Laki-laki">Laki-laki</option>
+                    <option value="Perempuan">Perempuan</option>
+                </select>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                <label for="kd_spesialis" class="form-label fw-bold">Spesialis</label>
+                <select name="kd_spesialis" id="kd_spesialis" class="form-select custom-select">
+                  <option value="kd_spesialis">Pilih Spesialis</option> 
+                </select>
+                </div>
+            <div class="col-md-6 mb-3">
+              <label>No. Telepon</label>
+              <input type="text" name="no_telp" id="no_telp" class="form-control">
+            </div>
+            <div class="col-md-6 mb-3">
+              <label>Tanggal Masuk</label>
+              <input type="date" name="tgl_masuk" id="tgl_masuk" class="form-control">
+            </div>
+            <div class="col-md-6 mb-3">
+              <label>Foto</label>
+              <input type="file" name="foto" id="foto" class="form-control">
+            </div>
+            <div class="col-md-12 mb-3">
+              <label>Alamat</label>
+              <textarea name="alamat" id="alamat" class="form-control"></textarea>
+            </div>
+            <div class="col-md-12 mb-3">
+              <label>Keterangan</label>
+              <textarea name="keterangan" id="keterangan" class="form-control"></textarea>
+            </div>
+          </div>
         </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+          <button type="submit" class="btn btn-primary">Simpan</button>
+        </div>
+      </form>
     </div>
+  </div>
+</div>
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+<script>
 
-    <script>
-        $(document).ready(function () {
-            $('#dokterTable').DataTable();
 
-            // Tombol Kembali ke Menu Utama
-            $('#btnKembali').click(function () {
-                window.location.href = '/'; // Ganti dengan URL menu utama yang sesuai
-            });
+document.addEventListener('DOMContentLoaded', function () {
+  
+  $.ajaxSetup({
+  headers: {
+    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    }
+  });
+  
+  fetch('/admin/spesialis/dropdown')
+    .then(res => res.json())
+    .then(data => {
+      let select = document.getElementById('kd_spesialis');
 
-            // Pastikan modal muncul saat tombol "Tambah Dokter" ditekan
-            $('#btnTambah').click(function () {
-                $('#modalDokter').modal('show');
-            });
+      // Option default
+      let defaultOption = document.createElement('option');
+      defaultOption.value = '';
+      defaultOption.textContent = '-- Pilih Spesialis --';
+      select.appendChild(defaultOption);
 
-            // Submit Form Tambah/Update Dokter
-            $('#formDokter').submit(function (e) {
-                e.preventDefault();
-                let nip_dokter = $('#nip_dokter').val();
-                let nip_dokter_old = $('#nip_dokter_old').val();
-                let nm_dokter = $('#nm_dokter').val();
-                let jenis_kelamin = $('#jenis_kelamin').val();
-                let kd_specialis = $('#kd_specialis').val();
-                let url = nip_dokter_old ? '/update' : '/add';
+      // Isi data dari DB
+      data.forEach(sp => {
+        let option = document.createElement('option');
+        option.value = sp.kd_spesialis;
+        option.textContent = sp.nm_spesialis;
+        select.appendChild(option);
+      });
+    })
+    .catch(err => console.error('Error ambil data spesialis:', err));
+});
 
-                $.post(url, { nip_dokter, nm_dokter, jenis_kelamin, kd_specialis }, function (res) {
-                    if (res.success) {
-                        $('#modalDokter').modal('hide');
-                        location.reload();
-                    }
-                });
-            });
-        });
-    </script>
+$(function(){
+  function format(row){
+    return '<table class="table table-sm table-bordered">'+
+      '<tr><th>Alamat</th><td>'+(row.alamat||'')+'</td></tr>'+
+      '<tr><th>No. Telepon</th><td>'+(row.no_telp||'')+'</td></tr>'+
+      '<tr><th>Tgl Masuk</th><td>'+(row.tgl_masuk||'')+'</td></tr>'+
+      '<tr><th>Foto</th><td>'+(row.foto?'<img src="/images/'+row.foto+'" width="100">':'')+'</td></tr>'+
+      '<tr><th>Keterangan</th><td>'+(row.keterangan||'')+'</td></tr>'+
+      '</table>';
+  }
+
+  var table = $('#dokterTable').DataTable({
+    ajax: '/admin/dokter/data',
+    columns: [
+      { data: null, className:'dt-control', orderable:false, defaultContent:'' },
+      { data: 'nip_dokter' },
+      { data: 'nm_dokter' },
+      { data: 'jenis_kelamin', render: function(data){
+            return data === 'Laki-laki' ? 'Laki-laki' : data === 'Perempuan' ? 'Perempuan' : '';
+            }
+        },
+      { data: 'nm_spesialis' },
+      { data: null, render: function(row){
+          return '<button class="btn btn-sm btn-warning btnEdit" data-id="'+row.nip_dokter+'">Edit</button> '+
+                 '<button class="btn btn-sm btn-danger btnDelete" data-id="'+row.nip_dokter+'">Hapus</button>';
+        }
+      }
+    ]
+  });
+
+  $('#dokterTable tbody').on('click', 'td.dt-control', function () {
+    var tr = $(this).closest('tr');
+    var row = table.row(tr);
+    if(row.child.isShown()) row.child.hide(); else row.child(format(row.data())).show();
+  });
+
+  $('#btnAdd').click(function()
+  {
+    $('#dokterForm')[0].reset();
+    $('#nip_dokter').prop('disabled', false);
+    $('#dokterModal').modal('show');
+  });
+
+  // Simpan Data
+$('#dokterForm').submit(function(e) {
+  e.preventDefault();
+  var saveMethod = $('#saveMethod').val();
+  var id = $('#nip_dokter').val();
+  var formData = new FormData(this);
+
+  $.ajax({
+    url: saveMethod === 'edit' ? '/admin/dokter/update/' + id : '/admin/dokter/store',
+    method: 'POST',
+    data: formData,
+    processData: false,
+    contentType: false,
+    headers: {
+      'X-Requested-With': 'XMLHttpRequest',
+      'Accept': 'application/json'
+    },
+    success: function(res) {
+      $('#dokterModal').modal('hide');
+      $('#dokterTable').DataTable().ajax.reload();
+      alert('Data berhasil disimpan!');
+    },
+    error: function(xhr, status, error) {
+      console.error("Error:", xhr.responseText);
+      alert('Terjadi kesalahan: ' + xhr.responseText);
+    }
+  });
+});
+
+  // Hapus Data
+  $('#dokterTable').on('click', '.btnDelete', function() {
+    var id = $(this).data('id');
+    if(confirm('Yakin hapus data ini?')){
+      $.post('/admin/dokter/delete/' + id, {_method: 'DELETE'}, function(){
+        $('#dokterTable').DataTable().ajax.reload();
+      });
+    }
+  });
+
+  $('#dokterTable').on('click', '.btnEdit', function(){
+    var row = table.row($(this).closest('tr')).data();
+    $('#nip_dokter').val(row.nip_dokter).prop('disabled', true);
+    $('#nm_dokter').val(row.nm_dokter);
+
+   $('#jenis_kelamin').val(row.jenis_kelamin === 'Laki-laki' ? 'Laki-laki' : 
+                        row.jenis_kelamin === 'Perempuan' ? 'Perempuan' : '');
+    $('#kd_spesialis').val(row.kd_spesialis);
+    $('#alamat').val(row.alamat);
+    $('#no_telp').val(row.no_telp);
+    $('#tgl_masuk').val(row.tgl_masuk ? row.tgl_masuk.split('T')[0] : '');
+    $('#old_foto').val(row.foto);
+    $('#keterangan').val(row.keterangan);
+    // Tambahkan ini untuk mengubah saveMethod menjadi "edit"
+    $('#saveMethod').val('edit');
+    $('#dokterModal').modal('show');
+  });
+
+  
+});
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

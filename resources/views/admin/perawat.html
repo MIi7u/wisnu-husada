@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Data Perawat</title>
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <!-- DataTables CSS -->
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
+  <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.5.0/css/responsive.bootstrap5.min.css">
+
+  <style>
+    .card-header{
+      background-color: #007bff;
+      color: white;
+    }
+    .modal-header {
+      background-color: #007bff;
+      color: white;
+    }
+    table.dataTable thead {
+      background-color: #007bff;
+      color: white;
+    }
+    .card {
+      margin-top: 20px;
+    }
+    td.details-control {
+      background: url('https://www.datatables.net/examples/resources/details_open.png') no-repeat center center;
+      cursor: pointer;
+    }
+    tr.shown td.details-control {
+      background: url('https://www.datatables.net/examples/resources/details_close.png') no-repeat center center;
+    }
+  </style>
+</head>
+<body class="bg-light">
+
+<div class="container mt-4">
+  <div class="card shadow">
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <h4 class="mb-0">Manajemen Data Perawat</h4>      
+      <button class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#perawatModal">+ Tambah Perawat</button>
+    </div>
+    <div class="card-body">
+         <table id="perawatTable" class="table table-striped table-bordered nowrap" style="width:100%">
+        <thead>
+          <tr>
+            <th></th>
+            <th>NIP Perawat</th>
+            <th>Nama Perawat</th>
+            <th>Alamat</th>
+            <th>No HP</th>
+            <th>Aksi</th>
+          </tr>
+        </thead>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="perawatModal" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Tambah Perawat</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <form id="perawatForm">
+          {{ csrfField() }}
+          <div class="mb-3">
+            <label class="form-label">NIP Perawat</label>
+            <input type="text" class="form-control" name="nip_perawat" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Nama Perawat</label>
+            <input type="text" class="form-control" name="nama_perawat" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Jenis Kelamin</label>
+            <select class="form-control" name="jenis_kelamin" required>
+              <option value="">Pilih</option>
+              <option value="L">Laki-laki</option>
+              <option value="P">Perempuan</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Tanggal Lahir</label>
+            <input type="date" class="form-control" name="tgl_lahir" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">No HP</label>
+            <input type="text" class="form-control" name="no_hp" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Email</label>
+            <input type="email" class="form-control" name="email">
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Alamat</label>
+            <textarea class="form-control" name="alamat" required></textarea>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Spesialis</label>
+            <input type="text" class="form-control" name="spesialis">
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Tanggal Mulai Kerja</label>
+            <input type="date" class="form-control" name="tgl_mulai_kerja">
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Status</label>
+            <select class="form-control" name="status">
+              <option value="Aktif">Aktif</option>
+              <option value="Nonaktif">Nonaktif</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Foto</label>
+            <input type="file" class="form-control" name="foto">
+          </div>
+          <button type="submit" class="btn btn-primary">Simpan</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- JS -->
+<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+<script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
+
+<script>
+  function format(d) {
+    return (
+      '<table class="table table-bordered">'+
+        '<tr><td><strong>Jenis Kelamin</strong></td><td>'+d.jenis_kelamin+'</td></tr>'+
+        '<tr><td><strong>Tanggal Lahir</strong></td><td>'+d.tgl_lahir+'</td></tr>'+
+        '<tr><td><strong>Email</strong></td><td>'+d.email+'</td></tr>'+
+        '<tr><td><strong>Spesialis</strong></td><td>'+d.spesialis+'</td></tr>'+
+        '<tr><td><strong>Tanggal Mulai Kerja</strong></td><td>'+d.tgl_mulai_kerja+'</td></tr>'+
+        '<tr><td><strong>Status</strong></td><td>'+d.status+'</td></tr>'+
+      '</table>'
+    );
+  }
+
+  $(document).ready(function() {
+    var table = $('#perawatTable').DataTable({
+      ajax: '/perawat/data',
+      columns: [
+        {
+          className: 'details-control',
+          orderable: false,
+          data: null,
+          defaultContent: ''
+        },
+        { data: 'nip_perawat' },
+        { data: 'nama_perawat' },
+        { data: 'alamat' },
+        { data: 'no_hp' },
+        {
+          data: null,
+          render: function(data) {
+            return '<button class="btn btn-sm btn-warning">Edit</button> '+
+                   '<button class="btn btn-sm btn-danger">Hapus</button>';
+          }
+        }
+      ],
+      responsive: true
+    });
+
+    $('#perawatTable tbody').on('click', 'td.details-control', function() {
+      var tr = $(this).closest('tr');
+      var row = table.row(tr);
+
+      if (row.child.isShown()) {
+        row.child.hide();
+        tr.removeClass('shown');
+      } else {
+        row.child(format(row.data())).show();
+        tr.addClass('shown');
+      }
+    });
+  });
+</script>
+</body>
+</html>

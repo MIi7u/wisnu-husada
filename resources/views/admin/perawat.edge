@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Data Perawat</title>
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <!-- DataTables CSS -->
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
+  <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.5.0/css/responsive.bootstrap5.min.css">
+
+  <style>
+    .card-header{
+      background:linear-gradient(to bottom,rgb(135, 199, 231),rgb(5, 19, 121));
+      color: white;
+    }
+    .modal-header {
+      background-color: #007bff;
+      color: white;
+    }
+    table.dataTable thead th{
+      background-color: #007bff;
+      color: white;
+    }
+    .card {
+      margin-top: 20px;
+    }
+    td.details-control {
+      background: url('https://www.datatables.net/examples/resources/details_open.png') no-repeat center center;
+      cursor: pointer;
+    }
+    tr.shown td.details-control {
+      background: url('https://www.datatables.net/examples/resources/details_close.png') no-repeat center center;
+    }
+
+    .custom-select {
+    border-radius: 12px; 
+    padding: 10px 14px;
+    font-size: 16px;
+    border: 1px solid #ced4da;
+    background: linear-gradient(to right, #f8f9fa, #ffffff);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+    transition: all 0.3s ease-in-out;
+  }
+
+  .custom-select:focus {
+    border-color: #4e73df;
+    box-shadow: 0 0 8px rgba(78,115,223,0.5);
+    outline: none;
+  }
+
+  .form-label {
+    color: #4e73df;
+    font-weight: bold;
+  }
+  </style>
+</head>
+<body class="bg-light">
+
+<div class="container mt-4">
+  <div class="card shadow">
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <h4 class="mb-0">Manajemen Data Perawat</h4>      
+      <button class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#perawatModal">+ Tambah Perawat</button>
+    </div>
+    <div class="card-body">
+        <table id="perawatTable" class="table table-bordered table-striped" style="width:100%">
+        <thead>
+          <tr>
+            <th></th>
+            <th>NIP Perawat</th>
+            <th>Nama Perawat</th>
+            <th>Alamat</th>
+            <th>No HP</th>
+            <th>Aksi</th>
+          </tr>
+        </thead>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<!-- Modal -->
+<div class="modal fade" id="perawatModal" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header bg-primary text-white">
+        <h5 class="modal-title">Tambah Perawat</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <form id="perawatForm">
+          {{ csrfField() }}
+
+          <!-- NIP dan Nama Perawat -->
+          <div class="input-group mb-3">
+            <span class="input-group-text">NIP</span>
+            <input type="text" class="form-control" name="nip_perawat" required>
+         </div>
+         <div class="input-group mb-3">   
+            <span class="input-group-text">Nama</span>
+            <input type="text" class="form-control" name="nama_perawat" required>
+          </div>
+
+          <!-- Jenis Kelamin dan Tanggal Lahir -->
+          <div class="input-group mb-3">
+            <span class="input-group-text">Jenis Kelamin</span>
+            <select class="form-select" name="jenis_kelamin" required>
+              <option value="">--Pilih--</option>
+              <option value="Laki-laki">Laki-laki</option>
+              <option value="Perempuan">Perempuan</option>
+            </select>
+          </div> 
+           <div class="input-group mb-3">
+            <span class="input-group-text">Tgl Lahir</span>
+            <input type="date" class="form-control" name="tgl_lahir" required>
+          </div>
+
+          <!-- No HP dan Email -->
+          <div class="input-group mb-3">
+            <span class="input-group-text">No HP</span>
+            <input type="text" class="form-control" name="no_hp" required>
+            <span class="input-group-text">Email</span>
+            <input type="email" class="form-control" name="email">
+          </div>
+
+          <!-- Alamat -->
+           <div class="input-group mb-3">
+            <span class="input-group-text">Alamat</span>
+            <textarea class="form-control" name="alamat" rows="2" required></textarea>
+          </div>
+
+          <!-- Spesialis dan Tanggal Mulai Kerja -->
+          <div class="input-group mb-3">
+            <span class="input-group-text">Spesialis</span>
+            <input type="text" class="form-control" name="spesialis">
+          </div> 
+          <div class="input-group mb-3"> 
+            <span class="input-group-text">Mulai Kerja</span>
+            <input type="date" class="form-control" name="tgl_mulai_kerja">
+          </div>
+
+          <!-- Status dan Foto -->
+          <div class="input-group mb-3">
+            <span class="input-group-text">Status</span>
+            <select class="form-select" name="status">
+              <option value="Aktif">Aktif</option>
+              <option value="Nonaktif">Nonaktif</option>
+            </select>
+          </div> 
+          <div class="input-group mb-3">
+            <span class="input-group-text">Foto</span>
+            <input type="file" class="form-control" name="foto">
+          </div>
+
+          <!-- Tombol -->
+          <div class="d-flex justify-content-end">
+            <button type="submit" class="btn btn-primary">Simpan</button>
+          </div>
+
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- JS -->
+<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+<script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
+
+<script>
+$.ajaxSetup({
+  headers: {
+    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    }
+});
+    function format(d) {
+      return (
+        '<table class="table table-sm">'+
+          '<tr><td><strong>Jenis Kelamin:</strong></td><td>'+d.jenis_kelamin+'</td></tr>'+
+          '<tr><td><strong>Tanggal Lahir:</strong></td><td>'+d.tgl_lahir+'</td></tr>'+
+          '<tr><td><strong>Email:</strong></td><td>'+d.email+'</td></tr>'+
+          '<tr><td><strong>Spesialis:</strong></td><td>'+d.spesialis+'</td></tr>'+
+          '<tr><td><strong>Tanggal Mulai Kerja:</strong></td><td>'+d.tgl_mulai_kerja+'</td></tr>'+
+          '<tr><td><strong>Status:</strong></td><td>'+d.status+'</td></tr>'+
+          '<tr><td><strong>Foto:</strong></td><td>'+(d.foto?'<img src="/images/'+d.foto+'" width="100">':'')+'</td></tr>'+      
+          '</table>'
+      );
+    }
+  $(document).ready(function() {
+    var mode = 'add';               // 'add' atau 'edit'
+    var editingNip = null;
+    var perawatModal = new bootstrap.Modal(document.getElementById('perawatModal'));
+    var $form = $('#perawatForm');
+
+    // Inisialisasi DataTable
+    var table = $('#perawatTable').DataTable({
+      ajax: '/admin/perawat/data',
+      columns: [
+        { className: 'details-control', orderable: false, data: null, defaultContent: '' },
+        { data: 'nip_perawat' },
+        { data: 'nama_perawat' },
+        { data: 'alamat' },
+        { data: 'no_hp' },
+        {
+          data: null,
+          render: function(data) {
+            return '<button class="btn btn-sm btn-warning btnEdit me-1">Edit</button>' +
+                   '<button class="btn btn-sm btn-danger btnDel">Hapus</button>';
+          }
+        }
+      ],
+      responsive: true
+    });
+
+    // Expand row (detail)
+    $('#perawatTable tbody').on('click', 'td.details-control', function() {
+      var tr = $(this).closest('tr');
+      var row = table.row(tr);
+
+      if (row.child.isShown()) {
+        row.child.hide();
+        tr.removeClass('shown');
+      } else {
+        // buat fungsi format ada di halaman (format(row.data()))
+        row.child(format(row.data())).show();
+        tr.addClass('shown');
+      }
+    });
+
+    // Tombol Add (gunakan selector tombol hijau di header; jika punya id, ganti selector)
+    $('.btn-success').on('click', function() {
+      mode = 'add';
+      editingNip = null;
+      $('#modalTitle').text('Tambah Perawat');
+      // ubah warna header: biru untuk Add
+      $('#modalHeader').removeClass('bg-warning bg-danger').addClass('bg-primary');
+      $form[0].reset();
+      $('input[name="nip_perawat"]').prop('readonly', false);
+      $('#preview').attr('src','').addClass('d-none');
+      $('#old_foto').val('');
+      perawatModal.show();
+    });
+
+    // Klik Edit — delegated event
+    $('#perawatTable tbody').on('click', '.btnEdit', function() {
+      var data = table.row($(this).closest('tr')).data();
+      if (!data) return alert('Data tidak ditemukan');
+
+      mode = 'edit';
+      editingNip = data.nip_perawat;
+
+      $('#modalTitle').text('Edit Perawat');
+      // ubah warna header : kuning untuk Edit
+      $('#modalHeader').removeClass('bg-primary bg-danger').addClass('bg-warning');
+
+      // reset form dan isi field
+      $form[0].reset();
+      // isi semua input yang name-nya sesuai key data
+      for (var k in data) {
+        if (!data.hasOwnProperty(k)) continue;
+        var $el = $('[name="' + k + '"]');
+        if ($el.length) {
+          // jika tipe file, skip
+          if ($el.attr('type') === 'file') continue;
+          $el.val(data[k]);
+        }
+      }
+
+      // set readonly nip
+      $('input[name="nip_perawat"]').prop('readonly', true);
+
+      // preview foto bila ada
+      if (data.foto) {
+        $('#preview').attr('src', '/' + data.foto).removeClass('d-none');
+        $('#old_foto').val(data.foto);
+      } else {
+        $('#preview').attr('src', '').addClass('d-none');
+        $('#old_foto').val('');
+      }
+
+      perawatModal.show();
+    });
+
+    // Preview file input ketika user memilih file baru
+    $form.find('input[name="foto"]').on('change', function() {
+      var file = this.files[0];
+      if (!file) {
+        $('#preview').attr('src', '').addClass('d-none');
+        return;
+      }
+      var url = URL.createObjectURL(file);
+      $('#preview').attr('src', url).removeClass('d-none');
+    });
+
+    // Submit form (Add or Edit)
+    $form.on('submit', function(e) {
+      e.preventDefault();
+
+      var fd = new FormData(this);
+      var url = '/admin/perawat';
+      if (mode === 'edit' && editingNip) {
+        url = '/admin/perawat/' + editingNip;
+        // jika route update di server menerima POST untuk update, kita gunakan POST
+        // jika server mengharuskan PUT, pakai method override sesuai implementasimu
+      }
+
+      $.ajax({
+        url: url,
+        method: 'POST',
+        data: fd,
+        processData: false,
+        contentType: false,
+        success: function(res) {
+          perawatModal.hide();
+          table.ajax.reload(null, false);
+        },
+        error: function(xhr) {
+          var msg = 'Gagal menyimpan';
+          if (xhr.responseJSON && xhr.responseJSON.message) msg = xhr.responseJSON.message;
+          alert(msg);
+        }
+      });
+    });
+
+    // Hapus
+    $('#perawatTable tbody').on('click', '.btnDel', function() {
+      var data = table.row($(this).closest('tr')).data();
+      if (!data) return;
+      if (!confirm('Yakin hapus perawat: ' + data.nama_perawat + ' (' + data.nip_perawat + ')?')) return;
+      $.ajax({
+        url: '/admin/perawat/' + data.nip_perawat,
+        method: 'DELETE'
+      })
+      .done(function() { table.ajax.reload(null, false); })
+      .fail(function(xhr) {
+        alert((xhr.responseJSON && xhr.responseJSON.message) ? xhr.responseJSON.message : 'Gagal hapus');
+      });
+    });
+
+  }); // end document.ready
+</script>
+
+</body>
+</html>
