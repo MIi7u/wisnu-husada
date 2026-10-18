@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <meta name="csrf-token" content="{{ csrfToken }}">
+  <title>SIMRS-Wisnuhusada | Stok & Reagen Lab</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+  <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+@include("admin/laboratorium/_navbar")
+
+<div class="container-fluid py-4">
+
+  {{-- ===== Banner Peringatan Dini (Prediksi ARIMA) ===== --}}
+  <div id="bannerArima" class="alert alert-warning shadow-sm d-none">
+    <i class="fas fa-brain me-2"></i><strong>Peringatan Dini:</strong> <span id="bannerArimaText"></span>
+  </div>
+
+  <ul class="nav nav-tabs mb-3" role="tablist">
+    <li class="nav-item"><button class="nav-link active" data-bs-toggle="tab" data-bs-target="#tab-reagen">Master Reagen</button></li>
+    <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-transaksi">Transaksi Stok</button></li>
+    <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-prediksi">Fitur Prediksi Kebutuhan (ARIMA)</button></li>
+    <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-expired">Laporan Kedaluwarsa</button></li>
+    <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-kebutuhan">Kebutuhan Reagen per Tes</button></li>
+  </ul>
+
+  <div class="tab-content">
+
+    {{-- ============ TAB MASTER REAGEN ============ --}}
+    <div class="tab-pane fade show active" id="tab-reagen">
+      <div class="card shadow-sm">
+        <div class="card-header bg-white d-flex justify-content-between">
+          <h6 class="mb-0">Master Data Reagen / BHP</h6>
+          <button class="btn btn-primary btn-sm" id="btnAddReagen"><i class="fas fa-plus me-1"></i>Tambah Reagen</button>
+        </div>
+        <div class="card-body"><table id="reagenTable" class="table table-bordered table-hover w-100">
+          <thead><tr><th width="4%">No</th><th>Kode</th><th>Nama Reagen</th><th>Satuan</th><th>Stok</th><th>Safety Stock</th><th>Expired</th><th>Status</th><th>Aksi</th></tr></thead>
+        </table></div>
+      </div>
+    </div>
+
+    {{-- ============ TAB TRANSAKSI ============ --}}
+    <div class="tab-pane fade" id="tab-transaksi">
+      <div class="card shadow-sm">
+        <div class="card-header bg-white d-flex justify-content-between">
+          <h6 class="mb-0">Transaksi Stok (Masuk / Keluar)</h6>
+          <button class="btn btn-success btn-sm" id="btnTransaksi"><i class="fas fa-exchange-alt me-1"></i>Catat Transaksi</button>
+        </div>
+        <div class="card-body"><table id="riwayatTable" class="table table-bordered table-hover w-100">
+          <thead><tr><th width="4%">No</th><th>Tanggal</th><th>Reagen</th><th>Tipe</th><th>Jumlah</th><th>Petugas</th><th>Keterangan</th></tr></thead>
+        </table></div>
+      </div>
+    </div>
+
+    {{-- ============ TAB PREDIKSI ARIMA ============ --}}
+    <div class="tab-pane fade" id="tab-prediksi">
+      <div class="card shadow-sm">
+        <div class="card-header bg-white d-flex justify-content-between align-items-center">
+          <h6 class="mb-0"><i class="fas fa-crystal-ball far fa-chart-line me-1"></i>Fitur Prediksi Kebutuhan Reagen</h6>
+          <div class="d-flex gap-2">
+            <select id="selHorizon" class="form-select form-select-sm" style="width:auto">
+              <option value="1">1 Bulan ke Depan</option>
+              <option value="3">3 Bulan ke Depan</option>
+              <option value="4" selected>4 Bulan ke Depan</option>
+            </select>
+            <button class="btn btn-dark btn-sm" id="btnPrediksi"><i class="fas fa-play me-1"></i>Jalankan Prediksi</button>
+          </div>
+        </div>
+        <div class="card-body">
+          <p class="text-muted small mb-2">Metode: <span id="metodeLabel" class="badge bg-info text-dark">-</span> — garis historis vs prediksi ditampilkan pada grafik di bawah.</p>
+          <canvas id="chartPrediksi" height="90"></canvas>
+          <hr>
+          <h6>Tabel Rekomendasi Pengadaan</h6>
+          <div class="table-responsive">
+            <table id="prediksiTable" class="table table-bordered table-sm w-100">
+              <thead><tr><th>Kode Reagen</th><th>Nama Reagen</th><th>Stok Saat Ini</th><th>Prediksi Kebutuhan</th><th>Rekomendasi Jumlah Pesan</th></tr></thead>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    {{-- ============ TAB KEDALUWARSA ============ --}}
+    <div class="tab-pane fade" id="tab-expired">
+      <div class="card shadow-sm">
+        <div class="card-header bg-white d-flex justify-content-between align-items-center">
+          <h6 class="mb-0"><i class="fas fa-calendar-xmark me-1"></i>Reagen Akan Kedaluwarsa (≤ 60 hari)</h6>
+          <button class="btn btn-outline-danger btn-sm" id="btnExpired"><i class="fas fa-rotate me-1"></i>Cek Sekarang</button>
+        </div>
+        <div class="card-body"><table id="expiredTable" class="table table-bordered table-sm w-100">
+          <thead><tr><th>Kode</th><th>Nama Reagen</th><th>Satuan</th><th>Stok</th><th>Tanggal Expired</th><th>Sisa Hari</th></tr></thead>
+        </table></div>
+      </div>
+    </div>
+
+    {{-- ============ TAB KEBUTUHAN (BOM) ============ --}}
+    <div class="tab-pane fade" id="tab-kebutuhan">
+      <div class="card shadow-sm">
+        <div class="card-header bg-white d-flex justify-content-between">
+          <h6 class="mb-0">Kebutuhan Reagen per Jenis Pemeriksaan (mis. 1x Darah Lengkap = 0.5ml Reagen A + 1ml Reagen B)</h6>
+          <button class="btn btn-primary btn-sm" id="btnAddKebutuhan"><i class="fas fa-plus me-1"></i>Tambah Relasi</button>
+        </div>
+        <div class="card-body"><table id="kebutuhanTable" class="table table-bordered table-sm w-100">
+          <thead><tr><th>No</th><th>Jenis Pemeriksaan</th><th>Reagen</th><th>Jumlah / Tes</th><th>Aksi</th></tr></thead>
+        </table></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{{-- Modal Reagen --}}
+<div class="modal fade" id="modalReagen" tabindex="-1"><div class="modal-dialog"><form class="modal-content" id="formReagen">
+  <div class="modal-header"><h5 class="modal-title" id="judulReagen">Tambah Reagen</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+  <div class="modal-body">
+    <input type="hidden" name="id" id="reagenId">
+    <div class="mb-3"><label class="form-label">Kode Reagen</label><input class="form-control" name="kode_reagen" required></div>
+    <div class="mb-3"><label class="form-label">Nama Reagen</label><input class="form-control" name="nama_reagen" required placeholder="mis. Reagen DBD (NS1)"></div>
+    <div class="mb-3"><label class="form-label">Satuan</label><input class="form-control" name="satuan" value="Botol"></div>
+    <div class="row">
+      <div class="col"><div class="mb-3"><label class="form-label">Stok Awal</label><input type="number" class="form-control" name="stok" value="0"></div></div>
+      <div class="col"><div class="mb-3"><label class="form-label">Safety Stock</label><input type="number" class="form-control" name="safety_stock" value="5"></div></div>
+    </div>
+    <div class="mb-3"><label class="form-label">Tanggal Kedaluwarsa</label><input type="date" class="form-control" name="expired_date"></div>
+    <div class="mb-3" id="wrapAktif" style="display:none"><label class="form-label">Status</label>
+      <select class="form-select" name="aktif"><option value="true">Aktif</option><option value="false">Nonaktif</option></select></div>
+  </div>
+  <div class="modal-footer"><button class="btn btn-success" type="submit"><i class="fas fa-save me-1"></i>Simpan</button></div>
+</form></div></div>
+
+{{-- Modal Transaksi --}}
+<div class="modal fade" id="modalTrx" tabindex="-1"><div class="modal-dialog"><form class="modal-content" id="formTrx">
+  <div class="modal-header"><h5 class="modal-title">Catat Transaksi Stok</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+  <div class="modal-body">
+    <div class="mb-3"><label class="form-label">Reagen</label><select class="form-select" name="id_reagen" id="selReagenTrx" required></select></div>
+    <div class="mb-3"><label class="form-label">Tipe</label><select class="form-select" name="tipe"><option value="MASUK">Stok Masuk (Pengadaan)</option><option value="KELUAR">Stok Keluar (Pemakaian)</option></select></div>
+    <div class="mb-3"><label class="form-label">Jumlah</label><input type="number" min="1" class="form-control" name="jumlah" required></div>
+    <div class="mb-3"><label class="form-label">Keterangan</label><input class="form-control" name="keterangan" placeholder="mis. PO No. 123 / Pemakaian Hematologi"></div>
+  </div>
+  <div class="modal-footer"><button class="btn btn-success" type="submit"><i class="fas fa-save me-1"></i>Simpan</button></div>
+</form></div></div>
+
+{{-- Modal Kebutuhan --}}
+<div class="modal fade" id="modalKebutuhan" tabindex="-1"><div class="modal-dialog"><form class="modal-content" id="formKebutuhan">
+  <div class="modal-header"><h5 class="modal-title">Tambah Kebutuhan Reagen per Tes</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+  <div class="modal-body">
+    <div class="mb-3"><label class="form-label">Jenis Pemeriksaan</label><select class="form-select" name="kode_jenis" id="selJenisKb" required></select></div>
+    <div class="mb-3"><label class="form-label">Reagen</label><select class="form-select" name="id_reagen" id="selReagenKb" required></select></div>
+    <div class="mb-3"><label class="form-label">Jumlah per Tes</label><input type="number" step="0.01" class="form-control" name="jumlah_per_tes" value="1" required></div>
+  </div>
+  <div class="modal-footer"><button class="btn btn-success" type="submit"><i class="fas fa-save me-1"></i>Simpan</button></div>
+</form></div></div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="/scripts/laboratorium_stok.js"></script>
+</body>
+</html>

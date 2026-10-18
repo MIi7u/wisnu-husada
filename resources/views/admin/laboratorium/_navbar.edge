@@ -1,0 +1,23 @@
+@{
+  const labNav = use('App/Helpers/labNav')
+}
+<nav class="navbar navbar-expand-lg navbar-dark navbar-custom">
+  <div class="container-fluid">
+    <a class="navbar-link active-menu" href="/admin/menu_laboratorium"><i class="fas fa-flask me-2"></i></a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#labNavbar">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="labNavbar">
+      <ul class="navbar-nav me-auto">
+        @each(item in labNav.MENUS)
+          <li class="nav-item">
+            <a class="nav-link {{ item.key === active ? 'active-menu' : '' }}" href="{{ item.url }}">
+              <i class="fas {{ item.icon }} me-1"></i>{{ item.label }}
+            </a>
+          </li>
+        @endeach
+      </ul>
+      <span class="text-white-50 small"><i class="fas fa-user me-1"></i>{{ user || 'Pengguna' }}</span>
+    </div>
+  </div>
+</nav>

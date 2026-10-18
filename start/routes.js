@@ -12,16 +12,14 @@
 const Route = use('Route')
 
 // ===================== 1. Menu Navigasi Unit =====================
-Route.group(() => {
-    Route.on('/', 'DashboardController.index')
-    Route.on('/menu_pendaftaran', 'MenuUnitController.pendaftaran')
-    Route.on('/menu_keperawatan', 'MenuUnitController.keperawatan')
-    Route.on('/menu_farmasi', 'MenuUnitController.farmasi')
-    Route.on('/menu_radiologi', 'MenuUnitController.radiologi')
-    Route.on('/menu_laboratorium', 'MenuUnitController.laboratorium')
-    Route.on('/menu_kasir', 'MenuUnitController.kasir')
-    Route.on('/menu_dokter', 'MenuUnitController.dokter')
-}).prefix('admin').namespace('Admin')
+Route.get('/admin', 'Admin/DashboardController.index')
+Route.get('/admin/menu_pendaftaran', 'Admin/MenuUnitController.pendaftaran')
+Route.get('/admin/menu_keperawatan', 'Admin/MenuUnitController.keperawatan')
+Route.get('/admin/menu_farmasi', 'Admin/MenuUnitController.farmasi')
+Route.get('/admin/menu_radiologi', 'Admin/MenuUnitController.radiologi')
+Route.get('/admin/menu_laboratorium', 'Admin/MenuUnitController.laboratorium')
+Route.get('/admin/menu_kasir', 'Admin/MenuUnitController.kasir')
+Route.get('/admin/menu_dokter', 'Admin/MenuUnitController.dokter')
 
 // ===================== 2. Master Data =====================
 Route.group(() => {
@@ -110,6 +108,46 @@ Route.group(() => {
     Route.post('/tarif/store', 'LaboratoriumController.tarifStore')
     Route.post('/tarif/update/:id', 'LaboratoriumController.tarifUpdate')
     Route.delete('/tarif/delete/:id', 'LaboratoriumController.tarifDelete')
+
+    /* ---------- 1. Dashboard Laboratorium ---------- */
+    Route.get('/dashboard', 'LaboratoriumDashboardController.dashboard')
+
+    /* ---------- 2. Permintaan & Pendaftaran (Requisition) ---------- */
+    Route.get('/permintaan', 'LaboratoriumDashboardController.permintaan')
+    Route.get('/permintaan/data', 'LaboratoriumDashboardController.permintaanData')
+    Route.post('/permintaan/store', 'LaboratoriumDashboardController.permintaanStore')
+    Route.post('/permintaan/status/:id', 'LaboratoriumDashboardController.permintaanUpdateStatus')
+    Route.delete('/permintaan/delete/:id', 'LaboratoriumDashboardController.permintaanDelete')
+
+    /* ---------- 3. Proses Pemeriksaan (Workflow) ---------- */
+    Route.get('/pemeriksaan', 'LaboratoriumDashboardController.pemeriksaan')
+    Route.get('/pemeriksaan/antrian', 'LaboratoriumDashboardController.antrianData')
+    Route.get('/pemeriksaan/items/:kode_jenis', 'LaboratoriumDashboardController.itemsByJenis')
+    Route.get('/pemeriksaan/hasil/:id', 'LaboratoriumDashboardController.hasilList')
+    Route.post('/pemeriksaan/hasil/:id', 'LaboratoriumDashboardController.hasilSimpan')
+    Route.post('/pemeriksaan/validasi/:id', 'LaboratoriumDashboardController.validasi')
+    Route.get('/pemeriksaan/cetak/:id', 'LaboratoriumDashboardController.cetakHasil')
+
+    /* ---------- 4. Manajemen Stok & Reagen (Core ARIMA) ---------- */
+    Route.get('/stok', 'LaboratoriumDashboardController.stok')
+    Route.get('/stok/reagen/data', 'LaboratoriumDashboardController.reagenData')
+    Route.get('/stok/reagen/dropdown', 'LaboratoriumDashboardController.reagenDropdown')
+    Route.post('/stok/reagen/store', 'LaboratoriumDashboardController.reagenStore')
+    Route.post('/stok/reagen/update/:id', 'LaboratoriumDashboardController.reagenUpdate')
+    Route.delete('/stok/reagen/delete/:id', 'LaboratoriumDashboardController.reagenDelete')
+    Route.post('/stok/transaksi', 'LaboratoriumDashboardController.stokTransaksi')
+    Route.get('/stok/riwayat', 'LaboratoriumDashboardController.stokRiwayat')
+    Route.get('/stok/kebutuhan/data', 'LaboratoriumDashboardController.kebutuhanData')
+    Route.post('/stok/kebutuhan/store', 'LaboratoriumDashboardController.kebutuhanStore')
+    Route.delete('/stok/kebutuhan/delete/:id', 'LaboratoriumDashboardController.kebutuhanDelete')
+    Route.get('/stok/prediksi', 'LaboratoriumDashboardController.prediksi')
+    Route.get('/stok/kedaluwarsa', 'LaboratoriumDashboardController.kedaluwarsa')
+
+    /* ---------- 5. Laporan & Analitik ---------- */
+    Route.get('/laporan', 'LaboratoriumDashboardController.laporan')
+    Route.get('/laporan/volume', 'LaboratoriumDashboardController.laporanVolume')
+    Route.get('/laporan/efisiensi', 'LaboratoriumDashboardController.laporanEfisiensi')
+    Route.get('/laporan/pendapatan', 'LaboratoriumDashboardController.laporanPendapatan')
 }).prefix('admin/laboratorium')
 
 // 🔒 Grup admin

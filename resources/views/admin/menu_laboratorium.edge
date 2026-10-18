@@ -32,58 +32,63 @@
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav me-auto">
 
-        <!-- Dropdown Rajal -->
+        <!-- 1. Dashboard -->
+        <li class="nav-item">
+          <a class="nav-link active-menu" href="/admin/laboratorium/dashboard"><i class="fas fa-gauge-high me-1"></i>Dashboard</a>
+        </li>
+
+        <!-- 2. Permintaan & Pendaftaran -->
         <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" id="rajalMenu"
-             role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            Rawat Jalan
+          <a class="nav-link dropdown-toggle" href="#" id="reqMenu" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="fas fa-clipboard-list me-1"></i>Permintaan &amp; Pendaftaran
           </a>
-          <ul class="dropdown-menu" aria-labelledby="rajalMenu">
-            <li><a class="dropdown-item" href="#">Tarif di Ruangan</a></li>
-            <li><a class="dropdown-item" href="#">Rawat IGD</a></li>
-            <li><a class="dropdown-item" href="#">Obat/BHP di ruang (IGD)</a></li>
+          <ul class="dropdown-menu" aria-labelledby="reqMenu">
+            <li><a class="dropdown-item" href="/admin/laboratorium/permintaan"><i class="fas fa-plus-circle me-2"></i>Input Permintaan Baru</a></li>
+            <li><a class="dropdown-item" href="/admin/laboratorium/permintaan"><i class="fas fa-barcode me-2"></i>Cetak Label Barcode</a></li>
+            <li><a class="dropdown-item" href="/admin/laboratorium/permintaan"><i class="fas fa-history me-2"></i>Riwayat Permintaan</a></li>
           </ul>
         </li>
 
-        <!-- Dropdown Laboratorium -->
+        <!-- 3. Proses Pemeriksaan -->
         <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle active-menu" href="#" id="labMenu"
-             role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            Laboratorium
+          <a class="nav-link dropdown-toggle" href="#" id="prosesMenu" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="fas fa-microscope me-1"></i>Proses Pemeriksaan
           </a>
-          <ul class="dropdown-menu" aria-labelledby="labMenu">
-            <li><a class="dropdown-item" href="/admin/laboratorium"><i class="fas fa-cubes me-2"></i>Master &amp; Tarif Laboratorium</a></li>
-            <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item disabled" href="#">Permintaan Laboratorium (segera)</a></li>
-            <li><a class="dropdown-item disabled" href="#">Pasien Laboratorium (segera)</a></li>
-            <li><a class="dropdown-item disabled" href="#">Hasil Pemeriksaan Lab (segera)</a></li>
+          <ul class="dropdown-menu" aria-labelledby="prosesMenu">
+            <li><a class="dropdown-item" href="/admin/laboratorium/pemeriksaan"><i class="fas fa-list-ol me-2"></i>Antrian Sampel</a></li>
+            <li><a class="dropdown-item" href="/admin/laboratorium/pemeriksaan"><i class="fas fa-keyboard me-2"></i>Input Hasil Pemeriksaan</a></li>
+            <li><a class="dropdown-item" href="/admin/laboratorium/pemeriksaan"><i class="fas fa-user-doctor me-2"></i>Validasi Hasil (Sp.PK)</a></li>
+            <li><a class="dropdown-item" href="/admin/laboratorium/pemeriksaan"><i class="fas fa-file-pdf me-2"></i>Cetak Hasil Lab (PDF)</a></li>
           </ul>
         </li>
 
-        <!-- Dropdown Ranap -->
+        <!-- 4. Manajemen Stok & Reagen -->
         <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" id="ranapMenu"
-             role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            Rawat Inap
+          <a class="nav-link dropdown-toggle" href="#" id="stokMenu" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="fas fa-boxes-stacked me-1"></i>Stok &amp; Reagen
           </a>
-          <ul class="dropdown-menu" aria-labelledby="ranapMenu">
-            <li><a class="dropdown-item" href="#">Bangsal</a></li>
-            <li><a class="dropdown-item" href="#">Tarif Ruang Ranap</a></li>
-            <li><a class="dropdown-item" href="#">Surveilans Ranap</a></li>
+          <ul class="dropdown-menu" aria-labelledby="stokMenu">
+            <li><a class="dropdown-item" href="/admin/laboratorium/stok"><i class="fas fa-vials me-2"></i>Master Data Reagen</a></li>
+            <li><a class="dropdown-item" href="/admin/laboratorium/stok"><i class="fas fa-exchange-alt me-2"></i>Transaksi Stok</a></li>
+            <li><a class="dropdown-item" href="/admin/laboratorium/stok"><i class="fas fa-brain me-2"></i>Prediksi Kebutuhan (ARIMA)</a></li>
+            <li><a class="dropdown-item" href="/admin/laboratorium/stok"><i class="fas fa-calendar-xmark me-2"></i>Laporan Kedaluwarsa</a></li>
           </ul>
         </li>
 
-        <!-- Dropdown Master Laboratorium -->
+        <!-- 5. Laporan & Analitik -->
+        <li class="nav-item">
+          <a class="nav-link" href="/admin/laboratorium/laporan"><i class="fas fa-chart-line me-1"></i>Laporan &amp; Analitik</a>
+        </li>
+
+        <!-- 6. Pengaturan -->
         <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" id="masterLabMenu"
-             role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            Master Laboratorium
+          <a class="nav-link dropdown-toggle" href="#" id="settingMenu" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="fas fa-gear me-1"></i>Pengaturan
           </a>
-          <ul class="dropdown-menu" aria-labelledby="masterLabMenu">
-            <li><a class="dropdown-item" href="/admin/laboratorium"><i class="fas fa-money-bill-wave me-2"></i>Tarif di Ruangan Lab</a></li>
-            <li><a class="dropdown-item" href="/admin/laboratorium"><i class="fas fa-vials me-2"></i>Master Data Jenis Pemeriksaan Lab</a></li>
-            <li><a class="dropdown-item" href="/admin/laboratorium"><i class="fas fa-microscope me-2"></i>Master Data Pemeriksaan Lab</a></li>
-            <li><a class="dropdown-item disabled" href="#">Obat/BHP diruang (Lab) (segera)</a></li>
+          <ul class="dropdown-menu" aria-labelledby="settingMenu">
+            <li><a class="dropdown-item" href="/admin/laboratorium"><i class="fas fa-sitemap me-2"></i>Master Jenis Pemeriksaan</a></li>
+            <li><a class="dropdown-item" href="/admin/laboratorium"><i class="fas fa-money-bill-wave me-2"></i>Tarif Lab per Ruang</a></li>
+            <li><a class="dropdown-item" href="/admin/pegawai"><i class="fas fa-users-gear me-2"></i>Master Pengguna &amp; Hak Akses</a></li>
           </ul>
         </li>
 
@@ -106,31 +111,13 @@
             Halaman menu Laboratorium. Silakan pilih salah satu menu di atas.
           </p>
           <div class="row g-3">
-            <div class="col-md-3">
-              <div class="border rounded p-3 text-center">
-                <i class="fas fa-clipboard-list fa-2x mb-2 text-primary"></i>
-                <div>Permintaan Lab</div>
-              </div>
-            </div>
-            <div class="col-md-3">
-              <div class="border rounded p-3 text-center">
-                <i class="fas fa-vial fa-2x mb-2 text-success"></i>
-                <div>Pasien Lab</div>
-              </div>
-            </div>
-            <div class="col-md-3">
-              <div class="border rounded p-3 text-center">
-                <i class="fas fa-file-medical fa-2x mb-2 text-warning"></i>
-                <div>Hasil Pemeriksaan</div>
-              </div>
-            </div>
-            <div class="col-md-3">
-              <div class="border rounded p-3 text-center">
-                <i class="fas fa-money-bill-wave fa-2x mb-2 text-danger"></i>
-                <div>Tarif Lab</div>
-              </div>
-            </div>
-          </div>
+            <div class="col-md-4 col-lg-2"><a href="/admin/laboratorium/dashboard" class="text-decoration-none"><div class="border rounded p-3 text-center h-100"><i class="fas fa-gauge-high fa-2x mb-2 text-primary"></i><div>Dashboard</div></div></a></div>
+            <div class="col-md-4 col-lg-2"><a href="/admin/laboratorium/permintaan" class="text-decoration-none"><div class="border rounded p-3 text-center h-100"><i class="fas fa-clipboard-list fa-2x mb-2 text-success"></i><div>Permintaan &amp; Pendaftaran</div></div></a></div>
+            <div class="col-md-4 col-lg-2"><a href="/admin/laboratorium/pemeriksaan" class="text-decoration-none"><div class="border rounded p-3 text-center h-100"><i class="fas fa-microscope fa-2x mb-2 text-warning"></i><div>Proses Pemeriksaan</div></div></a></div>
+            <div class="col-md-4 col-lg-2"><a href="/admin/laboratorium/stok" class="text-decoration-none"><div class="border rounded p-3 text-center h-100"><i class="fas fa-boxes-stacked fa-2x mb-2 text-danger"></i><div>Stok &amp; Reagen (ARIMA)</div></div></a></div>
+            <div class="col-md-4 col-lg-2"><a href="/admin/laboratorium/laporan" class="text-decoration-none"><div class="border rounded p-3 text-center h-100"><i class="fas fa-chart-line fa-2x mb-2 text-info"></i><div>Laporan &amp; Analitik</div></div></a></div>
+            <div class="col-md-4 col-lg-2"><a href="/admin/laboratorium" class="text-decoration-none"><div class="border rounded p-3 text-center h-100"><i class="fas fa-gear fa-2x mb-2 text-secondary"></i><div>Pengaturan</div></div></a></div>
+        </div>
         </div>
       </div>
     </div>
