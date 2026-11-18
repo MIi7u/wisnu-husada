@@ -12,6 +12,7 @@
 const Route = use('Route')
 
 // ===================== 1. Menu Navigasi Unit =====================
+Route.get('/', ({ view }) => view.render('admin.menu'))
 Route.get('/admin', 'Admin/DashboardController.index')
 Route.get('/admin/menu_pendaftaran', 'Admin/MenuUnitController.pendaftaran')
 Route.get('/admin/menu_keperawatan', 'Admin/MenuUnitController.keperawatan')
