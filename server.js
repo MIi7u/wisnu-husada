@@ -17,32 +17,39 @@
 |     Make sure to pass relative path from the project root.
 */
 
+/*
+|--------------------------------------------------------------------------
+| WebSocket (socket.io)
+|--------------------------------------------------------------------------
+*/
 const { Ignitor } = require('@adonisjs/ignitor')
-
 
 new Ignitor(require('@adonisjs/fold'))
   .appRoot(__dirname)
   .fireHttpServer()
-  .catch(console.error)
+  .then(() => {
+    // Ambil instance Server dari IoC container SETELAH app bootstrap selesai,
+    // lalu attach socket.io ke http server yang sama.
+    const Server = use('Server')
+    const io = require('socket.io')(Server.getInstance())
 
-  const Server = use('Server')
-  const io = require('socket.io')(Server.getInstance())
-  
-  io.on('connection', (socket) => {
-    console.log('User connected:', socket.id)
-  
-    socket.on('sunmori_chat', (message) => {
-      console.log('Received chat:', message)
-      socket.broadcast.emit('sunmori_chat', message)
-    })
+    io.on('connection', (socket) => {
+      console.log('User connected:', socket.id)
 
-    socket.on('sunmori_notif', (message) => {
-      console.log('Received notif:', message)
-      socket.broadcast.emit('sunmori_notif', message)
-    })
-  
-    socket.on('disconnect', () => {
-      console.log('User disconnected:', socket.id)
+      socket.on('sunmori_chat', (message) => {
+        console.log('Received chat:', message)
+        io.emit('sunmori_chat', message)
+      })
+
+      socket.on('sunmori_notif', (message) => {
+        console.log('Received notif:', message)
+        io.emit('sunmori_notif', message)
+      })
+
+      socket.on('disconnect', () => {
+        console.log('User disconnected:', socket.id)
+      })
     })
   })
+  .catch(console.error)
   
